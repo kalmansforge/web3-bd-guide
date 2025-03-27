@@ -17,36 +17,42 @@ import Guide from "./pages/Guide";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
+import Teams from "./pages/Teams";
+import { useState } from "react";
 
-const queryClient = new QueryClient();
+function App() {
+  // Create a new instance of QueryClient inside the component
+  const [queryClient] = useState(() => new QueryClient());
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <ThresholdProvider>
-            <EvaluationProvider>
-              <Toaster />
-              <Sonner position="top-right" />
-              <Routes>
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/" element={<AuthGuard><Dashboard /></AuthGuard>} />
-                <Route path="/projects" element={<AuthGuard><Projects /></AuthGuard>} />
-                <Route path="/projects/:projectId" element={<AuthGuard><ProjectDetail /></AuthGuard>} />
-                <Route path="/evaluation/new" element={<AuthGuard><NewEvaluation /></AuthGuard>} />
-                <Route path="/metrics/:categoryId" element={<AuthGuard><MetricsGuide /></AuthGuard>} />
-                <Route path="/metrics" element={<AuthGuard><MetricsGuide /></AuthGuard>} />
-                <Route path="/guide" element={<AuthGuard><Guide /></AuthGuard>} />
-                <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </EvaluationProvider>
-          </ThresholdProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <ThresholdProvider>
+              <EvaluationProvider>
+                <Toaster />
+                <Sonner position="top-right" />
+                <Routes>
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/" element={<AuthGuard><Dashboard /></AuthGuard>} />
+                  <Route path="/projects" element={<AuthGuard><Projects /></AuthGuard>} />
+                  <Route path="/projects/:projectId" element={<AuthGuard><ProjectDetail /></AuthGuard>} />
+                  <Route path="/evaluation/new" element={<AuthGuard><NewEvaluation /></AuthGuard>} />
+                  <Route path="/metrics/:categoryId" element={<AuthGuard><MetricsGuide /></AuthGuard>} />
+                  <Route path="/metrics" element={<AuthGuard><MetricsGuide /></AuthGuard>} />
+                  <Route path="/guide" element={<AuthGuard><Guide /></AuthGuard>} />
+                  <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
+                  <Route path="/teams" element={<AuthGuard><Teams /></AuthGuard>} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </EvaluationProvider>
+            </ThresholdProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;
