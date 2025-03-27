@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { ProjectEvaluation, MetricEvaluation, TierType } from "@/types/metrics";
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { saveEvaluationsToStorage, getEvaluationsFromStorage } from "@/utils/localStorageUtils";
 
 interface EvaluationContextType {
   projects: ProjectEvaluation[];
@@ -15,6 +15,7 @@ interface EvaluationContextType {
   deleteProject: (id: string) => Promise<void>;
   calculateProjectScore: (project?: ProjectEvaluation) => { score: number; tier: TierType };
   loading: boolean;
+  refreshData: () => void;
 }
 
 const EvaluationContext = createContext<EvaluationContextType | undefined>(undefined);
@@ -33,75 +34,34 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // Fetch projects when user changes
+  // Load projects from local storage
+  const loadProjects = () => {
+    if (!user) {
+      setProjects([]);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const storedProjects = getEvaluationsFromStorage();
+      setProjects(storedProjects);
+    } catch (error: any) {
+      toast.error("Failed to load projects", {
+        description: error.message
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Refresh data (used after import)
+  const refreshData = () => {
+    loadProjects();
+  };
+
+  // Load projects when user changes
   useEffect(() => {
-    const fetchProjects = async () => {
-      if (!user) {
-        setProjects([]);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        
-        // Fetch all evaluations for the current user
-        const { data: evaluations, error: evalError } = await supabase
-          .from('evaluations')
-          .select('*, projects(*)')
-          .eq('user_id', user.id);
-          
-        if (evalError) throw evalError;
-        
-        if (!evaluations || evaluations.length === 0) {
-          setProjects([]);
-          return;
-        }
-        
-        // Fetch metric evaluations for each evaluation
-        const projectsWithMetrics = await Promise.all(
-          evaluations.map(async (evaluation) => {
-            const { data: metricEvals, error: metricError } = await supabase
-              .from('metric_evaluations')
-              .select('*')
-              .eq('evaluation_id', evaluation.id);
-              
-            if (metricError) throw metricError;
-            
-            // Format metric evaluations into the expected structure
-            const metrics: Record<string, MetricEvaluation> = {};
-            metricEvals?.forEach(metric => {
-              const metricKey = `${metric.category_id}_${metric.metric_id}`;
-              metrics[metricKey] = {
-                value: metric.value,
-                tier: metric.tier as TierType,
-                notes: metric.notes || ""
-              };
-            });
-            
-            // Create a ProjectEvaluation object
-            return {
-              id: evaluation.id,
-              name: evaluation.projects.name,
-              date: evaluation.created_at,
-              metrics,
-              overallScore: evaluation.overall_score,
-              overallTier: evaluation.overall_tier as TierType,
-              notes: evaluation.notes
-            } as ProjectEvaluation;
-          })
-        );
-        
-        setProjects(projectsWithMetrics);
-      } catch (error: any) {
-        toast.error("Failed to load projects", {
-          description: error.message
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
+    loadProjects();
   }, [user]);
 
   const createProject = (name: string) => {
@@ -170,77 +130,16 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         overallTier: tier
       };
       
-      // First, create or update the project
-      const { data: projectData, error: projectError } = await supabase
-        .from('projects')
-        .upsert({
-          id: updatedProject.id,
-          name: updatedProject.name,
-          user_id: user.id
-        }, {
-          onConflict: 'id'
-        })
-        .select('id')
-        .single();
-        
-      if (projectError) throw projectError;
-      
-      // Then create or update the evaluation
-      const { data: evalData, error: evalError } = await supabase
-        .from('evaluations')
-        .upsert({
-          id: updatedProject.id,
-          project_id: projectData.id,
-          user_id: user.id,
-          name: updatedProject.name,
-          overall_score: score,
-          overall_tier: tier,
-          notes: updatedProject.notes || ""
-        }, {
-          onConflict: 'id'
-        })
-        .select('id')
-        .single();
-        
-      if (evalError) throw evalError;
-      
-      // Finally save all metric evaluations
-      const metricInserts = Object.entries(updatedProject.metrics).map(([key, evaluation]) => {
-        const [categoryId, metricId] = key.split('_');
-        return {
-          evaluation_id: evalData.id,
-          category_id: categoryId,
-          metric_id: metricId,
-          value: String(evaluation.value),
-          tier: evaluation.tier,
-          notes: evaluation.notes || ""
-        };
-      });
-      
-      // First delete any existing metrics for this evaluation
-      await supabase
-        .from('metric_evaluations')
-        .delete()
-        .eq('evaluation_id', evalData.id);
-      
-      // Then insert the new ones
-      if (metricInserts.length > 0) {
-        const { error: metricsError } = await supabase
-          .from('metric_evaluations')
-          .insert(metricInserts);
-          
-        if (metricsError) throw metricsError;
-      }
-      
       // Update local state
       setProjects(prev => {
         const existing = prev.findIndex(p => p.id === updatedProject.id);
-        if (existing >= 0) {
-          const updated = [...prev];
-          updated[existing] = updatedProject;
-          return updated;
-        }
-        return [...prev, updatedProject];
+        const updatedProjects = existing >= 0 
+          ? prev.map(p => p.id === updatedProject.id ? updatedProject : p)
+          : [...prev, updatedProject];
+          
+        // Save to local storage
+        saveEvaluationsToStorage(updatedProjects);
+        return updatedProjects;
       });
       
       setCurrentProject(updatedProject);
@@ -262,16 +161,14 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       
-      // Delete the evaluation (cascades to metric_evaluations)
-      const { error } = await supabase
-        .from('evaluations')
-        .delete()
-        .eq('id', id);
-        
-      if (error) throw error;
-      
       // Update local state
-      setProjects(prev => prev.filter(p => p.id !== id));
+      setProjects(prev => {
+        const updatedProjects = prev.filter(p => p.id !== id);
+        // Save to local storage
+        saveEvaluationsToStorage(updatedProjects);
+        return updatedProjects;
+      });
+      
       if (currentProject?.id === id) {
         setCurrentProject(null);
       }
@@ -299,7 +196,8 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         saveProject,
         deleteProject,
         calculateProjectScore,
-        loading
+        loading,
+        refreshData
       }}
     >
       {children}

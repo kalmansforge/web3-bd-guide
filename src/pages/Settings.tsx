@@ -3,21 +3,23 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
 import { AlertCircle, Save, Undo } from "lucide-react";
 import { useThresholds } from "@/contexts/ThresholdContext";
+import { useEvaluation } from "@/contexts/EvaluationContext";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { metricsData } from "@/data/metricsData";
 import AppLayout from "@/components/layout/AppLayout";
 import PageHeader from "@/components/ui/PageHeader";
+import DataImportExport from "@/components/ui/DataImportExport";
 
 const Settings = () => {
-  const { thresholds, loading, updateThreshold, saveChanges, resetChanges, unsavedChanges } = useThresholds();
+  const { thresholds, loading, updateThreshold, saveChanges, resetChanges, unsavedChanges, refreshData: refreshThresholds } = useThresholds();
+  const { refreshData: refreshEvaluations } = useEvaluation();
   const [activeTab, setActiveTab] = useState("config");
   
   const handleThresholdChange = (
@@ -60,6 +62,11 @@ const Settings = () => {
     return "";
   };
 
+  const handleDataImported = () => {
+    refreshThresholds();
+    refreshEvaluations();
+  };
+
   return (
     <AppLayout>
       <PageHeader
@@ -70,9 +77,9 @@ const Settings = () => {
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-4">
           <TabsTrigger value="config">Threshold Configuration</TabsTrigger>
+          <TabsTrigger value="data">Data Management</TabsTrigger>
           <TabsTrigger value="account">Account Settings</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="advanced">Advanced</TabsTrigger>
         </TabsList>
         
@@ -106,7 +113,7 @@ const Settings = () => {
           </div>
           
           {unsavedChanges && (
-            <Alert variant="warning" className="bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
+            <Alert className="bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Unsaved Changes</AlertTitle>
               <AlertDescription>
@@ -202,6 +209,92 @@ const Settings = () => {
           )}
         </TabsContent>
         
+        <TabsContent value="data" className="space-y-4">
+          <div>
+            <h2 className="text-2xl font-semibold mb-2">Data Management</h2>
+            <p className="text-muted-foreground">Export and import your evaluation data and configurations</p>
+          </div>
+          
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-4">
+              <DataImportExport onDataImported={handleDataImported} />
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Local Storage</CardTitle>
+                  <CardDescription>
+                    Information about your locally stored data
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-sm font-medium mb-1">Data Privacy</h3>
+                      <p className="text-sm text-muted-foreground">
+                        All your evaluation data and threshold configurations are stored locally in your browser.
+                        No sensitive data is sent to our servers.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-sm font-medium mb-1">Data Security</h3>
+                      <p className="text-sm text-muted-foreground">
+                        To ensure your data is not lost, regularly export it and keep a backup.
+                        Clearing your browser cache or history will remove locally stored data.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Storage Usage</CardTitle>
+                <CardDescription>
+                  Overview of your local storage usage
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <h3 className="text-sm font-medium">Project Evaluations</h3>
+                    <span className="text-sm text-muted-foreground">{thresholds.length} items</span>
+                  </div>
+                  <div className="h-2 bg-muted rounded overflow-hidden">
+                    <div 
+                      className="h-full bg-primary" 
+                      style={{ width: `${Math.min(100, (thresholds.length / 100) * 100)}%` }} 
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <h3 className="text-sm font-medium">Threshold Configurations</h3>
+                    <span className="text-sm text-muted-foreground">{thresholds.length} items</span>
+                  </div>
+                  <div className="h-2 bg-muted rounded overflow-hidden">
+                    <div 
+                      className="h-full bg-primary" 
+                      style={{ width: `${Math.min(100, (thresholds.length / 100) * 100)}%` }} 
+                    />
+                  </div>
+                </div>
+                
+                <div className="pt-2 mt-4 border-t border-border">
+                  <h3 className="text-sm font-medium mb-2">Browser Storage Information</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Modern browsers typically allocate 5-10MB of local storage per domain.
+                    Your evaluation data is designed to be efficient and should not exceed this limit 
+                    for typical usage.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
         <TabsContent value="account">
           <Card>
             <CardHeader>
@@ -226,20 +319,6 @@ const Settings = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">Appearance settings will be available in a future update.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
-              <CardDescription>
-                Configure how and when you receive notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">Notification settings will be available in a future update.</p>
             </CardContent>
           </Card>
         </TabsContent>
