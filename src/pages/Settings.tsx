@@ -1,12 +1,12 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertCircle, Save, Undo } from "lucide-react";
+import { AlertCircle, Save, Undo, Moon, Sun, Laptop, Database, HardDrive } from "lucide-react";
 import { useThresholds } from "@/contexts/ThresholdContext";
 import { useEvaluation } from "@/contexts/EvaluationContext";
 import { Badge } from "@/components/ui/badge";
@@ -16,11 +16,34 @@ import { metricsData } from "@/data/metricsData";
 import AppLayout from "@/components/layout/AppLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import DataImportExport from "@/components/ui/DataImportExport";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
+import { toast } from "@/hooks/use-toast";
+import { 
+  calculateStorageSize, 
+  getAppearanceFromStorage, 
+  saveAppearanceToStorage,
+  AppearanceSettings,
+  defaultAppearanceSettings 
+} from "@/utils/localStorageUtils";
 
 const Settings = () => {
   const { thresholds, loading, updateThreshold, saveChanges, resetChanges, unsavedChanges, refreshData: refreshThresholds } = useThresholds();
-  const { refreshData: refreshEvaluations } = useEvaluation();
+  const { projects, refreshData: refreshEvaluations } = useEvaluation();
   const [activeTab, setActiveTab] = useState("config");
+  const [storageInfo, setStorageInfo] = useState(calculateStorageSize());
+  const [appearanceSettings, setAppearanceSettings] = useState<AppearanceSettings>(defaultAppearanceSettings);
+  const [unsavedAppearanceChanges, setUnsavedAppearanceChanges] = useState(false);
+  
+  useEffect(() => {
+    // Load appearance settings
+    const settings = getAppearanceFromStorage();
+    setAppearanceSettings(settings);
+    
+    // Update storage information
+    setStorageInfo(calculateStorageSize());
+  }, []);
   
   const handleThresholdChange = (
     metricId: string,
@@ -65,6 +88,51 @@ const Settings = () => {
   const handleDataImported = () => {
     refreshThresholds();
     refreshEvaluations();
+    setStorageInfo(calculateStorageSize());
+    // Reload appearance settings
+    const settings = getAppearanceFromStorage();
+    setAppearanceSettings(settings);
+  };
+  
+  const updateAppearanceSetting = <K extends keyof AppearanceSettings>(
+    key: K, 
+    value: AppearanceSettings[K]
+  ) => {
+    setAppearanceSettings(prev => ({
+      ...prev,
+      [key]: value,
+      updatedAt: new Date().toISOString()
+    }));
+    setUnsavedAppearanceChanges(true);
+  };
+  
+  const saveAppearanceChanges = () => {
+    const success = saveAppearanceToStorage(appearanceSettings);
+    if (success) {
+      setUnsavedAppearanceChanges(false);
+      toast({
+        title: "Appearance settings saved",
+        description: "Your appearance preferences have been saved successfully"
+      });
+      // Update storage info
+      setStorageInfo(calculateStorageSize());
+    } else {
+      toast({
+        title: "Error saving appearance settings",
+        description: "Please try again later",
+        variant: "destructive"
+      });
+    }
+  };
+  
+  const resetAppearanceChanges = () => {
+    const settings = getAppearanceFromStorage();
+    setAppearanceSettings(settings);
+    setUnsavedAppearanceChanges(false);
+    toast({
+      title: "Changes discarded",
+      description: "Appearance settings have been reset to their previous state"
+    });
   };
 
   return (
@@ -75,12 +143,10 @@ const Settings = () => {
       />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-4">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 mb-4">
           <TabsTrigger value="config">Threshold Configuration</TabsTrigger>
           <TabsTrigger value="data">Data Management</TabsTrigger>
-          <TabsTrigger value="account">Account Settings</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          <TabsTrigger value="advanced">Advanced</TabsTrigger>
         </TabsList>
         
         <TabsContent value="config" className="space-y-4">
@@ -249,8 +315,11 @@ const Settings = () => {
             </div>
             
             <Card>
-              <CardHeader>
-                <CardTitle>Storage Usage</CardTitle>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center">
+                  <HardDrive className="h-5 w-5 mr-2" />
+                  Storage Usage
+                </CardTitle>
                 <CardDescription>
                   Overview of your local storage usage
                 </CardDescription>
@@ -259,12 +328,14 @@ const Settings = () => {
                 <div>
                   <div className="flex justify-between mb-1">
                     <h3 className="text-sm font-medium">Project Evaluations</h3>
-                    <span className="text-sm text-muted-foreground">{thresholds.length} items</span>
+                    <span className="text-sm text-muted-foreground">
+                      {projects.length} items ({(storageInfo.evaluationsSize / 1024).toFixed(1)} KB)
+                    </span>
                   </div>
                   <div className="h-2 bg-muted rounded overflow-hidden">
                     <div 
                       className="h-full bg-primary" 
-                      style={{ width: `${Math.min(100, (thresholds.length / 100) * 100)}%` }} 
+                      style={{ width: `${Math.min(100, (storageInfo.evaluationsSize / storageInfo.totalSize * 100) || 0)}%` }} 
                     />
                   </div>
                 </div>
@@ -272,69 +343,318 @@ const Settings = () => {
                 <div>
                   <div className="flex justify-between mb-1">
                     <h3 className="text-sm font-medium">Threshold Configurations</h3>
-                    <span className="text-sm text-muted-foreground">{thresholds.length} items</span>
+                    <span className="text-sm text-muted-foreground">
+                      {thresholds.length} items ({(storageInfo.thresholdsSize / 1024).toFixed(1)} KB)
+                    </span>
                   </div>
                   <div className="h-2 bg-muted rounded overflow-hidden">
                     <div 
                       className="h-full bg-primary" 
-                      style={{ width: `${Math.min(100, (thresholds.length / 100) * 100)}%` }} 
+                      style={{ width: `${Math.min(100, (storageInfo.thresholdsSize / storageInfo.totalSize * 100) || 0)}%` }} 
                     />
                   </div>
                 </div>
                 
-                <div className="pt-2 mt-4 border-t border-border">
-                  <h3 className="text-sm font-medium mb-2">Browser Storage Information</h3>
-                  <p className="text-xs text-muted-foreground">
-                    Modern browsers typically allocate 5-10MB of local storage per domain.
-                    Your evaluation data is designed to be efficient and should not exceed this limit 
-                    for typical usage.
-                  </p>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <h3 className="text-sm font-medium">Appearance Settings</h3>
+                    <span className="text-sm text-muted-foreground">
+                      ({(storageInfo.appearanceSize / 1024).toFixed(1)} KB)
+                    </span>
+                  </div>
+                  <div className="h-2 bg-muted rounded overflow-hidden">
+                    <div 
+                      className="h-full bg-primary" 
+                      style={{ width: `${Math.min(100, (storageInfo.appearanceSize / storageInfo.totalSize * 100) || 0)}%` }} 
+                    />
+                  </div>
                 </div>
+                
+                <Separator className="my-2" />
+                
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <h3 className="text-sm font-medium">Total Storage Used</h3>
+                    <span className="text-sm font-medium text-primary">
+                      {storageInfo.totalSizeFormatted} ({storageInfo.percentUsed.toFixed(1)}% of 5MB)
+                    </span>
+                  </div>
+                  <div className="h-3 bg-muted rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full ${storageInfo.percentUsed > 80 ? 'bg-destructive' : 'bg-primary'}`}
+                      style={{ width: `${storageInfo.percentUsed}%` }} 
+                    />
+                  </div>
+                </div>
+                
+                <Alert className="mt-4 bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800">
+                  <Database className="h-4 w-4" />
+                  <AlertTitle>Browser Storage Limits</AlertTitle>
+                  <AlertDescription className="text-xs">
+                    Most browsers limit local storage to 5MB per domain. If you're approaching this limit,
+                    consider exporting and then clearing some old evaluations.
+                  </AlertDescription>
+                </Alert>
               </CardContent>
             </Card>
           </div>
         </TabsContent>
         
-        <TabsContent value="account">
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Settings</CardTitle>
-              <CardDescription>
-                Manage your account information and preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">Account settings will be available in a future update.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
         <TabsContent value="appearance">
-          <Card>
-            <CardHeader>
-              <CardTitle>Appearance Settings</CardTitle>
-              <CardDescription>
-                Customize the appearance and theme of your application
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">Appearance settings will be available in a future update.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="advanced">
-          <Card>
-            <CardHeader>
-              <CardTitle>Advanced Settings</CardTitle>
-              <CardDescription>
-                Configure advanced application settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">Advanced settings will be available in a future update.</p>
-            </CardContent>
-          </Card>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-2xl font-semibold">Appearance Settings</h2>
+              <p className="text-muted-foreground">Customize the appearance and theme of your application</p>
+            </div>
+            
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                onClick={resetAppearanceChanges}
+                disabled={!unsavedAppearanceChanges}
+                className="flex items-center gap-2"
+              >
+                <Undo className="h-4 w-4" />
+                Reset
+              </Button>
+              
+              <Button
+                onClick={saveAppearanceChanges}
+                disabled={!unsavedAppearanceChanges}
+                className="flex items-center gap-2"
+              >
+                <Save className="h-4 w-4" />
+                Save Changes
+              </Button>
+            </div>
+          </div>
+          
+          {unsavedAppearanceChanges && (
+            <Alert className="mb-6 bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Unsaved Changes</AlertTitle>
+              <AlertDescription>
+                You have unsaved changes to your appearance settings. Be sure to save them before leaving this page.
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Theme</CardTitle>
+                <CardDescription>
+                  Select your preferred color theme
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label>Theme Mode</Label>
+                  <RadioGroup 
+                    value={appearanceSettings.theme} 
+                    onValueChange={(value) => updateAppearanceSetting('theme', value as 'light' | 'dark' | 'system')}
+                    className="grid grid-cols-3 gap-4"
+                  >
+                    <div>
+                      <RadioGroupItem value="light" id="theme-light" className="peer sr-only" />
+                      <Label
+                        htmlFor="theme-light"
+                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <Sun className="h-6 w-6 mb-2" />
+                        <span>Light</span>
+                      </Label>
+                    </div>
+                    
+                    <div>
+                      <RadioGroupItem value="dark" id="theme-dark" className="peer sr-only" />
+                      <Label
+                        htmlFor="theme-dark"
+                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <Moon className="h-6 w-6 mb-2" />
+                        <span>Dark</span>
+                      </Label>
+                    </div>
+                    
+                    <div>
+                      <RadioGroupItem value="system" id="theme-system" className="peer sr-only" />
+                      <Label
+                        htmlFor="theme-system"
+                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <Laptop className="h-6 w-6 mb-2" />
+                        <span>System</span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Color Scheme</Label>
+                  <RadioGroup 
+                    value={appearanceSettings.colorScheme} 
+                    onValueChange={(value) => updateAppearanceSetting('colorScheme', value as 'default' | 'purple' | 'blue' | 'green')}
+                    className="grid grid-cols-4 gap-2"
+                  >
+                    <div>
+                      <RadioGroupItem value="default" id="color-default" className="peer sr-only" />
+                      <Label
+                        htmlFor="color-default"
+                        className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <span className="h-10 w-10 rounded-full bg-primary" />
+                      </Label>
+                    </div>
+                    
+                    <div>
+                      <RadioGroupItem value="purple" id="color-purple" className="peer sr-only" />
+                      <Label
+                        htmlFor="color-purple"
+                        className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <span className="h-10 w-10 rounded-full bg-purple-500" />
+                      </Label>
+                    </div>
+                    
+                    <div>
+                      <RadioGroupItem value="blue" id="color-blue" className="peer sr-only" />
+                      <Label
+                        htmlFor="color-blue"
+                        className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <span className="h-10 w-10 rounded-full bg-blue-500" />
+                      </Label>
+                    </div>
+                    
+                    <div>
+                      <RadioGroupItem value="green" id="color-green" className="peer sr-only" />
+                      <Label
+                        htmlFor="color-green"
+                        className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        <span className="h-10 w-10 rounded-full bg-green-500" />
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>UI Preferences</CardTitle>
+                <CardDescription>
+                  Adjust the user interface to your preferences
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-base">Font Size</Label>
+                    <RadioGroup 
+                      value={appearanceSettings.fontSize} 
+                      onValueChange={(value) => updateAppearanceSetting('fontSize', value as 'small' | 'medium' | 'large')}
+                      className="grid grid-cols-3 gap-2 mt-2"
+                    >
+                      <div>
+                        <RadioGroupItem value="small" id="font-small" className="peer sr-only" />
+                        <Label
+                          htmlFor="font-small"
+                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary text-sm"
+                        >
+                          Small
+                        </Label>
+                      </div>
+                      
+                      <div>
+                        <RadioGroupItem value="medium" id="font-medium" className="peer sr-only" />
+                        <Label
+                          htmlFor="font-medium"
+                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          Medium
+                        </Label>
+                      </div>
+                      
+                      <div>
+                        <RadioGroupItem value="large" id="font-large" className="peer sr-only" />
+                        <Label
+                          htmlFor="font-large"
+                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary text-lg"
+                        >
+                          Large
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-base">Border Radius</Label>
+                    <RadioGroup 
+                      value={appearanceSettings.borderRadius} 
+                      onValueChange={(value) => updateAppearanceSetting('borderRadius', value as 'none' | 'small' | 'medium' | 'large')}
+                      className="grid grid-cols-4 gap-2 mt-2"
+                    >
+                      <div>
+                        <RadioGroupItem value="none" id="radius-none" className="peer sr-only" />
+                        <Label
+                          htmlFor="radius-none"
+                          className="flex aspect-square flex-col items-center justify-center rounded-none border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          <div className="h-10 w-10 bg-primary/20" />
+                        </Label>
+                      </div>
+                      
+                      <div>
+                        <RadioGroupItem value="small" id="radius-small" className="peer sr-only" />
+                        <Label
+                          htmlFor="radius-small"
+                          className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          <div className="h-10 w-10 rounded-sm bg-primary/20" />
+                        </Label>
+                      </div>
+                      
+                      <div>
+                        <RadioGroupItem value="medium" id="radius-medium" className="peer sr-only" />
+                        <Label
+                          htmlFor="radius-medium"
+                          className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          <div className="h-10 w-10 rounded-md bg-primary/20" />
+                        </Label>
+                      </div>
+                      
+                      <div>
+                        <RadioGroupItem value="large" id="radius-large" className="peer sr-only" />
+                        <Label
+                          htmlFor="radius-large"
+                          className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          <div className="h-10 w-10 rounded-full bg-primary/20" />
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-3">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="animation">Animation Effects</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Enable UI animation effects
+                      </p>
+                    </div>
+                    <Switch
+                      id="animation"
+                      checked={appearanceSettings.animation}
+                      onCheckedChange={(checked) => updateAppearanceSetting('animation', checked)}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </AppLayout>
