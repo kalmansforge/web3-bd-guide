@@ -18,6 +18,7 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import Teams from "./pages/Teams";
+import RiskAssessment from "./pages/RiskAssessment";
 import { useState } from "react";
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/guide" element={<AuthGuard><Guide /></AuthGuard>} />
                   <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
                   <Route path="/teams" element={<AuthGuard><Teams /></AuthGuard>} />
+                  <Route path="/risks" element={<AuthGuard><RiskAssessment /></AuthGuard>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </EvaluationProvider>
