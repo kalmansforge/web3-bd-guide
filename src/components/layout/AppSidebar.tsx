@@ -12,7 +12,8 @@ import {
   GitBranch, 
   FileText,
   LogOut, 
-  User
+  User,
+  Settings
 } from "lucide-react";
 import {
   Sidebar,
@@ -75,6 +76,7 @@ const navItems = [
   { title: "Guide", icon: BookOpen, path: "/guide" },
   { title: "Teams", icon: Users, path: "/teams" },
   { title: "Risk Assessment", icon: Shield, path: "/risks" },
+  { title: "Settings", icon: Settings, path: "/settings" },
 ];
 
 const AppSidebar = () => {

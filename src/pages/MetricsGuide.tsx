@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, ExternalLink, Search } from "lucide-react";
+import { ArrowLeft, ExternalLink, Search, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,11 +11,13 @@ import { Separator } from "@/components/ui/separator";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { metricsData } from "@/data/metricsData";
+import { useThresholds } from "@/contexts/ThresholdContext";
 
 const MetricsGuide = () => {
   const { categoryId = "foundational" } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = React.useState("");
+  const { thresholds, loading } = useThresholds();
   
   const category = metricsData.find(c => c.id === categoryId);
   if (!category) {
@@ -29,11 +31,38 @@ const MetricsGuide = () => {
         m.description.toLowerCase().includes(searchQuery.toLowerCase()))
     : category.metrics;
 
+  const getThresholdValue = (metricId: string, tier: "T0" | "T1") => {
+    // If not yet loaded, use the default values
+    if (loading || thresholds.length === 0) {
+      const metric = category.metrics.find(m => m.id === metricId);
+      return metric ? metric.thresholds[tier] : "";
+    }
+    
+    // Use custom threshold if available
+    const threshold = thresholds.find(
+      t => t.metricId === metricId && t.categoryId === category.id
+    );
+    
+    if (threshold) {
+      return tier === "T0" ? threshold.t0Threshold : threshold.t1Threshold;
+    }
+    
+    // Fallback to default
+    const metric = category.metrics.find(m => m.id === metricId);
+    return metric ? metric.thresholds[tier] : "";
+  };
+
   return (
     <AppLayout>
       <PageHeader
         title="Metrics Guide"
         description="Comprehensive reference for BD evaluation metrics and frameworks"
+        actions={
+          <Button onClick={() => navigate("/settings")} variant="outline" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            Configure Thresholds
+          </Button>
+        }
       />
       
       <div className="flex items-center mb-8">
@@ -93,7 +122,7 @@ const MetricsGuide = () => {
                           </Badge>
                           <span className="text-sm font-medium">Strategic Tier</span>
                         </div>
-                        <p className="text-sm text-muted-foreground">{metric.thresholds.T0}</p>
+                        <p className="text-sm text-muted-foreground">{getThresholdValue(metric.id, "T0")}</p>
                       </div>
                       
                       <div className="space-y-2">
@@ -103,7 +132,7 @@ const MetricsGuide = () => {
                           </Badge>
                           <span className="text-sm font-medium">Secondary Tier</span>
                         </div>
-                        <p className="text-sm text-muted-foreground">{metric.thresholds.T1}</p>
+                        <p className="text-sm text-muted-foreground">{getThresholdValue(metric.id, "T1")}</p>
                       </div>
                     </div>
                   </div>
