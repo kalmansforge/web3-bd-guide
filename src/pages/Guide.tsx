@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, BarChart2, Shield, Database, Users, LineChart } from "lucide-react";
+import { ArrowRight, BarChart2, Shield, Database, Users, LineChart, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -28,7 +28,7 @@ const GuideSection = ({ title, description, icon: Icon, link, linkText }: {
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          This section provides comprehensive guidance on evaluating {title.toLowerCase()} aspects of Web3 projects for business development professionals.
+          Learn how to evaluate {title.toLowerCase()} aspects of Web3 projects.
         </p>
       </CardContent>
       <CardFooter>
@@ -58,25 +58,30 @@ const Guide = () => {
         <h2>Introduction</h2>
         <p>
           This guide provides a structured, data-driven approach to evaluating blockchain/Web3 projects, 
-          enabling BD teams to make informed, strategic decisions based on clear metrics and objective criteria.
+          enabling BD teams to make informed decisions based on clear metrics and objective criteria.
         </p>
         
-        <h3>Why Metrics Matter in Web3 Business Development</h3>
-        <p>
-          Metrics offer clarity in an inherently complex and dynamic environment. By leveraging objective and 
-          quantifiable benchmarks, BD professionals can assess project strengths, potential risks, and strategic 
-          alignment efficiently. This structured approach reduces uncertainty, enhances decision-making, and 
-          fosters meaningful partnerships.
-        </p>
-        
-        <h3>T0/T1 Classification</h3>
-        <p>
-          Projects are classified into two tiers:
-        </p>
-        <ul>
-          <li><strong>T0 (Strategic Tier):</strong> Projects meeting or exceeding high-threshold benchmarks, indicating strategic importance and significant potential.</li>
-          <li><strong>T1 (Secondary Tier):</strong> Projects meeting lower-threshold benchmarks, with moderate potential or requiring further development.</li>
-        </ul>
+        <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-4 sm:space-y-0 my-6">
+          <div className="flex-1 bg-muted/30 rounded-lg p-4">
+            <h3 className="text-lg font-medium mb-2">T0/T1 Classification</h3>
+            <p className="text-sm text-muted-foreground">
+              <strong>T0 (Strategic Tier):</strong> Projects meeting high-threshold benchmarks, indicating strategic importance.
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              <strong>T1 (Secondary Tier):</strong> Projects meeting lower-threshold benchmarks, with moderate potential.
+            </p>
+          </div>
+          
+          <div className="flex-1 bg-muted/30 rounded-lg p-4">
+            <h3 className="text-lg font-medium mb-2">How To Use</h3>
+            <ol className="text-sm text-muted-foreground list-decimal list-inside space-y-1">
+              <li>Start with foundational metrics assessment</li>
+              <li>Evaluate product, financial, and ecosystem metrics</li>
+              <li>Assess strategic alignment and risks</li>
+              <li>Calculate final score and tier classification</li>
+            </ol>
+          </div>
+        </div>
       </div>
       
       <Separator className="my-8" />
@@ -85,42 +90,42 @@ const Guide = () => {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-8">
         <GuideSection 
           title="Foundational Metrics" 
-          description="Baseline indicators of a project's strength and viability" 
+          description="Baseline indicators of project strength" 
           icon={Database}
           link="/metrics/foundational"
           linkText="View Foundational Metrics"
         />
         <GuideSection 
           title="Product Metrics" 
-          description="Measures of product strength and market acceptance" 
+          description="Measures of product quality and adoption" 
           icon={BarChart2}
           link="/metrics/product"
           linkText="View Product Metrics"
         />
         <GuideSection 
           title="Financial Metrics" 
-          description="Evaluation of economic sustainability and token design" 
+          description="Economic sustainability indicators" 
           icon={LineChart}
           link="/metrics/financial"
           linkText="View Financial Metrics"
         />
         <GuideSection 
           title="Strategic Alignment" 
-          description="Assessment of positioning within industry verticals" 
+          description="Positioning within industry verticals" 
           icon={ArrowRight}
           link="/metrics/strategic"
           linkText="View Strategic Metrics"
         />
         <GuideSection 
           title="Ecosystem & Community" 
-          description="Health and engagement of project community" 
+          description="Health of project community" 
           icon={Users}
           link="/metrics/ecosystem"
           linkText="View Ecosystem Metrics"
         />
         <GuideSection 
           title="Risk Metrics" 
-          description="Indicators of potential issues and red flags" 
+          description="Potential issues and red flags" 
           icon={Shield}
           link="/metrics/risk"
           linkText="View Risk Metrics"
@@ -129,36 +134,22 @@ const Guide = () => {
       
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>How to Use This Guide Effectively</CardTitle>
+          <CardTitle>Get Started</CardTitle>
+          <CardDescription>Begin evaluating blockchain projects with our structured approach</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">1. Project Assessment Workflow</h3>
-            <p className="text-muted-foreground">Follow these steps for thorough project evaluation:</p>
-            <ul className="list-disc pl-6 space-y-1">
-              <li className="text-muted-foreground">Initial screening based on foundational metrics</li>
-              <li className="text-muted-foreground">Deep-dive into product, financial, strategic alignment, and ecosystem metrics</li>
-              <li className="text-muted-foreground">Risk assessment through clearly defined risk metrics</li>
-            </ul>
-          </div>
-          
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">2. Tier Classification</h3>
-            <p className="text-muted-foreground">
-              Use the T0/T1 thresholds to classify projects and prioritize strategic partnerships accordingly.
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">3. Regular Reassessment</h3>
-            <p className="text-muted-foreground">
-              The Web3 landscape evolves rapidly. Schedule regular reassessments of evaluated projects to track progress.
-            </p>
-          </div>
+          <p className="text-muted-foreground">
+            Ready to evaluate a project? Start a new evaluation and work through each metric category systematically.
+            Share your evaluations with team members to collaborate on project assessments.
+          </p>
         </CardContent>
-        <CardFooter>
-          <Button className="w-full" onClick={() => navigate("/evaluation/new")}>
-            Start a New Project Evaluation
+        <CardFooter className="flex flex-col sm:flex-row gap-3">
+          <Button className="w-full sm:w-auto" onClick={() => navigate("/evaluation/new")}>
+            New Evaluation
+          </Button>
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => navigate("/teams")}>
+            <Users className="mr-2 h-4 w-4" />
+            Manage Teams
           </Button>
         </CardFooter>
       </Card>
