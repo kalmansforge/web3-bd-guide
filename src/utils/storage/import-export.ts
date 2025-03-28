@@ -2,6 +2,7 @@
 import { getAppearanceFromStorage, saveAppearanceToStorage } from "./appearance";
 import { getEvaluationsFromStorage, saveEvaluationsToStorage } from "./evaluations";
 import { getThresholdsFromStorage, saveThresholdsToStorage } from "./thresholds";
+import { getTemplatesFromStorage, saveTemplatesToStorage } from "./templates";
 
 /**
  * Export all data to a downloadable JSON file
@@ -11,11 +12,13 @@ export const exportAllData = (): boolean => {
     const evaluations = getEvaluationsFromStorage();
     const thresholds = getThresholdsFromStorage();
     const appearance = getAppearanceFromStorage();
+    const templates = getTemplatesFromStorage();
     
     const exportData = {
       evaluations,
       thresholds,
       appearance,
+      templates,
       exportDate: new Date().toISOString(),
       version: '1.0',
     };
@@ -41,7 +44,7 @@ export const exportAllData = (): boolean => {
  * Import data from a JSON string
  * Can handle both complete exports and single evaluation exports
  */
-export const importData = (jsonData: string): { success: boolean; type: 'complete' | 'evaluation' | 'unknown' } => {
+export const importData = (jsonData: string): { success: boolean; type: 'complete' | 'evaluation' | 'template' | 'unknown' } => {
   try {
     const parsedData = JSON.parse(jsonData);
     
@@ -72,6 +75,12 @@ export const importData = (jsonData: string): { success: boolean; type: 'complet
         return { success: true, type: 'evaluation' };
       }
       
+      // Handle template import
+      if (parsedData.id && parsedData.categories && parsedData.name) {
+        // This looks like a template
+        return { success: true, type: 'template' };
+      }
+      
       // Complete export with thresholds
       if (parsedData.thresholds && Array.isArray(parsedData.thresholds)) {
         saveEvaluationsToStorage(parsedData.evaluations);
@@ -80,6 +89,11 @@ export const importData = (jsonData: string): { success: boolean; type: 'complet
         // Import appearance settings if available
         if (parsedData.appearance) {
           saveAppearanceToStorage(parsedData.appearance);
+        }
+        
+        // Import templates if available
+        if (parsedData.templates && parsedData.templates.templates && Array.isArray(parsedData.templates.templates)) {
+          saveTemplatesToStorage(parsedData.templates);
         }
         
         return { success: true, type: 'complete' };

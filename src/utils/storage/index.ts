@@ -5,3 +5,4 @@ export * from './evaluations';
 export * from './thresholds';
 export * from './appearance';
 export * from './import-export';
+export * from './templates';

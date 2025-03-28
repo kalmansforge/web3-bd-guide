@@ -4,8 +4,8 @@ import { Settings, Filter, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
-import { metricsData } from "@/data/metricsData";
 import { useThresholds } from "@/contexts/ThresholdContext";
+import { useTemplates } from "@/contexts/TemplateContext";
 import { getAllTierNames } from "@/utils/storage";
 import MetricsSearch from "@/components/metrics-guide/MetricsSearch";
 import MetricsCategoryTabs from "@/components/metrics-guide/MetricsCategoryTabs";
@@ -20,37 +20,62 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 const MetricsGuide = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<string>("foundational");
-  const [evaluationFilter, setEvaluationFilter] = useState<string>("all");
   const [notesFilter, setNotesFilter] = useState<string>("all");
-  const { thresholds, loading } = useThresholds();
+  const { thresholds, loading: thresholdsLoading } = useThresholds();
+  const { activeTemplate, loading: templateLoading } = useTemplates();
   const tierNames = getAllTierNames();
+  
+  // Initialize activeTab with the first category from the template
+  const [activeTab, setActiveTab] = useState<string>(
+    activeTemplate?.categories[0]?.id || ""
+  );
+  
+  useEffect(() => {
+    // Update active tab when template changes
+    if (activeTemplate && activeTemplate.categories.length > 0) {
+      setActiveTab(activeTemplate.categories[0].id);
+    }
+  }, [activeTemplate]);
   
   useEffect(() => {
     console.log("Current Tier Names:", tierNames);
     console.log("Current Thresholds:", thresholds);
-  }, [tierNames, thresholds]);
+    console.log("Current Template:", activeTemplate);
+  }, [tierNames, thresholds, activeTemplate]);
+  
+  if (templateLoading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center h-[50vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p>Loading metrics template...</p>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
   
   // Find the active category or default to the first one
-  const category = metricsData.find(c => c.id === activeTab) || metricsData[0];
+  const category = activeTemplate.categories.find(c => c.id === activeTab) || activeTemplate.categories[0];
   
-  // Filter metrics based on all criteria (search, evaluation filter, notes filter)
+  // Filter metrics based on all criteria (search, notes filter)
   const filteredMetrics = category?.metrics.filter(metric => {
     // Text search filter
     const matchesSearch = !searchQuery || 
       metric.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
       metric.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // In the metrics guide, we don't have evaluated metrics yet, so this filter doesn't apply directly
-    // We'll keep it in the UI for consistency but it won't filter anything
+    // Notes filter (not implemented yet, will be part of project evaluations)
+    const matchesNotes = notesFilter === "all" || false; // Will be updated when we have notes
     
-    return matchesSearch;
+    return matchesSearch && (notesFilter === "all" || matchesNotes);
   }) || [];
 
   const getThresholdValue = (metricId: string, tier: string) => {
     if (!category || !tier) return "No threshold defined";
     
-    if (loading || !thresholds.length) {
+    if (thresholdsLoading || !thresholds.length) {
       const metric = category.metrics.find(m => m.id === metricId);
       return metric?.thresholds[tier] || "No threshold defined";
     }
@@ -74,13 +99,19 @@ const MetricsGuide = () => {
   return (
     <AppLayout>
       <PageHeader
-        title="Metrics Guide"
-        description="Comprehensive reference for BD evaluation metrics and frameworks"
+        title={`Metrics Guide: ${activeTemplate.name}`}
+        description={activeTemplate.description}
         actions={
-          <Button onClick={() => navigate("/settings")} variant="outline" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            Configure Thresholds
-          </Button>
+          <div className="flex gap-2 flex-wrap">
+            <Button onClick={() => navigate("/templates")} variant="outline" className="flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              Manage Templates
+            </Button>
+            <Button onClick={() => navigate("/settings")} variant="outline" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Configure Thresholds
+            </Button>
+          </div>
         }
       />
       
@@ -104,7 +135,7 @@ const MetricsGuide = () => {
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                {metricsData.map((category, index) => (
+                {activeTemplate.categories.map((category, index) => (
                   <SelectItem key={category.id} value={category.id}>
                     {index + 1}. {category.name}
                   </SelectItem>
@@ -114,24 +145,7 @@ const MetricsGuide = () => {
           </div>
           
           <div className="w-full md:w-2/3">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label className="mb-2 block text-sm font-medium">
-                  <Filter className="inline mr-2 h-4 w-4" />
-                  Filter by Evaluation Status
-                </Label>
-                <ToggleGroup 
-                  type="single" 
-                  value={evaluationFilter} 
-                  onValueChange={(value) => value && setEvaluationFilter(value)}
-                  className="justify-start"
-                >
-                  <ToggleGroupItem value="all" aria-label="Show all metrics">All</ToggleGroupItem>
-                  <ToggleGroupItem value="evaluated" aria-label="Show evaluated metrics">Evaluated</ToggleGroupItem>
-                  <ToggleGroupItem value="not-evaluated" aria-label="Show not evaluated metrics">Not Evaluated</ToggleGroupItem>
-                </ToggleGroup>
-              </div>
-              
+            <div className="grid grid-cols-1 gap-4">
               <div>
                 <Label className="mb-2 block text-sm font-medium">
                   <MessageSquare className="inline mr-2 h-4 w-4" />
@@ -155,7 +169,7 @@ const MetricsGuide = () => {
       
       {/* Keep the category tabs for easy switching between categories */}
       <MetricsCategoryTabs 
-        categories={metricsData} 
+        categories={activeTemplate.categories} 
         activeTab={activeTab} 
         onTabChange={setActiveTab} 
       />

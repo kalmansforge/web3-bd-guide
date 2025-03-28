@@ -1,10 +1,12 @@
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppLayout from "@/components/layout/AppLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import { useThresholds } from "@/contexts/ThresholdContext";
 import { useEvaluation } from "@/contexts/EvaluationContext";
+import { useTemplates } from "@/contexts/TemplateContext";
 import { 
   calculateStorageSize, 
   getAppearanceFromStorage, 
@@ -17,10 +19,14 @@ import ThresholdConfigTab from "@/components/settings/ThresholdConfigTab";
 import AppearanceTab from "@/components/settings/AppearanceTab";
 import TierNamesTab from "@/components/settings/TierNamesTab";
 import DataManagementTab from "@/components/settings/DataManagementTab";
+import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
 
 const Settings = () => {
+  const navigate = useNavigate();
   const { thresholds, refreshData: refreshThresholds } = useThresholds();
   const { projects, refreshData: refreshEvaluations } = useEvaluation();
+  const { templates, refreshData: refreshTemplates } = useTemplates();
   const [activeTab, setActiveTab] = useState("config");
   const [storageInfo, setStorageInfo] = useState(calculateStorageSize());
   const [appearanceSettings, setAppearanceSettings] = useState<AppearanceSettings>(defaultAppearanceSettings);
@@ -36,6 +42,7 @@ const Settings = () => {
   const handleDataImported = () => {
     refreshThresholds();
     refreshEvaluations();
+    refreshTemplates();
     setStorageInfo(calculateStorageSize());
     const settings = getAppearanceFromStorage();
     setAppearanceSettings(settings);
@@ -117,6 +124,12 @@ const Settings = () => {
       <PageHeader
         title="Settings"
         description="Configure application settings and thresholds"
+        actions={
+          <Button onClick={() => navigate('/templates')} variant="outline">
+            <FileText className="mr-2 h-4 w-4" />
+            Manage Templates
+          </Button>
+        }
       />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
