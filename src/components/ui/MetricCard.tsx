@@ -40,7 +40,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
   const effectiveCategory = category || categoryId || "";
   
   // Get tier names from the evaluation if available
-  const evalTier = evaluation?.tier || null;
+  const evalTier = evaluation?.tier || metric?.tier || null;
   const evalTierDisplay = evalTier ? getTierDisplayName(evalTier) : null;
 
   return (

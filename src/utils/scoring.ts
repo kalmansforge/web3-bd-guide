@@ -1,3 +1,4 @@
+
 import { ProjectEvaluation, MetricEvaluation, TierType } from "@/types/metrics";
 import { MetricCategory } from "@/types/metrics";
 import { getAllTierNames } from "@/utils/storage";
@@ -54,7 +55,7 @@ export const calculateProjectScore = (
 ): { score: number; tier: TierType; completedMetrics: number } => {
   if (!project) return { score: 0, tier: null, completedMetrics: 0 };
   
-  const metrics = Object.entries(project.metrics);
+  const metrics = Object.entries(project.metrics || {});
   if (metrics.length === 0) return { score: 0, tier: null, completedMetrics: 0 };
   
   let totalScore = 0;
@@ -143,7 +144,7 @@ export const getProjectCompletionData = (
   const totalMetrics = metricsData.reduce((acc, category) => 
     acc + category.metrics.length, 0);
     
-  const completedMetrics = Object.keys(project.metrics).length;
+  const completedMetrics = Object.keys(project?.metrics || {}).length;
   
   return { completedMetrics, totalMetrics };
 };
