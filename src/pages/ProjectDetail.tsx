@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit, FileText, DownloadIcon } from "lucide-react";
@@ -13,7 +14,7 @@ import MetricCard from "@/components/ui/MetricCard";
 import ProjectScoreCard from "@/components/ui/ProjectScoreCard";
 import { Metric, TierType } from "@/types/metrics";
 import { toast } from "sonner";
-import { exportAllData } from "@/utils/localStorageUtils";
+import { exportSingleEvaluation } from "@/utils/localStorageUtils";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,13 +44,13 @@ const ProjectDetail = () => {
   };
   
   const handleExportPDF = () => {
-    if (exportAllData()) {
+    if (exportSingleEvaluation(project.id)) {
       toast.success("Export successful", {
-        description: "Your evaluation data has been exported"
+        description: "Your evaluation has been exported to a JSON file"
       });
     } else {
       toast.error("Export failed", {
-        description: "There was a problem exporting your data"
+        description: "There was a problem exporting your evaluation"
       });
     }
   };

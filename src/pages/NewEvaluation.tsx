@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,9 +19,19 @@ const NewEvaluation = () => {
   const [projectName, setProjectName] = useState("");
   const [currentStep, setCurrentStep] = useState("project");
   const [activeCategory, setActiveCategory] = useState(metricsData[0].id);
+  const [isEditMode, setIsEditMode] = useState(false);
   
   const navigate = useNavigate();
   const { createProject, currentProject, updateMetric, saveProject, calculateProjectScore } = useEvaluation();
+  
+  // Check if we're in edit mode
+  useEffect(() => {
+    if (currentProject) {
+      setProjectName(currentProject.name);
+      setCurrentStep("evaluation");
+      setIsEditMode(true);
+    }
+  }, [currentProject]);
   
   const handleCreateProject = () => {
     if (!projectName.trim()) return;
@@ -65,7 +75,7 @@ const NewEvaluation = () => {
   return (
     <AppLayout>
       <PageHeader
-        title={currentProject ? `Evaluating: ${currentProject.name}` : "New Project Evaluation"}
+        title={isEditMode ? `Editing: ${currentProject?.name}` : (currentProject ? `Evaluating: ${currentProject.name}` : "New Project Evaluation")}
         description={currentProject 
           ? "Complete the evaluation by reviewing each metric category" 
           : "Start by entering the project name"

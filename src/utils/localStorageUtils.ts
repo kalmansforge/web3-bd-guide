@@ -1,4 +1,3 @@
-
 /**
  * Utility functions for working with local storage
  * Used to store evaluation data and threshold configurations locally
@@ -82,6 +81,39 @@ export const exportAllData = () => {
     return true;
   } catch (error) {
     console.error('Error exporting data:', error);
+    return false;
+  }
+};
+
+export const exportSingleEvaluation = (evaluationId: string) => {
+  try {
+    const evaluations = getEvaluationsFromStorage();
+    const evaluation = evaluations.find(e => e.id === evaluationId);
+    
+    if (!evaluation) {
+      return false;
+    }
+    
+    const exportData = {
+      evaluations: [evaluation],
+      exportDate: new Date().toISOString(),
+      version: '1.0',
+      type: 'single-evaluation'
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
+    
+    const exportFileName = `${evaluation.name.replace(/\s+/g, '_').toLowerCase()}_evaluation_${new Date().toISOString().split('T')[0]}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileName);
+    linkElement.click();
+    
+    return true;
+  } catch (error) {
+    console.error('Error exporting single evaluation:', error);
     return false;
   }
 };
