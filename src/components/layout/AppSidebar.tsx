@@ -1,6 +1,6 @@
 
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { 
   Gauge, 
   BarChart2, 
@@ -10,7 +10,9 @@ import {
   GitBranch, 
   FileText,
   Settings,
-  Shield
+  Shield,
+  PanelLeftClose,
+  PanelLeftOpen
 } from "lucide-react";
 import {
   Sidebar,
@@ -23,9 +25,10 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarTrigger,
+  useSidebar
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 // Simplified navigation data without nested children
 const navItems = [
@@ -55,16 +58,33 @@ const navItems = [
 ];
 
 const AppSidebar = () => {
-  const navigate = useNavigate();
+  const { state, toggleSidebar } = useSidebar();
+  const isExpanded = state === "expanded";
 
   return (
     <Sidebar>
       <SidebarHeader className="h-14 flex items-center px-6 justify-between">
         <div className="flex items-center space-x-2">
           <GitBranch className="h-5 w-5 text-primary" />
-          <span className="font-semibold text-base">Web3 BD Guide</span>
+          <span className={cn("font-semibold text-base transition-opacity", 
+            isExpanded ? "opacity-100" : "opacity-0"
+          )}>
+            Web3 BD Guide
+          </span>
         </div>
-        <SidebarTrigger />
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={toggleSidebar}
+          className="h-7 w-7"
+          aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
+        >
+          {isExpanded ? (
+            <PanelLeftClose className="h-5 w-5" />
+          ) : (
+            <PanelLeftOpen className="h-5 w-5" />
+          )}
+        </Button>
       </SidebarHeader>
       
       <SidebarContent>
@@ -74,7 +94,7 @@ const AppSidebar = () => {
             <SidebarMenu>
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild tooltip={!isExpanded ? item.title : undefined}>
                     <NavLink
                       to={item.path}
                       className={({ isActive }) =>
@@ -85,7 +105,12 @@ const AppSidebar = () => {
                       }
                     >
                       <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
+                      <span className={cn(
+                        "transition-opacity", 
+                        isExpanded ? "opacity-100" : "opacity-0"
+                      )}>
+                        {item.title}
+                      </span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -95,7 +120,7 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="p-4">
+      <SidebarFooter className={cn("p-4", isExpanded ? "block" : "hidden")}>
         <div className="flex items-center justify-between px-4 py-2 rounded-lg bg-accent">
           <div className="flex items-center gap-2">
             <FileText className="h-4 w-4 text-primary" />
