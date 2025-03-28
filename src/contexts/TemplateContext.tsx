@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { EvaluationTemplate } from "@/types/templates";
 import { toast } from "sonner";
@@ -69,7 +68,8 @@ export const TemplateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       setLoading(true);
       
-      if (setActiveTemplate(id)) {
+      const success = setActiveTemplate(id);
+      if (success) {
         const template = templates.find(t => t.id === id);
         if (template) {
           setActiveTemplate(template);
