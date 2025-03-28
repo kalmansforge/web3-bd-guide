@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppLayout from "@/components/layout/AppLayout";
 import PageHeader from "@/components/ui/PageHeader";
@@ -23,10 +23,16 @@ import TemplatesTab from "@/components/settings/TemplatesTab";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { thresholds, refreshData: refreshThresholds } = useThresholds();
   const { projects, refreshData: refreshEvaluations } = useEvaluation();
   const { templates, refreshData: refreshTemplates } = useTemplates();
-  const [activeTab, setActiveTab] = useState("config");
+  
+  // Parse the tab from the URL search params
+  const searchParams = new URLSearchParams(location.search);
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabParam || "config");
+  
   const [storageInfo, setStorageInfo] = useState(calculateStorageSize());
   const [appearanceSettings, setAppearanceSettings] = useState<AppearanceSettings>(defaultAppearanceSettings);
   const [unsavedAppearanceChanges, setUnsavedAppearanceChanges] = useState(false);
@@ -37,6 +43,21 @@ const Settings = () => {
     setStorageInfo(calculateStorageSize());
     applyAppearanceSettings(settings);
   }, []);
+
+  // Update URL when tab changes
+  useEffect(() => {
+    // Update the URL with the active tab
+    if (activeTab !== tabParam) {
+      navigate(`/settings?tab=${activeTab}`, { replace: true });
+    }
+  }, [activeTab, navigate, tabParam]);
+
+  // Handle tab change from URL
+  useEffect(() => {
+    if (tabParam && ['config', 'appearance', 'tier-names', 'data-management', 'templates'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
 
   const handleDataImported = () => {
     refreshThresholds();
@@ -125,7 +146,7 @@ const Settings = () => {
         description="Configure application settings and thresholds"
       />
       
-      <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-1 sm:grid-cols-5 mb-4">
           <TabsTrigger value="config">Threshold Configuration</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>

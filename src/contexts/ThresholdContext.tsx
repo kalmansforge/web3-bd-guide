@@ -7,6 +7,7 @@ import {
   getThresholdsFromStorage, 
   getAllTierNames 
 } from "@/utils/storage";
+import { useTemplates } from "@/contexts/TemplateContext";
 
 export type ThresholdConfig = {
   id: string;
@@ -24,6 +25,7 @@ type ThresholdContextType = {
   resetChanges: () => void;
   unsavedChanges: boolean;
   refreshData: () => void;
+  applyTemplateThresholds: (templateId?: string) => void;
 };
 
 const ThresholdContext = createContext<ThresholdContextType | undefined>(undefined);
@@ -41,6 +43,9 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
   const [originalThresholds, setOriginalThresholds] = useState<ThresholdConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+  
+  // Get the templates context
+  const { activeTemplate, templates } = useTemplates?.() || { activeTemplate: null, templates: [] };
 
   const loadThresholds = async () => {
     setLoading(true);
@@ -145,6 +150,56 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const applyTemplateThresholds = (templateId?: string) => {
+    try {
+      setLoading(true);
+      
+      // If no template ID is provided, use the active template
+      const template = templateId 
+        ? templates.find(t => t.id === templateId) 
+        : activeTemplate;
+      
+      if (!template) {
+        throw new Error("Template not found");
+      }
+      
+      // Create updated thresholds based on the template
+      const updatedThresholds: ThresholdConfig[] = [];
+      
+      template.categories.forEach(category => {
+        category.metrics.forEach(metric => {
+          updatedThresholds.push({
+            id: `${category.id}-${metric.id}`,
+            metricId: metric.id,
+            categoryId: category.id,
+            thresholds: metric.thresholds,
+            updatedAt: new Date().toISOString()
+          });
+        });
+      });
+      
+      // Set and save the updated thresholds
+      setThresholds(updatedThresholds);
+      setOriginalThresholds(JSON.parse(JSON.stringify(updatedThresholds)));
+      saveThresholdsToStorage(updatedThresholds);
+      
+      toast({
+        title: "Thresholds updated",
+        description: `Threshold configurations have been updated based on the "${template.name}" template`,
+      });
+    } catch (error) {
+      console.error("Error applying template thresholds:", error);
+      toast({
+        title: "Error updating thresholds",
+        description: "Failed to apply template thresholds",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+      setUnsavedChanges(false);
+    }
+  };
+
   return (
     <ThresholdContext.Provider
       value={{
@@ -154,7 +209,8 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
         saveChanges,
         resetChanges,
         unsavedChanges,
-        refreshData
+        refreshData,
+        applyTemplateThresholds
       }}
     >
       {children}

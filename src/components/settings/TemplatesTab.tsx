@@ -3,15 +3,18 @@ import React, { useState, useRef } from "react";
 import { Plus, Upload, Download, Copy, Trash, Settings, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useTemplates } from "@/contexts/TemplateContext";
+import { useThresholds } from "@/contexts/ThresholdContext";
 import { EvaluationTemplate } from "@/types/templates";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 const TemplatesTab = () => {
+  const navigate = useNavigate();
   const { 
     templates, 
     activeTemplate, 
@@ -23,22 +26,60 @@ const TemplatesTab = () => {
     createTemplate
   } = useTemplates();
   
+  const { thresholds, refreshData: refreshThresholds } = useThresholds();
+  
   const [searchTerm, setSearchTerm] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const handleCreateTemplate = () => {
-    createTemplate();
+    const newTemplate = createTemplate();
+    navigate(`/template-editor/${newTemplate.id}`);
     toast.success("New template created", {
       description: "Edit the template to customize it for your needs"
     });
   };
   
   const handleSetActive = (templateId: string) => {
-    setActiveTemplateId(templateId);
+    AlertDialog({
+      title: "Apply Template",
+      description: "Would you like to update the thresholds based on this template? This will replace your current threshold configurations.",
+      cancelText: "Keep Current Thresholds",
+      confirmText: "Update Thresholds",
+      onConfirm: () => {
+        setActiveTemplateId(templateId);
+        refreshThresholds();
+        toast.success("Template and thresholds updated", {
+          description: "The template has been set as active and thresholds have been updated"
+        });
+      },
+      onCancel: () => {
+        setActiveTemplateId(templateId);
+        toast.success("Template activated", {
+          description: "The template has been set as active but thresholds remain unchanged"
+        });
+      }
+    });
   };
   
   const handleDuplicate = (templateId: string) => {
-    duplicateTemplateById(templateId);
+    const success = duplicateTemplateById(templateId);
+    if (success) {
+      // Find the newly created duplicate template (it will have "Copy" in the name)
+      const original = templates.find(t => t.id === templateId);
+      if (original) {
+        const duplicate = templates.find(t => 
+          t.id !== templateId && t.name === `${original.name} (Copy)`
+        );
+        
+        if (duplicate) {
+          navigate(`/template-editor/${duplicate.id}`);
+        }
+      }
+    }
+  };
+  
+  const handleEdit = (templateId: string) => {
+    navigate(`/template-editor/${templateId}`);
   };
   
   const handleExport = (templateId: string) => {
@@ -60,7 +101,9 @@ const TemplatesTab = () => {
         const fileContent = event.target?.result as string;
         const result = importTemplateFromJson(fileContent);
         
-        if (!result.success) {
+        if (result.success && result.template) {
+          navigate(`/template-editor/${result.template.id}`);
+        } else {
           toast.error("Import Failed", {
             description: "The file contains invalid template data"
           });
@@ -102,6 +145,36 @@ const TemplatesTab = () => {
     template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     template.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Helper function to render our confirmation dialog
+  const AlertDialog = ({ 
+    title, 
+    description, 
+    confirmText, 
+    cancelText, 
+    onConfirm, 
+    onCancel 
+  }: { 
+    title: string; 
+    description: string; 
+    confirmText: string; 
+    cancelText: string; 
+    onConfirm: () => void; 
+    onCancel: () => void; 
+  }) => {
+    return (
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={onCancel}>{cancelText}</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>{confirmText}</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -195,15 +268,46 @@ const TemplatesTab = () => {
             
             <CardFooter className="pt-4 pb-4 flex flex-wrap gap-2">
               {template.id !== activeTemplate.id && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => handleSetActive(template.id)}
-                >
-                  <Settings className="mr-1 h-3 w-3" />
-                  Set Active
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                    >
+                      <Settings className="mr-1 h-3 w-3" />
+                      Set Active
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialog 
+                    title="Apply Template"
+                    description="Would you like to update the thresholds based on this template? This will replace your current threshold configurations."
+                    cancelText="Keep Current Thresholds"
+                    confirmText="Update Thresholds"
+                    onConfirm={() => {
+                      setActiveTemplateId(template.id);
+                      refreshThresholds();
+                      toast.success("Template and thresholds updated", {
+                        description: "The template has been set as active and thresholds have been updated"
+                      });
+                    }}
+                    onCancel={() => {
+                      setActiveTemplateId(template.id);
+                      toast.success("Template activated", {
+                        description: "The template has been set as active but thresholds remain unchanged"
+                      });
+                    }}
+                  />
+                </AlertDialog>
               )}
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => handleEdit(template.id)}
+              >
+                <Edit className="mr-1 h-3 w-3" />
+                Edit
+              </Button>
               
               <Button 
                 variant="outline" 
