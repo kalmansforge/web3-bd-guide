@@ -12,7 +12,7 @@ import MetricsSearch from "@/components/metrics-guide/MetricsSearch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Filter } from "lucide-react";
+import { Filter, MessageSquare } from "lucide-react";
 
 interface DetailedMetricsProps {
   activeCategory: string;
@@ -30,6 +30,7 @@ const DetailedMetrics = ({
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState("");
   const [evaluationFilter, setEvaluationFilter] = useState<string>("all");
+  const [notesFilter, setNotesFilter] = useState<string>("all");
   
   // Generate metrics for the active category
   const currentMetrics = useMemo(() => 
@@ -55,9 +56,17 @@ const DetailedMetrics = ({
         matchesEvaluation = !metric.tier;
       }
       
-      return matchesSearch && matchesEvaluation;
+      // Notes filter
+      let matchesNotes = true;
+      if (notesFilter === "with-notes") {
+        matchesNotes = !!metric.notes && metric.notes.trim() !== "";
+      } else if (notesFilter === "without-notes") {
+        matchesNotes = !metric.notes || metric.notes.trim() === "";
+      }
+      
+      return matchesSearch && matchesEvaluation && matchesNotes;
     });
-  }, [currentMetrics, searchTerm, evaluationFilter]);
+  }, [currentMetrics, searchTerm, evaluationFilter, notesFilter]);
   
   const currentCategory = metricsData.find(c => c.id === activeCategory);
   
@@ -93,20 +102,41 @@ const DetailedMetrics = ({
           </div>
           
           <div className="w-full md:w-2/3">
-            <Label className="mb-2 block text-sm font-medium">
-              <Filter className="inline mr-2 h-4 w-4" />
-              Filter by Evaluation Status
-            </Label>
-            <ToggleGroup 
-              type="single" 
-              value={evaluationFilter} 
-              onValueChange={(value) => value && setEvaluationFilter(value)}
-              className="justify-start"
-            >
-              <ToggleGroupItem value="all" aria-label="Show all metrics">All</ToggleGroupItem>
-              <ToggleGroupItem value="evaluated" aria-label="Show evaluated metrics">Evaluated</ToggleGroupItem>
-              <ToggleGroupItem value="not-evaluated" aria-label="Show not evaluated metrics">Not Evaluated</ToggleGroupItem>
-            </ToggleGroup>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label className="mb-2 block text-sm font-medium">
+                  <Filter className="inline mr-2 h-4 w-4" />
+                  Filter by Evaluation Status
+                </Label>
+                <ToggleGroup 
+                  type="single" 
+                  value={evaluationFilter} 
+                  onValueChange={(value) => value && setEvaluationFilter(value)}
+                  className="justify-start"
+                >
+                  <ToggleGroupItem value="all" aria-label="Show all metrics">All</ToggleGroupItem>
+                  <ToggleGroupItem value="evaluated" aria-label="Show evaluated metrics">Evaluated</ToggleGroupItem>
+                  <ToggleGroupItem value="not-evaluated" aria-label="Show not evaluated metrics">Not Evaluated</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              
+              <div>
+                <Label className="mb-2 block text-sm font-medium">
+                  <MessageSquare className="inline mr-2 h-4 w-4" />
+                  Filter by Notes
+                </Label>
+                <ToggleGroup 
+                  type="single" 
+                  value={notesFilter} 
+                  onValueChange={(value) => value && setNotesFilter(value)}
+                  className="justify-start"
+                >
+                  <ToggleGroupItem value="all" aria-label="Show all metrics">All</ToggleGroupItem>
+                  <ToggleGroupItem value="with-notes" aria-label="Show metrics with notes">With Notes</ToggleGroupItem>
+                  <ToggleGroupItem value="without-notes" aria-label="Show metrics without notes">Without Notes</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -156,9 +186,10 @@ const DetailedMetrics = ({
                           </p>
                         )}
                         {metric.notes && (
-                          <p className="text-sm text-muted-foreground">
-                            <span className="font-medium">Notes:</span> {metric.notes}
-                          </p>
+                          <div className="text-sm text-muted-foreground">
+                            <div className="font-medium">Notes:</div>
+                            <div className="pl-2 mt-1 border-l-2 border-muted">{metric.notes}</div>
+                          </div>
                         )}
                       </div>
                     ) : (
