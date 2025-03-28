@@ -29,6 +29,7 @@ const Templates = () => {
   
   const [searchTerm, setSearchTerm] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImporting, setIsImporting] = useState(false);
   
   const handleCreateTemplate = () => {
     createTemplate();
@@ -68,16 +69,17 @@ const Templates = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
+    setIsImporting(true);
     
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const fileContent = event.target?.result as string;
-        const result = importTemplateFromJson(fileContent);
+        const result = await importTemplateFromJson(fileContent);
         
         if (!result.success) {
           toast.error("Import Failed", {
@@ -93,6 +95,7 @@ const Templates = () => {
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
+        setIsImporting(false);
       }
     };
     
@@ -100,6 +103,7 @@ const Templates = () => {
       toast.error("Import Failed", {
         description: "There was an error reading the file"
       });
+      setIsImporting(false);
     };
     
     reader.readAsText(file);
@@ -122,9 +126,10 @@ const Templates = () => {
               variant="outline" 
               onClick={handleImportClick}
               size="sm"
+              disabled={isImporting}
             >
               <Upload className="mr-2 h-4 w-4" />
-              Import Template
+              {isImporting ? "Importing..." : "Import Template"}
             </Button>
             <Button 
               onClick={handleCreateTemplate}
