@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 
 // Simplified navigation data without nested children
 const navItems = [
+  { title: "Guide", icon: BookOpen, path: "/guide" },
   { 
     title: "Dashboard", 
     icon: Gauge, 
@@ -49,7 +50,6 @@ const navItems = [
     icon: LineChart, 
     path: "/metrics-guide",
   },
-  { title: "Guide", icon: BookOpen, path: "/guide" },
   { title: "Risk Assessment", icon: Shield, path: "/risk-assessment" },
   { title: "Settings", icon: Settings, path: "/settings" },
 ];
