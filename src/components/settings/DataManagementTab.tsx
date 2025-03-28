@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ProjectEvaluation } from "@/types/metrics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import ClearLocalDataDialog from "@/components/ui/ClearLocalDataDialog";
 import DataImportExport from "@/components/ui/DataImportExport";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
+import { getTemplateStorageSize } from "@/utils/storage/core";
 
 interface DataManagementTabProps {
   projects: ProjectEvaluation[];
@@ -54,7 +54,10 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
               </div>
               <Separator className="my-2" />
               <div className="text-sm space-y-2">
-                {Object.entries(storageInfo.breakdown).map(([key, size]) => (
+                {Object.entries({
+                  ...storageInfo.breakdown,
+                  'Templates': getTemplateStorageSize() // New function to get template storage size
+                }).map(([key, size]) => (
                   <div key={key} className="flex justify-between items-center py-1">
                     <span className="text-muted-foreground">{key}:</span>
                     <span className="font-mono">{formatBytes(size)}</span>
