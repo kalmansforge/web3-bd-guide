@@ -1,5 +1,5 @@
 
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { TemplateContextType } from "./types";
 import { useTemplateOperations } from "./useTemplateOperations";
 import { EvaluationTemplate } from "@/types/templates";
@@ -13,14 +13,20 @@ export interface TemplateProviderProps {
 
 export const TemplateProvider: React.FC<TemplateProviderProps> = ({ children }) => {
   const templateOperations = useTemplateOperations();
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load templates on component mount
   useEffect(() => {
-    templateOperations.refreshData();
+    const initialize = async () => {
+      await templateOperations.refreshData();
+      setIsInitialized(true);
+    };
+    
+    initialize();
   }, []);
 
-  // Only provide context if activeTemplate exists
-  if (!templateOperations.activeTemplate) {
+  // Show loading state while initializing
+  if (!isInitialized || !templateOperations.activeTemplate) {
     return (
       <div className="flex items-center justify-center h-screen">
         <p>Loading templates...</p>

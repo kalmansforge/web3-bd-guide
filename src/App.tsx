@@ -13,18 +13,18 @@ import MetricsGuide from "@/pages/MetricsGuide";
 import NotFound from "@/pages/NotFound";
 import TemplateEditor from "@/pages/TemplateEditor";
 
+import { TemplateProvider } from "@/contexts/templates";
 import { ThresholdProvider } from "@/contexts/thresholds";
 import { EvaluationProvider } from "@/contexts/EvaluationContext";
-import { TemplateProvider } from "@/contexts/templates";
 
 import "./App.css";
 
 function App() {
   return (
-    <TemplateProvider>
-      <ThresholdProvider>
-        <EvaluationProvider>
-          <Router>
+    <Router>
+      <TemplateProvider>
+        <ThresholdProvider>
+          <EvaluationProvider>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -36,11 +36,11 @@ function App() {
               <Route path="/template-editor/:id" element={<TemplateEditor />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </Router>
-          <Toaster position="top-right" closeButton richColors />
-        </EvaluationProvider>
-      </ThresholdProvider>
-    </TemplateProvider>
+            <Toaster position="top-right" closeButton richColors />
+          </EvaluationProvider>
+        </ThresholdProvider>
+      </TemplateProvider>
+    </Router>
   );
 }
 
