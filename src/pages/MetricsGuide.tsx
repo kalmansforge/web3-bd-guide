@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Search, Settings } from "lucide-react";
@@ -10,6 +11,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { metricsData } from "@/data/metricsData";
 import { useThresholds } from "@/contexts/ThresholdContext";
+import { cn } from "@/lib/utils";
 
 const MetricsGuide = () => {
   const navigate = useNavigate();
