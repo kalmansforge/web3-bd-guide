@@ -59,7 +59,7 @@ const Dashboard = () => {
   const t1Projects = projects.filter(p => p.overallTier === 'T1').length;
   
   const handleNewEvaluation = () => {
-    navigate('/evaluation/new');
+    navigate('/new-evaluation');
   };
   
   const handleViewProjects = () => {
@@ -67,7 +67,7 @@ const Dashboard = () => {
   };
   
   const handleViewMetrics = () => {
-    navigate('/metrics/foundational');
+    navigate('/metrics-guide');
   };
 
   return (
