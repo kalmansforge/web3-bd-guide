@@ -39,28 +39,56 @@ export const exportAllData = (): boolean => {
 
 /**
  * Import data from a JSON string
+ * Can handle both complete exports and single evaluation exports
  */
-export const importData = (jsonData: string): boolean => {
+export const importData = (jsonData: string): { success: boolean; type: 'complete' | 'evaluation' | 'unknown' } => {
   try {
     const parsedData = JSON.parse(jsonData);
     
-    // Validate the imported data structure
-    if (!parsedData.evaluations || !parsedData.thresholds || !Array.isArray(parsedData.evaluations) || !Array.isArray(parsedData.thresholds)) {
-      throw new Error('Invalid data format');
+    // Check if this is a complete export
+    if (parsedData.evaluations && Array.isArray(parsedData.evaluations)) {
+      
+      // Handle single evaluation export
+      if (parsedData.type === 'single-evaluation') {
+        // Get current evaluations
+        const currentEvaluations = getEvaluationsFromStorage();
+        
+        // Check for duplicate IDs and rename if necessary
+        const importedEvaluations = parsedData.evaluations.map(eval => {
+          // Create new ID to avoid conflicts
+          const newId = crypto.randomUUID();
+          return {
+            ...eval,
+            id: newId,
+            name: eval.name + ' (Imported)',
+            date: new Date().toISOString()
+          };
+        });
+        
+        // Merge with current evaluations
+        const mergedEvaluations = [...currentEvaluations, ...importedEvaluations];
+        saveEvaluationsToStorage(mergedEvaluations);
+        
+        return { success: true, type: 'evaluation' };
+      }
+      
+      // Complete export with thresholds
+      if (parsedData.thresholds && Array.isArray(parsedData.thresholds)) {
+        saveEvaluationsToStorage(parsedData.evaluations);
+        saveThresholdsToStorage(parsedData.thresholds);
+        
+        // Import appearance settings if available
+        if (parsedData.appearance) {
+          saveAppearanceToStorage(parsedData.appearance);
+        }
+        
+        return { success: true, type: 'complete' };
+      }
     }
     
-    // Store the imported data
-    saveEvaluationsToStorage(parsedData.evaluations);
-    saveThresholdsToStorage(parsedData.thresholds);
-    
-    // Import appearance settings if available
-    if (parsedData.appearance) {
-      saveAppearanceToStorage(parsedData.appearance);
-    }
-    
-    return true;
+    throw new Error('Invalid data format');
   } catch (error) {
     console.error('Error importing data:', error);
-    return false;
+    return { success: false, type: 'unknown' };
   }
 };

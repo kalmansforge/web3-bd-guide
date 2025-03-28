@@ -1,9 +1,11 @@
+
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, Upload, FileText } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { Download, Upload, FileText, Info } from "lucide-react";
+import { toast } from "sonner";
 import { exportAllData, importData } from "@/utils/storage";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface DataImportExportProps {
   onDataImported?: () => void;
@@ -16,15 +18,12 @@ const DataImportExport: React.FC<DataImportExportProps> = ({ onDataImported }) =
   const handleExport = () => {
     const success = exportAllData();
     if (success) {
-      toast({
-        title: "Export Successful",
+      toast.success("Export Successful", {
         description: "Your evaluation data and thresholds have been exported successfully."
       });
     } else {
-      toast({
-        title: "Export Failed",
-        description: "There was an error exporting your data. Please try again.",
-        variant: "destructive"
+      toast.error("Export Failed", {
+        description: "There was an error exporting your data. Please try again."
       });
     }
   };
@@ -43,29 +42,30 @@ const DataImportExport: React.FC<DataImportExportProps> = ({ onDataImported }) =
     reader.onload = (event) => {
       try {
         const fileContent = event.target?.result as string;
-        const success = importData(fileContent);
+        const result = importData(fileContent);
         
-        if (success) {
-          toast({
-            title: "Import Successful",
-            description: "Your evaluation data and thresholds have been imported successfully."
-          });
+        if (result.success) {
+          if (result.type === 'complete') {
+            toast.success("Import Successful", {
+              description: "Your complete data (evaluations, thresholds, and settings) has been imported successfully."
+            });
+          } else if (result.type === 'evaluation') {
+            toast.success("Evaluation Import Successful", {
+              description: "The project evaluation has been imported and added to your existing projects."
+            });
+          }
           
           if (onDataImported) {
             onDataImported();
           }
         } else {
-          toast({
-            title: "Import Failed",
-            description: "The file contains invalid data. Please check the file and try again.",
-            variant: "destructive"
+          toast.error("Import Failed", {
+            description: "The file contains invalid data. Please check the file and try again."
           });
         }
       } catch (error) {
-        toast({
-          title: "Import Failed",
-          description: "There was an error importing your data. Please try again.",
-          variant: "destructive"
+        toast.error("Import Failed", {
+          description: "There was an error importing your data. Please try again."
         });
       } finally {
         setIsImporting(false);
@@ -77,10 +77,8 @@ const DataImportExport: React.FC<DataImportExportProps> = ({ onDataImported }) =
     };
     
     reader.onerror = () => {
-      toast({
-        title: "Import Failed",
-        description: "There was an error reading the file. Please try again.",
-        variant: "destructive"
+      toast.error("Import Failed", {
+        description: "There was an error reading the file. Please try again."
       });
       setIsImporting(false);
     };
@@ -96,11 +94,19 @@ const DataImportExport: React.FC<DataImportExportProps> = ({ onDataImported }) =
           Export or import your evaluation data and threshold configurations
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-2">
-        <p className="text-sm text-muted-foreground mb-4">
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground mb-2">
           Your evaluation data and threshold configurations are stored locally in your browser. 
           Export your data to back it up or transfer it to another device.
         </p>
+        
+        <Alert className="mb-4">
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            The import function automatically detects and handles both complete data exports and single project evaluation files.
+          </AlertDescription>
+        </Alert>
+        
         <div className="flex flex-col space-y-2">
           <Button onClick={handleExport} className="w-full" variant="outline">
             <Download className="mr-2 h-4 w-4" />
