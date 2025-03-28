@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useEvaluation } from "@/contexts/EvaluationContext";
-import { metricsData } from "@/data/metricsData";
+import { useTemplates } from "@/contexts/TemplateContext";
 import ProjectScoreCard from "@/components/ui/ProjectScoreCard";
 import { Metric, TierType } from "@/types/metrics";
 import { exportSingleEvaluation } from "@/utils/storage";
@@ -21,10 +21,22 @@ const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { projects, setCurrentProject } = useEvaluation();
-  const [activeCategory, setActiveCategory] = useState(metricsData[0].id);
+  const { templates, activeTemplate } = useTemplates();
+  const [activeCategory, setActiveCategory] = useState("");
   const isMobile = useIsMobile();
   
   const project = projects.find(p => p.id === id);
+  
+  // Get the template used for this project
+  const projectTemplateId = project?.templateId || activeTemplate.id;
+  const projectTemplate = templates.find(t => t.id === projectTemplateId) || activeTemplate;
+  
+  // Set initial active category from the project's template
+  useEffect(() => {
+    if (projectTemplate.categories.length > 0 && !activeCategory) {
+      setActiveCategory(projectTemplate.categories[0].id);
+    }
+  }, [projectTemplate, activeCategory]);
   
   useEffect(() => {
     if (!project) {
@@ -37,12 +49,12 @@ const ProjectDetail = () => {
   
   if (!project) return null;
   
-  // Get evaluation progress stats using our utility function
-  const { completedMetrics, totalMetrics } = getProjectCompletionData(project, metricsData);
+  // Get evaluation progress stats using our utility function with the project's template
+  const { completedMetrics, totalMetrics } = getProjectCompletionData(project, projectTemplate.categories);
   
   const handleEditProject = () => {
     setCurrentProject(project);
-    navigate("/new-evaluation");
+    navigate("/new-evaluation", { state: { project } });
   };
   
   const handleExportPDF = () => {
@@ -58,7 +70,7 @@ const ProjectDetail = () => {
   };
   
   const generateMetricsWithEvaluation = (categoryId: string): Metric[] => {
-    const category = metricsData.find(c => c.id === categoryId);
+    const category = projectTemplate.categories.find(c => c.id === categoryId);
     if (!category) return [];
     
     return category.metrics.map(metric => {
@@ -94,19 +106,23 @@ const ProjectDetail = () => {
           />
         </div>
         
+        <div className="mb-3 text-sm text-muted-foreground">
+          Using template: <span className="font-medium">{projectTemplate.name}</span>
+        </div>
+        
         <ProjectSummary 
           name={project.name}
           overallTier={project.overallTier as TierType}
           completedMetrics={completedMetrics}
           totalMetrics={totalMetrics}
-          metricsData={metricsData}
+          metricsData={projectTemplate.categories}
           metrics={project.metrics}
         />
         
         <DetailedMetrics 
           activeCategory={activeCategory}
           onCategoryChange={setActiveCategory}
-          metricsData={metricsData}
+          metricsData={projectTemplate.categories}
           generateMetricsWithEvaluation={generateMetricsWithEvaluation}
         />
       </div>

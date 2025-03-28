@@ -10,15 +10,14 @@ import EvaluationTabs from "@/components/evaluation/EvaluationTabs";
 import { getProjectCompletionData } from "@/utils/scoring";
 
 const NewEvaluation = () => {
-  // Get active template
-  const { activeTemplate } = useTemplates();
+  // Get templates
+  const { activeTemplate, templates } = useTemplates();
   
   // Local state
   const [projectName, setProjectName] = useState("");
+  const [selectedTemplateId, setSelectedTemplateId] = useState(activeTemplate.id);
   const [currentStep, setCurrentStep] = useState("project");
-  const [activeCategory, setActiveCategory] = useState(
-    activeTemplate.categories.length > 0 ? activeTemplate.categories[0].id : ""
-  );
+  const [activeCategory, setActiveCategory] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
   
   // Navigation and context
@@ -36,26 +35,35 @@ const NewEvaluation = () => {
       setCurrentStep("evaluation");
       setIsEditMode(true);
       setCurrentProject(editProject);
+      
+      // If the project has a templateId, use that
+      if (editProject.templateId) {
+        setSelectedTemplateId(editProject.templateId);
+      }
     } else {
       // Clear current project when accessing the page directly
       setCurrentProject(null);
       setProjectName("");
       setCurrentStep("project");
       setIsEditMode(false);
+      setSelectedTemplateId(activeTemplate.id);
     }
-  }, [location.state, setCurrentProject]);
+  }, [location.state, setCurrentProject, activeTemplate.id]);
+  
+  // Get the currently selected template
+  const selectedTemplate = templates.find(t => t.id === (currentProject?.templateId || selectedTemplateId)) || activeTemplate;
   
   // Update active category when template changes
   useEffect(() => {
-    if (activeTemplate.categories.length > 0 && !activeCategory) {
-      setActiveCategory(activeTemplate.categories[0].id);
+    if (selectedTemplate.categories.length > 0 && !activeCategory) {
+      setActiveCategory(selectedTemplate.categories[0].id);
     }
-  }, [activeTemplate, activeCategory]);
+  }, [selectedTemplate, activeCategory]);
   
   // Handlers
   const handleCreateProject = () => {
     if (!projectName.trim()) return;
-    createProject(projectName);
+    createProject(projectName, selectedTemplateId);
     setCurrentStep("evaluation");
   };
   
@@ -72,8 +80,8 @@ const NewEvaluation = () => {
     }
   };
   
-  // Get evaluation progress stats
-  const { completedMetrics, totalMetrics } = getProjectCompletionData(currentProject, activeTemplate.categories);
+  // Get evaluation progress stats based on the selected template
+  const { completedMetrics, totalMetrics } = getProjectCompletionData(currentProject, selectedTemplate.categories);
   
   // Get score and tier
   const { score, tier } = currentProject 
@@ -85,8 +93,8 @@ const NewEvaluation = () => {
       <PageHeader
         title={isEditMode ? `Editing: ${currentProject?.name}` : (currentProject ? `Evaluating: ${currentProject.name}` : "New Project Evaluation")}
         description={currentProject 
-          ? "Complete the evaluation by reviewing each metric category" 
-          : "Start by entering the project name"
+          ? `Evaluating using the "${selectedTemplate.name}" template` 
+          : "Start by entering the project name and selecting a template"
         }
         actions={
           currentProject && (
@@ -102,13 +110,15 @@ const NewEvaluation = () => {
         currentStep={currentStep}
         projectName={projectName}
         setProjectName={setProjectName}
+        selectedTemplateId={selectedTemplateId}
+        setSelectedTemplateId={setSelectedTemplateId}
         handleCreateProject={handleCreateProject}
         currentProject={currentProject}
         handleUpdateMetric={handleUpdateMetric}
         handleSaveProject={handleSaveProject}
         activeCategory={activeCategory}
         setActiveCategory={setActiveCategory}
-        metricsData={activeTemplate.categories}
+        metricsData={selectedTemplate.categories}
         score={score}
         tier={tier}
         completedMetrics={completedMetrics}

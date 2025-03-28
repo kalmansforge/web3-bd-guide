@@ -9,6 +9,8 @@ interface EvaluationTabsProps {
   currentStep: string;
   projectName: string;
   setProjectName: (name: string) => void;
+  selectedTemplateId: string;
+  setSelectedTemplateId: (id: string) => void;
   handleCreateProject: () => void;
   currentProject: ProjectEvaluation | null;
   handleUpdateMetric: (categoryId: string, metricId: string, evaluation: MetricEvaluation) => void;
@@ -26,6 +28,8 @@ const EvaluationTabs: React.FC<EvaluationTabsProps> = ({
   currentStep,
   projectName,
   setProjectName,
+  selectedTemplateId,
+  setSelectedTemplateId,
   handleCreateProject,
   currentProject,
   handleUpdateMetric,
@@ -49,6 +53,8 @@ const EvaluationTabs: React.FC<EvaluationTabsProps> = ({
         <ProjectDetailsForm 
           projectName={projectName}
           setProjectName={setProjectName}
+          selectedTemplateId={selectedTemplateId}
+          setSelectedTemplateId={setSelectedTemplateId}
           handleCreateProject={handleCreateProject}
         />
       </TabsContent>

@@ -28,6 +28,7 @@ export interface ProjectEvaluation {
   overallScore?: number;
   overallTier?: TierType;
   notes?: string;
+  templateId?: string; // Added templateId to track which template was used
 }
 
 export interface MetricEvaluation {

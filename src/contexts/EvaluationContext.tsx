@@ -10,7 +10,7 @@ interface EvaluationContextType {
   projects: ProjectEvaluation[];
   currentProject: ProjectEvaluation | null;
   setCurrentProject: (project: ProjectEvaluation | null) => void;
-  createProject: (name: string) => void;
+  createProject: (name: string, templateId?: string) => void;
   updateMetric: (categoryId: string, metricId: string, evaluation: MetricEvaluation) => void;
   saveProject: () => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
@@ -33,7 +33,7 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [projects, setProjects] = useState<ProjectEvaluation[]>([]);
   const [currentProject, setCurrentProject] = useState<ProjectEvaluation | null>(null);
   const [loading, setLoading] = useState(false);
-  const { activeTemplate } = useTemplates();
+  const { activeTemplate, templates } = useTemplates();
 
   const loadProjects = () => {
     try {
@@ -57,12 +57,16 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     loadProjects();
   }, []);
 
-  const createProject = (name: string) => {
+  const createProject = (name: string, templateId?: string) => {
+    // Use the specified templateId or default to activeTemplate id
+    const selectedTemplateId = templateId || activeTemplate.id;
+    
     const newProject: ProjectEvaluation = {
       id: crypto.randomUUID(),
       name,
       date: new Date().toISOString(),
       metrics: {},
+      templateId: selectedTemplateId, // Store the template ID with the project
     };
     
     setCurrentProject(newProject);
@@ -89,7 +93,11 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const calculateProjectScoreWrapper = (project = currentProject) => {
     if (!project) return { score: 0, tier: null };
     
-    const result = calculateProjectScore(project, activeTemplate.categories);
+    // Get the template used for this project
+    const templateId = project.templateId || activeTemplate.id;
+    const projectTemplate = templates.find(t => t.id === templateId) || activeTemplate;
+    
+    const result = calculateProjectScore(project, projectTemplate.categories);
     return { score: result.score, tier: result.tier };
   };
 
