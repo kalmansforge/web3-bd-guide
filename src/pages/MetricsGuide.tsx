@@ -1,27 +1,37 @@
 
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Search, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { metricsData } from "@/data/metricsData";
 import { useThresholds } from "@/contexts/ThresholdContext";
 
 const MetricsGuide = () => {
-  const { categoryId = "foundational" } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [activeTab, setActiveTab] = React.useState<string>("foundational");
   const { thresholds, loading } = useThresholds();
   
-  const category = metricsData.find(c => c.id === categoryId);
+  // Update active tab from location state when component mounts or location changes
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+      // Clear the state after using it to avoid persisting
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
+  
+  const category = metricsData.find(c => c.id === activeTab);
   if (!category) {
-    navigate("/metrics/foundational");
+    // Default to foundational if category is not found
+    setActiveTab("foundational");
     return null;
   }
   
@@ -84,7 +94,7 @@ const MetricsGuide = () => {
         </div>
       </div>
       
-      <Tabs value={categoryId} onValueChange={(value) => navigate(`/metrics/${value}`)}>
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value)}>
         <TabsList className="w-full flex overflow-x-auto no-scrollbar mb-6">
           {metricsData.map(category => (
             <TabsTrigger key={category.id} value={category.id} className="flex-shrink-0">

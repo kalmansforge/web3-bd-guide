@@ -1,6 +1,6 @@
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { 
   Gauge, 
   BarChart2, 
@@ -53,12 +53,12 @@ const navItems = [
     path: "/metrics-guide",
     isCollapsible: true,
     children: [
-      { title: "Foundational", path: "/metrics-guide?category=foundational" },
-      { title: "Product", path: "/metrics-guide?category=product" },
-      { title: "Financial", path: "/metrics-guide?category=financial" },
-      { title: "Strategic", path: "/metrics-guide?category=strategic" },
-      { title: "Ecosystem", path: "/metrics-guide?category=ecosystem" },
-      { title: "Risk", path: "/metrics-guide?category=risk" },
+      { title: "Foundational", path: "/metrics-guide", tabValue: "foundational" },
+      { title: "Product", path: "/metrics-guide", tabValue: "product" },
+      { title: "Financial", path: "/metrics-guide", tabValue: "financial" },
+      { title: "Strategic", path: "/metrics-guide", tabValue: "strategic" },
+      { title: "Ecosystem", path: "/metrics-guide", tabValue: "ecosystem" },
+      { title: "Risk", path: "/metrics-guide", tabValue: "risk" },
     ]
   },
   { title: "Guide", icon: BookOpen, path: "/guide" },
@@ -68,6 +68,7 @@ const navItems = [
 
 const AppSidebar = () => {
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>({});
+  const navigate = useNavigate();
 
   const toggleGroup = (title: string) => {
     setOpenGroups(prev => ({
@@ -77,6 +78,11 @@ const AppSidebar = () => {
   };
 
   const isGroupOpen = (title: string) => !!openGroups[title];
+
+  const handleMetricItemClick = (e: React.MouseEvent, path: string, tabValue?: string) => {
+    e.preventDefault();
+    navigate(path, { state: { activeTab: tabValue } });
+  };
 
   return (
     <Sidebar>
@@ -127,16 +133,12 @@ const AppSidebar = () => {
                       {isGroupOpen(item.title) && item.children && (
                         <SidebarMenuSub>
                           {item.children.map((child) => (
-                            <SidebarMenuSubItem key={child.path}>
-                              <SidebarMenuSubButton asChild>
-                                <NavLink
-                                  to={child.path}
-                                  className={({ isActive }) =>
-                                    cn("text-muted-foreground", isActive && "text-primary font-medium")
-                                  }
-                                >
-                                  {child.title}
-                                </NavLink>
+                            <SidebarMenuSubItem key={child.title}>
+                              <SidebarMenuSubButton 
+                                onClick={(e) => handleMetricItemClick(e, child.path, child.tabValue)}
+                                className="text-muted-foreground hover:text-foreground"
+                              >
+                                {child.title}
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           ))}
