@@ -6,7 +6,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { useTemplateEditor } from "@/hooks/useTemplateEditor";
+import { useTemplateEditor } from "@/hooks/template-editor";
 import TemplateDetailsPanel from "@/components/templates/editor/TemplateDetailsPanel";
 import CategoriesPanel from "@/components/templates/editor/CategoriesPanel";
 
