@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Save, Undo, Plus, Trash2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AppearanceSettings, TierName } from "@/utils/localStorageUtils";
+import { AppearanceSettings, TierName } from "@/utils/storage";
 import { 
   Form,
   FormField,

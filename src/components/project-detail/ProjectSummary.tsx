@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { TierType } from "@/types/metrics";
-import { getTierDisplayName, getAllTierNames } from "@/utils/localStorageUtils";
+import { getTierDisplayName, getAllTierNames } from "@/utils/storage";
 
 interface ProjectSummaryProps {
   name: string;
@@ -24,6 +24,20 @@ const ProjectSummary = ({
 }: ProjectSummaryProps) => {
   const tierNames = getAllTierNames();
   
+  // Find tier display names by their internal names
+  const findTierDisplayName = (internalName: string): string => {
+    const tier = tierNames.find(t => t.internalName === internalName);
+    return tier ? tier.displayName : internalName;
+  };
+  
+  // Get the first tier (formerly T0)
+  const firstTierName = tierNames.length > 0 ? tierNames[0].internalName : 'T0';
+  const firstTierDisplay = tierNames.length > 0 ? tierNames[0].displayName : 'T0';
+  
+  // Get the second tier (formerly T1)
+  const secondTierName = tierNames.length > 1 ? tierNames[1].internalName : 'T1';
+  const secondTierDisplay = tierNames.length > 1 ? tierNames[1].displayName : 'T1';
+  
   return (
     <Card className="mb-6">
       <CardHeader className="pb-0">
@@ -40,10 +54,10 @@ const ProjectSummary = ({
               {overallTier ? getTierDisplayName(overallTier) : 'Unclassified'}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
-              {overallTier === 'T0' 
-                ? `${tierNames.t0} tier project with high potential` 
-                : overallTier === 'T1'
-                ? `${tierNames.t1} tier project with moderate potential`
+              {overallTier === firstTierName
+                ? `${firstTierDisplay} tier project with high potential` 
+                : overallTier === secondTierName
+                ? `${secondTierDisplay} tier project with moderate potential`
                 : 'Not enough data to classify'
               }
             </p>
@@ -70,11 +84,11 @@ const ProjectSummary = ({
               const completedCount = categoryEvaluations.length;
               
               const t0Count = categoryEvaluations
-                .filter(key => metrics[key].tier === 'T0')
+                .filter(key => metrics[key].tier === firstTierName)
                 .length;
               
               const t1Count = categoryEvaluations
-                .filter(key => metrics[key].tier === 'T1')
+                .filter(key => metrics[key].tier === secondTierName)
                 .length;
               
               const percentComplete = (completedCount / categoryMetrics) * 100;
@@ -91,11 +105,11 @@ const ProjectSummary = ({
                         <span>{Math.round(percentComplete)}%</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">{tierNames.t0} Metrics</span>
+                        <span className="text-muted-foreground">{firstTierDisplay} Metrics</span>
                         <span>{t0Count} of {completedCount}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">{tierNames.t1} Metrics</span>
+                        <span className="text-muted-foreground">{secondTierDisplay} Metrics</span>
                         <span>{t1Count} of {completedCount}</span>
                       </div>
                     </div>

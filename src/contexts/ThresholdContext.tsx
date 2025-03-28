@@ -6,7 +6,7 @@ import {
   saveThresholdsToStorage, 
   getThresholdsFromStorage, 
   getAllTierNames 
-} from "@/utils/localStorageUtils";
+} from "@/utils/storage";
 
 export type ThresholdConfig = {
   id: string;

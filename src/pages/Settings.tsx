@@ -11,7 +11,7 @@ import {
   saveAppearanceToStorage,
   AppearanceSettings,
   defaultAppearanceSettings 
-} from "@/utils/localStorageUtils";
+} from "@/utils/storage";
 import { toast } from "@/hooks/use-toast";
 import ThresholdConfigTab from "@/components/settings/ThresholdConfigTab";
 import AppearanceTab from "@/components/settings/AppearanceTab";

@@ -10,14 +10,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useThresholds } from "@/contexts/ThresholdContext";
 import { metricsData } from "@/data/metricsData";
+import { getAllTierNames } from "@/utils/storage";
 
 const ThresholdConfigTab = () => {
   const { thresholds, loading, updateThreshold, saveChanges, resetChanges, unsavedChanges } = useThresholds();
+  const tierNames = getAllTierNames();
+  
+  // Get the first tier (formerly T0)
+  const firstTierName = tierNames.length > 0 ? tierNames[0].internalName : 'T0';
+  const firstTierDisplay = tierNames.length > 0 ? tierNames[0].displayName : 'T0';
+  
+  // Get the second tier (formerly T1)
+  const secondTierName = tierNames.length > 1 ? tierNames[1].internalName : 'T1';
+  const secondTierDisplay = tierNames.length > 1 ? tierNames[1].displayName : 'T1';
 
   const handleThresholdChange = (
     metricId: string,
     categoryId: string,
-    tier: "t0" | "t1",
+    tierKey: string,
     value: string
   ) => {
     const threshold = thresholds.find(
@@ -25,29 +35,31 @@ const ThresholdConfigTab = () => {
     );
     
     if (threshold) {
+      const updatedThresholds = { ...threshold.thresholds };
+      updatedThresholds[tierKey] = value;
+      
       updateThreshold(
         metricId,
         categoryId,
-        tier === "t0" ? value : threshold.t0Threshold,
-        tier === "t1" ? value : threshold.t1Threshold
+        updatedThresholds
       );
     }
   };
   
-  const getThresholdValue = (metricId: string, categoryId: string, tier: "t0" | "t1") => {
+  const getThresholdValue = (metricId: string, categoryId: string, tierKey: string) => {
     const threshold = thresholds.find(
       t => t.metricId === metricId && t.categoryId === categoryId
     );
     
-    if (threshold) {
-      return tier === "t0" ? threshold.t0Threshold : threshold.t1Threshold;
+    if (threshold && threshold.thresholds && threshold.thresholds[tierKey]) {
+      return threshold.thresholds[tierKey];
     }
     
     const category = metricsData.find(c => c.id === categoryId);
     const metric = category?.metrics.find(m => m.id === metricId);
     
-    if (metric) {
-      return tier === "t0" ? metric.thresholds.T0 : metric.thresholds.T1;
+    if (metric && metric.thresholds && metric.thresholds[tierKey]) {
+      return metric.thresholds[tierKey];
     }
     
     return "";
@@ -131,39 +143,39 @@ const ThresholdConfigTab = () => {
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                              <Label htmlFor={`${metric.id}-t0`} className="flex items-center">
+                              <Label htmlFor={`${metric.id}-${firstTierName}`} className="flex items-center">
                                 <Badge variant="outline" className="mr-2 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                                  T0
+                                  {firstTierDisplay}
                                 </Badge>
                                 <span>Strategic Tier Threshold</span>
                               </Label>
                             </div>
                             
                             <Textarea
-                              id={`${metric.id}-t0`}
-                              value={getThresholdValue(metric.id, category.id, "t0")}
-                              onChange={(e) => handleThresholdChange(metric.id, category.id, "t0", e.target.value)}
+                              id={`${metric.id}-${firstTierName}`}
+                              value={getThresholdValue(metric.id, category.id, firstTierName)}
+                              onChange={(e) => handleThresholdChange(metric.id, category.id, firstTierName, e.target.value)}
                               className="min-h-[80px]"
-                              placeholder="Enter threshold criteria for T0 (Strategic) classification"
+                              placeholder={`Enter threshold criteria for ${firstTierDisplay} (Strategic) classification`}
                             />
                           </div>
                           
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                              <Label htmlFor={`${metric.id}-t1`} className="flex items-center">
+                              <Label htmlFor={`${metric.id}-${secondTierName}`} className="flex items-center">
                                 <Badge variant="outline" className="mr-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                                  T1
+                                  {secondTierDisplay}
                                 </Badge>
                                 <span>Secondary Tier Threshold</span>
                               </Label>
                             </div>
                             
                             <Textarea
-                              id={`${metric.id}-t1`}
-                              value={getThresholdValue(metric.id, category.id, "t1")}
-                              onChange={(e) => handleThresholdChange(metric.id, category.id, "t1", e.target.value)}
+                              id={`${metric.id}-${secondTierName}`}
+                              value={getThresholdValue(metric.id, category.id, secondTierName)}
+                              onChange={(e) => handleThresholdChange(metric.id, category.id, secondTierName, e.target.value)}
                               className="min-h-[80px]"
-                              placeholder="Enter threshold criteria for T1 (Secondary) classification"
+                              placeholder={`Enter threshold criteria for ${secondTierDisplay} (Secondary) classification`}
                             />
                           </div>
                         </div>
