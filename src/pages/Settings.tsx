@@ -4,9 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppLayout from "@/components/layout/AppLayout";
 import PageHeader from "@/components/ui/PageHeader";
-import { useThresholds } from "@/contexts/ThresholdContext";
 import { useEvaluation } from "@/contexts/EvaluationContext";
-import { useTemplates } from "@/contexts/TemplateContext";
+import { useTemplates } from "@/contexts/templates";
 import { 
   calculateStorageSize, 
   getAppearanceFromStorage, 
@@ -15,7 +14,6 @@ import {
   defaultAppearanceSettings 
 } from "@/utils/storage";
 import { toast } from "@/hooks/use-toast";
-import ThresholdConfigTab from "@/components/settings/ThresholdConfigTab";
 import AppearanceTab from "@/components/settings/AppearanceTab";
 import TierNamesTab from "@/components/settings/TierNamesTab";
 import DataManagementTab from "@/components/settings/DataManagementTab";
@@ -24,14 +22,13 @@ import TemplatesTab from "@/components/settings/TemplatesTab";
 const Settings = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { thresholds, refreshData: refreshThresholds } = useThresholds();
   const { projects, refreshData: refreshEvaluations } = useEvaluation();
   const { templates, refreshData: refreshTemplates } = useTemplates();
   
   // Parse the tab from the URL search params
   const searchParams = new URLSearchParams(location.search);
   const tabParam = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState(tabParam || "config");
+  const [activeTab, setActiveTab] = useState(tabParam || "appearance");
   
   const [storageInfo, setStorageInfo] = useState(calculateStorageSize());
   const [appearanceSettings, setAppearanceSettings] = useState<AppearanceSettings>(defaultAppearanceSettings);
@@ -54,13 +51,12 @@ const Settings = () => {
 
   // Handle tab change from URL
   useEffect(() => {
-    if (tabParam && ['config', 'appearance', 'tier-names', 'data-management', 'templates'].includes(tabParam)) {
+    if (tabParam && ['appearance', 'tier-names', 'data-management', 'templates'].includes(tabParam)) {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
 
   const handleDataImported = () => {
-    refreshThresholds();
     refreshEvaluations();
     refreshTemplates();
     setStorageInfo(calculateStorageSize());
@@ -143,21 +139,16 @@ const Settings = () => {
     <AppLayout>
       <PageHeader
         title="Settings"
-        description="Configure application settings and thresholds"
+        description="Configure application appearance and data management"
       />
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="mb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-1">
-          <TabsTrigger value="config">Threshold Configuration</TabsTrigger>
+        <TabsList className="mb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-1">
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="tier-names">Tier Names</TabsTrigger>
           <TabsTrigger value="data-management">Data Management</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="config" className="mt-0">
-          <ThresholdConfigTab />
-        </TabsContent>
         
         <TabsContent value="appearance" className="mt-0">
           <AppearanceTab 
@@ -182,7 +173,6 @@ const Settings = () => {
         <TabsContent value="data-management" className="mt-0">
           <DataManagementTab 
             projects={projects}
-            thresholds={thresholds}
             storageInfo={storageInfo}
             onDataImported={handleDataImported}
           />

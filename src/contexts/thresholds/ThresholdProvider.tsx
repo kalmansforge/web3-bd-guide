@@ -14,9 +14,7 @@ export const ThresholdContext = createContext<ThresholdContextType | undefined>(
 
 export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
   const [thresholds, setThresholds] = useState<ThresholdConfig[]>([]);
-  const [originalThresholds, setOriginalThresholds] = useState<ThresholdConfig[]>([]);
   const [loading, setLoading] = useState(true);
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   
   // Get the templates context
   const { activeTemplate, templates } = useTemplates();
@@ -28,7 +26,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
 
       if (storedThresholds && storedThresholds.length > 0) {
         setThresholds(storedThresholds);
-        setOriginalThresholds(JSON.parse(JSON.stringify(storedThresholds)));
       } else {
         const defaultThresholds: ThresholdConfig[] = [];
         
@@ -45,8 +42,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
         });
         
         setThresholds(defaultThresholds);
-        setOriginalThresholds(JSON.parse(JSON.stringify(defaultThresholds)));
-        
         saveThresholdsToStorage(defaultThresholds);
       }
     } catch (error) {
@@ -71,81 +66,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
 
   const isActiveTemplateLocked = (): boolean => {
     return activeTemplate?.isLocked || false;
-  };
-
-  const updateThreshold = async (
-    metricId: string, 
-    categoryId: string, 
-    updatedThresholds: Record<string, string>
-  ) => {
-    // Check if active template is locked
-    if (isActiveTemplateLocked()) {
-      toast({
-        title: "Cannot modify thresholds",
-        description: "The active template is locked. Create a copy to modify thresholds.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    const updatedThresholdsList = thresholds.map((threshold) => {
-      if (threshold.metricId === metricId && threshold.categoryId === categoryId) {
-        return {
-          ...threshold,
-          thresholds: updatedThresholds,
-          updatedAt: new Date().toISOString()
-        };
-      }
-      return threshold;
-    });
-    
-    setThresholds(updatedThresholdsList);
-    setUnsavedChanges(true);
-  };
-
-  const saveChanges = async () => {
-    // Check if active template is locked
-    if (isActiveTemplateLocked()) {
-      toast({
-        title: "Cannot save threshold changes",
-        description: "The active template is locked. Create a copy to modify thresholds.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    try {
-      const success = saveThresholdsToStorage(thresholds);
-      
-      if (success) {
-        setOriginalThresholds(JSON.parse(JSON.stringify(thresholds)));
-        setUnsavedChanges(false);
-        
-        toast({
-          title: "Threshold configurations saved",
-          description: "Your changes have been saved successfully",
-        });
-      } else {
-        throw new Error("Failed to save to local storage");
-      }
-    } catch (error) {
-      console.error("Error saving thresholds:", error);
-      toast({
-        title: "Error saving threshold configurations",
-        description: "Please try again later",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const resetChanges = () => {
-    setThresholds(JSON.parse(JSON.stringify(originalThresholds)));
-    setUnsavedChanges(false);
-    
-    toast({
-      title: "Changes discarded",
-      description: "Threshold configurations have been reset to their previous state",
-    });
   };
 
   const applyTemplateThresholds = (templateId?: string) => {
@@ -178,7 +98,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
       
       // Set and save the updated thresholds
       setThresholds(updatedThresholds);
-      setOriginalThresholds(JSON.parse(JSON.stringify(updatedThresholds)));
       saveThresholdsToStorage(updatedThresholds);
       
       toast({
@@ -194,7 +113,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
       });
     } finally {
       setLoading(false);
-      setUnsavedChanges(false);
     }
   };
 
@@ -203,10 +121,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
       value={{
         thresholds,
         loading,
-        updateThreshold,
-        saveChanges,
-        resetChanges,
-        unsavedChanges,
         refreshData,
         applyTemplateThresholds,
         isActiveTemplateLocked
