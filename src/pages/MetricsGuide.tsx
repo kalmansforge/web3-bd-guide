@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Search, Settings } from "lucide-react";
@@ -12,6 +11,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import { metricsData } from "@/data/metricsData";
 import { useThresholds } from "@/contexts/ThresholdContext";
 import { cn } from "@/lib/utils";
+import { getAllTierNames } from "@/utils/storage";
 
 const MetricsGuide = () => {
   const navigate = useNavigate();
@@ -19,13 +19,12 @@ const MetricsGuide = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<string>("foundational");
   const { thresholds, loading } = useThresholds();
+  const tierNames = getAllTierNames();
   
   useEffect(() => {
-    if (location.state?.activeTab) {
-      setActiveTab(location.state.activeTab);
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location, navigate]);
+    console.log("Current Tier Names:", tierNames);
+    console.log("Current Thresholds:", thresholds);
+  }, [tierNames, thresholds]);
   
   // Find the active category or default to the first one
   const category = metricsData.find(c => c.id === activeTab) || metricsData[0];
@@ -38,13 +37,16 @@ const MetricsGuide = () => {
     : category?.metrics || [];
 
   const getThresholdValue = (metricId: string, tier: string) => {
+    console.log(`Getting threshold for metric: ${metricId}, tier: ${tier}`);
+    console.log("Tier Names:", tierNames);
+    console.log("Loading:", loading);
+    console.log("Thresholds:", thresholds);
+    
     if (loading || !thresholds.length) {
-      // Use default threshold from metricsData when thresholds are loading or empty
       const metric = category?.metrics.find(m => m.id === metricId);
       return metric?.thresholds[tier] || "No threshold defined";
     }
     
-    // Find custom threshold from user settings
     const threshold = thresholds.find(
       t => t.metricId === metricId && t.categoryId === category?.id
     );
@@ -53,7 +55,6 @@ const MetricsGuide = () => {
       return threshold.thresholds[tier];
     }
     
-    // Fall back to default threshold
     const metric = category?.metrics.find(m => m.id === metricId);
     return metric?.thresholds[tier] || "No threshold defined";
   };
