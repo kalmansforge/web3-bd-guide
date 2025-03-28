@@ -63,33 +63,31 @@ const AppSidebar = () => {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="h-14 flex items-center px-6 justify-between">
-        <div className="flex items-center space-x-2">
+      <SidebarHeader className="h-14 flex items-center justify-between px-4">
+        <div className={cn("flex items-center gap-2", isExpanded ? "ml-2" : "justify-center w-full")}>
           <GitBranch className="h-5 w-5 text-primary" />
           <span className={cn("font-semibold text-base transition-opacity", 
-            isExpanded ? "opacity-100" : "opacity-0"
+            isExpanded ? "opacity-100" : "opacity-0 hidden"
           )}>
             Web3 BD Guide
           </span>
         </div>
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={toggleSidebar}
-          className="h-7 w-7"
-          aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
-        >
-          {isExpanded ? (
+        {isExpanded && (
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={toggleSidebar}
+            className="h-7 w-7"
+            aria-label="Collapse sidebar"
+          >
             <PanelLeftClose className="h-5 w-5" />
-          ) : (
-            <PanelLeftOpen className="h-5 w-5" />
-          )}
-        </Button>
+          </Button>
+        )}
       </SidebarHeader>
       
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Main</SidebarGroupLabel>
+          <SidebarGroupLabel className={isExpanded ? "" : "sr-only"}>Main</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
@@ -100,17 +98,17 @@ const AppSidebar = () => {
                       className={({ isActive }) =>
                         cn(
                           "flex items-center gap-3 w-full rounded-md transition-colors",
-                          isActive ? "text-primary font-medium" : "text-muted-foreground hover:text-foreground"
+                          isActive ? "text-primary font-medium" : "text-muted-foreground hover:text-foreground",
+                          !isExpanded && "justify-center"
                         )
                       }
                     >
                       <item.icon className="h-5 w-5" />
-                      <span className={cn(
-                        "transition-opacity", 
-                        isExpanded ? "opacity-100" : "opacity-0"
-                      )}>
-                        {item.title}
-                      </span>
+                      {isExpanded && (
+                        <span className="transition-opacity">
+                          {item.title}
+                        </span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -120,15 +118,29 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className={cn("p-4", isExpanded ? "block" : "hidden")}>
-        <div className="flex items-center justify-between px-4 py-2 rounded-lg bg-accent">
-          <div className="flex items-center gap-2">
-            <FileText className="h-4 w-4 text-primary" />
-            <span className="text-xs font-medium">v1.0</span>
+      {isExpanded ? (
+        <SidebarFooter className="p-4">
+          <div className="flex items-center justify-between px-4 py-2 rounded-lg bg-accent">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-primary" />
+              <span className="text-xs font-medium">v1.0</span>
+            </div>
+            <span className="text-xs text-muted-foreground">BD Field Guide</span>
           </div>
-          <span className="text-xs text-muted-foreground">BD Field Guide</span>
-        </div>
-      </SidebarFooter>
+        </SidebarFooter>
+      ) : (
+        <SidebarFooter className="p-4">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={toggleSidebar}
+            className="w-full flex justify-center"
+            aria-label="Expand sidebar"
+          >
+            <PanelLeftOpen className="h-5 w-5" />
+          </Button>
+        </SidebarFooter>
+      )}
     </Sidebar>
   );
 };
