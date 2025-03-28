@@ -34,7 +34,7 @@ const DetailedMetrics = ({
                 <MetricCard
                   key={metric.id}
                   metric={metric}
-                  categoryId={category.id}
+                  category={category.id}
                   readOnly={true}
                 />
               ))}

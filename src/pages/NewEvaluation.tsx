@@ -187,7 +187,7 @@ const NewEvaluation = () => {
                             <MetricCard
                               key={metric.id}
                               metric={metricWithEvaluation}
-                              categoryId={category.id}
+                              category={category.id}
                               onUpdate={handleUpdateMetric}
                             />
                           );

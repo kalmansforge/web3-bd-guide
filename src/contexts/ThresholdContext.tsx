@@ -93,20 +93,20 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
   const updateThreshold = async (
     metricId: string, 
     categoryId: string, 
-    thresholds: Record<string, string>
+    updatedThresholds: Record<string, string>
   ) => {
-    const updatedThresholds = thresholds.map((threshold: ThresholdConfig) => {
+    const updatedThresholdsList = thresholds.map((threshold) => {
       if (threshold.metricId === metricId && threshold.categoryId === categoryId) {
         return {
           ...threshold,
-          thresholds,
+          thresholds: updatedThresholds,
           updatedAt: new Date().toISOString()
         };
       }
       return threshold;
     });
     
-    setThresholds(updatedThresholds);
+    setThresholds(updatedThresholdsList);
     setUnsavedChanges(true);
   };
 

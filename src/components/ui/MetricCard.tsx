@@ -13,20 +13,29 @@ import { getAllTierNames, getTierDisplayName } from '@/utils/storage';
 interface MetricCardProps {
   metric: Metric;
   category: string;
+  categoryId?: string; // Added for backwards compatibility
   evaluation?: MetricEvaluation;
   onViewDetail?: () => void;
+  onUpdate?: (categoryId: string, metricId: string, evaluation: MetricEvaluation) => void;
   isPreview?: boolean;
+  readOnly?: boolean;
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({
   metric,
   category,
+  categoryId,
   evaluation,
   onViewDetail,
-  isPreview = false
+  onUpdate,
+  isPreview = false,
+  readOnly = false
 }) => {
   const [expanded, setExpanded] = useState(false);
   const tierNames = getAllTierNames();
+  
+  // Use category or categoryId (for backward compatibility)
+  const effectiveCategory = category || categoryId || "";
   
   // Get tier names from the evaluation if available
   const evalTier = evaluation?.tier || null;
@@ -143,7 +152,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
             </CardDescription>
           </div>
           
-          {!isPreview && (
+          {!isPreview && !readOnly && (
             <div className="flex flex-col gap-2">
               {evalTier && (
                 <Badge className={cn(
@@ -175,9 +184,9 @@ const MetricCard: React.FC<MetricCardProps> = ({
       {expanded && (
         <CardContent className="pb-3 space-y-4">
           <div className="flex items-center gap-2 text-sm">
-            <div className={cn("flex items-center gap-1", getCategoryColor(category))}>
-              {getCategoryIcon(category)}
-              <span className="capitalize">{category}</span>
+            <div className={cn("flex items-center gap-1", getCategoryColor(effectiveCategory))}>
+              {getCategoryIcon(effectiveCategory)}
+              <span className="capitalize">{effectiveCategory}</span>
             </div>
             
             <Separator orientation="vertical" className="h-4" />
