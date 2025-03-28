@@ -33,7 +33,7 @@ const Dashboard = () => {
   };
 
   const handleViewStorage = () => {
-    navigate('/settings');
+    navigate('/settings?tab=data-management');
   };
 
   return (
