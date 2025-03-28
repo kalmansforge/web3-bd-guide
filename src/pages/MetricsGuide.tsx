@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, Filter, MessageSquare } from "lucide-react";
@@ -12,7 +13,6 @@ import MetricsCategoryTabs from "@/components/metrics-guide/MetricsCategoryTabs"
 import CategoryDescription from "@/components/metrics-guide/CategoryDescription";
 import MetricsList from "@/components/metrics-guide/MetricsList";
 import CategoryNotFound from "@/components/metrics-guide/CategoryNotFound";
-import BackButton from "@/components/metrics-guide/BackButton";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -56,8 +56,18 @@ const MetricsGuide = () => {
     );
   }
   
+  // Check if there are no categories in the template
+  if (!activeTemplate?.categories || activeTemplate.categories.length === 0) {
+    return <CategoryNotFound />;
+  }
+  
   // Find the active category or default to the first one
   const category = activeTemplate.categories.find(c => c.id === activeTab) || activeTemplate.categories[0];
+  
+  // If category doesn't exist but we have other categories, redirect to the first one
+  if (!category) {
+    return <CategoryNotFound />;
+  }
   
   // Filter metrics based on all criteria (search, notes filter)
   const filteredMetrics = category?.metrics.filter(metric => {
@@ -92,10 +102,6 @@ const MetricsGuide = () => {
     return metric?.thresholds[tier] || "No threshold defined";
   };
 
-  if (!category) {
-    return <CategoryNotFound onNavigateHome={() => navigate("/")} />;
-  }
-
   return (
     <AppLayout>
       <PageHeader
@@ -114,8 +120,6 @@ const MetricsGuide = () => {
           </div>
         }
       />
-      
-      <BackButton onClick={() => navigate("/")} />
       
       {/* Enhanced search and filter UI matching the project details page */}
       <div className="space-y-4 mb-6">
