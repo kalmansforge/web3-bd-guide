@@ -1,6 +1,6 @@
 
 import { EvaluationTemplate } from "@/types/templates";
-import { saveTemplate } from "./crud";
+import { saveTemplate } from "./update";
 
 /**
  * Import a template
