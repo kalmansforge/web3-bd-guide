@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Edit, FileText, DownloadIcon } from "lucide-react";
+import { ArrowLeft, Edit, DownloadIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,13 +14,14 @@ import MetricCard from "@/components/ui/MetricCard";
 import ProjectScoreCard from "@/components/ui/ProjectScoreCard";
 import { Metric, TierType } from "@/types/metrics";
 import { toast } from "sonner";
-import { exportSingleEvaluation, getTierDisplayName } from "@/utils/localStorageUtils";
+import { exportSingleEvaluation, getTierDisplayName, getAllTierNames } from "@/utils/localStorageUtils";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { projects, setCurrentProject } = useEvaluation();
   const [activeCategory, setActiveCategory] = useState(metricsData[0].id);
+  const tierNames = getAllTierNames();
   
   const project = projects.find(p => p.id === id);
   
@@ -145,9 +146,9 @@ const ProjectDetail = () => {
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
                   {project.overallTier === 'T0' 
-                    ? 'Strategic tier project with high potential' 
+                    ? `${tierNames.t0} tier project with high potential` 
                     : project.overallTier === 'T1'
-                    ? 'Secondary tier project with moderate potential'
+                    ? `${tierNames.t1} tier project with moderate potential`
                     : 'Not enough data to classify'
                   }
                 </p>
@@ -182,7 +183,6 @@ const ProjectDetail = () => {
                     .length;
                   
                   const percentComplete = (completedCount / categoryMetrics) * 100;
-                  const tierNames = { t0: getTierDisplayName('T0'), t1: getTierDisplayName('T1') };
                   
                   return (
                     <Card key={category.id} className="overflow-hidden">
