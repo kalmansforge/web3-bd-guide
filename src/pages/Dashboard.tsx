@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, ChevronRight, BarChart2, HardDrive, Shield, Users, Database, AlertCircle } from "lucide-react";
@@ -62,7 +61,6 @@ const Dashboard = () => {
   const t1Projects = projects.filter(p => p.overallTier === 'T1').length;
   
   useEffect(() => {
-    // Refresh storage info when dashboard loads
     setStorageInfo(calculateStorageSize());
   }, []);
   
@@ -126,7 +124,6 @@ const Dashboard = () => {
         />
       </div>
       
-      {/* Storage usage card */}
       <Card className="mt-6 mb-8 overflow-hidden">
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
@@ -155,41 +152,6 @@ const Dashboard = () => {
                 value={storageInfo.percentUsed} 
                 className={`h-2 ${storageInfo.percentUsed > 80 ? 'bg-destructive/20' : 'bg-muted'}`}
               />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-muted/30 p-4 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Evaluations</span>
-                  <span className="text-sm">{Math.round(storageInfo.evaluationsSize / 1024).toFixed(1)} KB</span>
-                </div>
-                <Progress 
-                  value={(storageInfo.evaluationsSize / storageInfo.totalSize) * 100} 
-                  className="h-1.5 bg-muted"
-                />
-              </div>
-              
-              <div className="bg-muted/30 p-4 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Thresholds</span>
-                  <span className="text-sm">{Math.round(storageInfo.thresholdsSize / 1024).toFixed(1)} KB</span>
-                </div>
-                <Progress 
-                  value={(storageInfo.thresholdsSize / storageInfo.totalSize) * 100} 
-                  className="h-1.5 bg-muted"
-                />
-              </div>
-              
-              <div className="bg-muted/30 p-4 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Appearance</span>
-                  <span className="text-sm">{Math.round(storageInfo.appearanceSize / 1024).toFixed(1)} KB</span>
-                </div>
-                <Progress 
-                  value={(storageInfo.appearanceSize / storageInfo.totalSize) * 100} 
-                  className="h-1.5 bg-muted"
-                />
-              </div>
             </div>
             
             {storageInfo.percentUsed > 80 && (
