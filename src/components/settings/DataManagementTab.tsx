@@ -1,10 +1,13 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Database, HardDrive } from "lucide-react";
+import { Database, HardDrive, AlertTriangle } from "lucide-react";
 import DataImportExport from "@/components/ui/DataImportExport";
 import { calculateStorageSize } from "@/utils/storage";
+import { Button } from "@/components/ui/button";
+import ClearLocalDataDialog from "@/components/ui/ClearLocalDataDialog";
 
 interface DataManagementTabProps {
   projects: any[];
@@ -19,6 +22,11 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
   storageInfo,
   onDataImported
 }) => {
+  const handleDataCleared = () => {
+    // This will trigger a refresh of the app state
+    window.location.reload();
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
@@ -113,6 +121,36 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
               Make sure to regularly export your data as a backup, as clearing your browser cache or storage will 
               permanently delete all your evaluations and settings.
             </p>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Danger Zone Section */}
+      <Card className="border-red-200 dark:border-red-800">
+        <CardHeader className="pb-2 text-red-500 dark:text-red-400">
+          <CardTitle className="flex items-center">
+            <AlertTriangle className="h-5 w-5 mr-2" />
+            Danger Zone
+          </CardTitle>
+          <CardDescription className="text-red-400 dark:text-red-300">
+            Destructive actions that cannot be undone
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-red-50 dark:bg-red-950/30 p-4 rounded-md border border-red-200 dark:border-red-800">
+            <h3 className="text-sm font-medium text-red-700 dark:text-red-300 mb-2">Clear All Local Data</h3>
+            <p className="text-sm text-red-600 dark:text-red-400 mb-4">
+              This will permanently delete all your project evaluations, threshold configurations, and 
+              appearance settings. This action cannot be undone.
+            </p>
+            <ClearLocalDataDialog 
+              trigger={
+                <Button variant="outline" className="bg-red-100 border-red-200 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/50">
+                  Clear All Local Data
+                </Button>
+              }
+              onDataCleared={handleDataCleared}
+            />
           </div>
         </CardContent>
       </Card>

@@ -1,10 +1,8 @@
 
 import React, { useState } from "react";
-import { Download, AlertTriangle } from "lucide-react";
-import { ProjectEvaluation } from "@/types/metrics";
-import { useEvaluation } from "@/contexts/EvaluationContext";
-import { exportSingleEvaluation } from "@/utils/storage";
+import { AlertTriangle, Download } from "lucide-react";
 import { toast } from "sonner";
+import { exportAllData } from "@/utils/storage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,40 +16,44 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-interface DeleteProjectDialogProps {
-  project: ProjectEvaluation;
+interface ClearLocalDataDialogProps {
   trigger: React.ReactNode;
-  onDeleted?: () => void;
+  onDataCleared: () => void;
 }
 
-const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({ 
-  project, 
+const ClearLocalDataDialog: React.FC<ClearLocalDataDialogProps> = ({ 
   trigger,
-  onDeleted
+  onDataCleared
 }) => {
-  const { deleteProject } = useEvaluation();
   const [hasExported, setHasExported] = useState(false);
   const [open, setOpen] = useState(false);
   
   const handleExportBeforeDelete = () => {
-    if (exportSingleEvaluation(project.id)) {
-      toast.success("Project exported", {
-        description: "Your evaluation has been exported as a JSON file"
+    if (exportAllData()) {
+      toast.success("Data exported", {
+        description: "Your data has been exported as a JSON file"
       });
       setHasExported(true);
     } else {
       toast.error("Export failed", {
-        description: "There was a problem exporting your evaluation"
+        description: "There was a problem exporting your data"
       });
     }
   };
   
-  const handleDelete = async () => {
-    await deleteProject(project.id);
-    if (onDeleted) {
-      onDeleted();
+  const handleClearData = () => {
+    try {
+      localStorage.clear();
+      toast.success("Data cleared", {
+        description: "All local storage data has been cleared"
+      });
+      onDataCleared();
+      setOpen(false);
+    } catch (error) {
+      toast.error("Failed to clear data", {
+        description: "There was a problem clearing your data"
+      });
     }
-    setOpen(false);
   };
   
   const handleOpenChange = (newOpen: boolean) => {
@@ -69,17 +71,18 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete project evaluation?</AlertDialogTitle>
+          <AlertDialogTitle>Clear all local data?</AlertDialogTitle>
           <AlertDialogDescription className="space-y-4">
             <div className="flex items-start gap-2 text-amber-600 dark:text-amber-400">
               <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5" />
               <p>
-                This will permanently delete the evaluation for <strong>{project.name}</strong>. 
+                This will permanently delete ALL your data including project evaluations, 
+                threshold configurations, and appearance settings.
                 This action cannot be undone.
               </p>
             </div>
             
-            <p>Would you like to export this evaluation before deleting it?</p>
+            <p>Would you like to export your data before clearing everything?</p>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-col space-y-2 sm:space-y-0">
@@ -96,7 +99,7 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
             <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
           </div>
           <AlertDialogAction 
-            onClick={handleDelete} 
+            onClick={handleClearData} 
             disabled={!hasExported}
             className={`
               w-full 
@@ -106,7 +109,7 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
               }
             `}
           >
-            {hasExported ? "Delete Evaluation" : "Export First to Delete"}
+            {hasExported ? "Clear All Data" : "Export First to Clear"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -114,4 +117,4 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
   );
 };
 
-export default DeleteProjectDialog;
+export default ClearLocalDataDialog;
