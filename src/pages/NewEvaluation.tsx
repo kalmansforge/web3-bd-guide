@@ -7,6 +7,7 @@ import { useEvaluation } from "@/contexts/EvaluationContext";
 import { metricsData } from "@/data/metricsData";
 import { MetricEvaluation, TierType } from "@/types/metrics";
 import EvaluationTabs from "@/components/evaluation/EvaluationTabs";
+import { getProjectCompletionData } from "@/utils/scoring";
 
 const NewEvaluation = () => {
   // Local state
@@ -44,12 +45,10 @@ const NewEvaluation = () => {
     navigate("/projects");
   };
   
-  // Calculate stats for the evaluation progress
-  const totalMetrics = metricsData.reduce((acc, category) => acc + category.metrics.length, 0);
-  const completedMetrics = currentProject 
-    ? Object.keys(currentProject.metrics).length 
-    : 0;
+  // Get evaluation progress stats
+  const { completedMetrics, totalMetrics } = getProjectCompletionData(currentProject, metricsData);
   
+  // Get score and tier
   const { score, tier } = currentProject 
     ? calculateProjectScore() 
     : { score: 0, tier: null as TierType };

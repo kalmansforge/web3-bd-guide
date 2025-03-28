@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { ProjectEvaluation, MetricEvaluation, TierType } from "@/types/metrics";
 import { toast } from "sonner";
 import { saveEvaluationsToStorage, getEvaluationsFromStorage } from "@/utils/storage";
+import { calculateProjectScore } from "@/utils/scoring";
+import { metricsData } from "@/data/metricsData";
 
 interface EvaluationContextType {
   projects: ProjectEvaluation[];
@@ -82,23 +84,11 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setCurrentProject(updatedProject);
   };
 
-  const calculateProjectScore = (project = currentProject): { score: number; tier: TierType } => {
+  const calculateProjectScoreWrapper = (project = currentProject) => {
     if (!project) return { score: 0, tier: null };
     
-    const metrics = Object.values(project.metrics);
-    if (metrics.length === 0) return { score: 0, tier: null };
-    
-    const t0Count = metrics.filter(m => m.tier === 'T0').length;
-    const t1Count = metrics.filter(m => m.tier === 'T1').length;
-    const totalMetrics = metrics.length;
-    
-    const score = (t0Count * 100 + t1Count * 50) / totalMetrics;
-    
-    let tier: TierType = null;
-    if (score >= 70) tier = 'T0';
-    else if (score >= 40) tier = 'T1';
-    
-    return { score, tier };
+    const result = calculateProjectScore(project, metricsData);
+    return { score: result.score, tier: result.tier };
   };
 
   const saveProject = async () => {
@@ -107,7 +97,7 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       
-      const { score, tier } = calculateProjectScore();
+      const { score, tier } = calculateProjectScoreWrapper();
       const updatedProject = {
         ...currentProject,
         overallScore: score,
@@ -173,7 +163,7 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         updateMetric,
         saveProject,
         deleteProject,
-        calculateProjectScore,
+        calculateProjectScore: calculateProjectScoreWrapper,
         loading,
         refreshData
       }}

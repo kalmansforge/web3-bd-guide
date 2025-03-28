@@ -8,6 +8,7 @@ import ProjectScoreCard from "@/components/ui/ProjectScoreCard";
 import { Metric, TierType } from "@/types/metrics";
 import { exportSingleEvaluation } from "@/utils/storage";
 import AppLayout from "@/components/layout/AppLayout";
+import { getProjectCompletionData } from "@/utils/scoring";
 
 // Import our new components
 import ProjectActions from "@/components/project-detail/ProjectActions";
@@ -34,8 +35,8 @@ const ProjectDetail = () => {
   
   if (!project) return null;
   
-  const totalMetrics = metricsData.reduce((acc, category) => acc + category.metrics.length, 0);
-  const completedMetrics = Object.keys(project.metrics).length;
+  // Get evaluation progress stats using our utility function
+  const { completedMetrics, totalMetrics } = getProjectCompletionData(project, metricsData);
   
   const handleEditProject = () => {
     setCurrentProject(project);
