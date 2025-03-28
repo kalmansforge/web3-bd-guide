@@ -1,5 +1,12 @@
 
-import { MetricCategory } from "./metrics";
+import { Metric } from "./metrics";
+
+export interface MetricCategory {
+  id: string;
+  name: string;
+  description: string;
+  metrics: Metric[];
+}
 
 export interface EvaluationTemplate {
   id: string;

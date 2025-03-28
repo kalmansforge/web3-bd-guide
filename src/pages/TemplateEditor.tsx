@@ -13,8 +13,9 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTemplates } from "@/contexts/TemplateContext";
 import { Badge } from "@/components/ui/badge";
-import { EvaluationTemplate, MetricCategory } from "@/types/templates";
+import { EvaluationTemplate } from "@/types/templates";
 import { Metric } from "@/types/metrics";
+import { MetricCategory } from "@/types/templates";
 import {
   AlertDialog,
   AlertDialogAction,

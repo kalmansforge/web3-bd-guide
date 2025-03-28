@@ -12,6 +12,7 @@ import { useTemplates } from "@/contexts/TemplateContext";
 import { useThresholds } from "@/contexts/ThresholdContext";
 import { EvaluationTemplate } from "@/types/templates";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const TemplatesTab = () => {
   const navigate = useNavigate();
@@ -26,10 +27,12 @@ const TemplatesTab = () => {
     createTemplate
   } = useTemplates();
   
-  const { thresholds, refreshData: refreshThresholds } = useThresholds();
+  const { thresholds, refreshData: refreshThresholds, applyTemplateThresholds } = useThresholds();
   
   const [searchTerm, setSearchTerm] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [pendingTemplateId, setPendingTemplateId] = useState<string | null>(null);
   
   const handleCreateTemplate = () => {
     const newTemplate = createTemplate();
@@ -40,25 +43,28 @@ const TemplatesTab = () => {
   };
   
   const handleSetActive = (templateId: string) => {
-    AlertDialog({
-      title: "Apply Template",
-      description: "Would you like to update the thresholds based on this template? This will replace your current threshold configurations.",
-      cancelText: "Keep Current Thresholds",
-      confirmText: "Update Thresholds",
-      onConfirm: () => {
-        setActiveTemplateId(templateId);
-        refreshThresholds();
+    setPendingTemplateId(templateId);
+    setConfirmDialogOpen(true);
+  };
+  
+  const confirmSetActive = (updateThresholds: boolean) => {
+    if (pendingTemplateId) {
+      setActiveTemplateId(pendingTemplateId);
+      
+      if (updateThresholds) {
+        applyTemplateThresholds(pendingTemplateId);
         toast.success("Template and thresholds updated", {
           description: "The template has been set as active and thresholds have been updated"
         });
-      },
-      onCancel: () => {
-        setActiveTemplateId(templateId);
+      } else {
         toast.success("Template activated", {
           description: "The template has been set as active but thresholds remain unchanged"
         });
       }
-    });
+      
+      setPendingTemplateId(null);
+      setConfirmDialogOpen(false);
+    }
   };
   
   const handleDuplicate = (templateId: string) => {
@@ -145,36 +151,6 @@ const TemplatesTab = () => {
     template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     template.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  // Helper function to render our confirmation dialog
-  const AlertDialog = ({ 
-    title, 
-    description, 
-    confirmText, 
-    cancelText, 
-    onConfirm, 
-    onCancel 
-  }: { 
-    title: string; 
-    description: string; 
-    confirmText: string; 
-    cancelText: string; 
-    onConfirm: () => void; 
-    onCancel: () => void; 
-  }) => {
-    return (
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>{confirmText}</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    );
-  };
 
   return (
     <div className="space-y-6">
@@ -268,36 +244,14 @@ const TemplatesTab = () => {
             
             <CardFooter className="pt-4 pb-4 flex flex-wrap gap-2">
               {template.id !== activeTemplate.id && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                    >
-                      <Settings className="mr-1 h-3 w-3" />
-                      Set Active
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialog 
-                    title="Apply Template"
-                    description="Would you like to update the thresholds based on this template? This will replace your current threshold configurations."
-                    cancelText="Keep Current Thresholds"
-                    confirmText="Update Thresholds"
-                    onConfirm={() => {
-                      setActiveTemplateId(template.id);
-                      refreshThresholds();
-                      toast.success("Template and thresholds updated", {
-                        description: "The template has been set as active and thresholds have been updated"
-                      });
-                    }}
-                    onCancel={() => {
-                      setActiveTemplateId(template.id);
-                      toast.success("Template activated", {
-                        description: "The template has been set as active but thresholds remain unchanged"
-                      });
-                    }}
-                  />
-                </AlertDialog>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleSetActive(template.id)}
+                >
+                  <Settings className="mr-1 h-3 w-3" />
+                  Set Active
+                </Button>
               )}
               
               <Button 
@@ -383,6 +337,26 @@ const TemplatesTab = () => {
           </div>
         </Card>
       )}
+      
+      {/* Template activation confirmation dialog */}
+      <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Apply Template</DialogTitle>
+            <DialogDescription>
+              Would you like to update the thresholds based on this template? This will replace your current threshold configurations.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => confirmSetActive(false)}>
+              Keep Current Thresholds
+            </Button>
+            <Button onClick={() => confirmSetActive(true)}>
+              Update Thresholds
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
