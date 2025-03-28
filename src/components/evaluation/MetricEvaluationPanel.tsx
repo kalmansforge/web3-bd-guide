@@ -1,10 +1,11 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { MetricCategory, MetricEvaluation, ProjectEvaluation } from "@/types/metrics";
 import MetricCard from "@/components/ui/MetricCard";
+import MetricEvaluationForm from "./MetricEvaluationForm";
 
 interface MetricEvaluationPanelProps {
   activeCategory: string;
@@ -21,6 +22,8 @@ const MetricEvaluationPanel: React.FC<MetricEvaluationPanelProps> = ({
   currentProject,
   handleUpdateMetric
 }) => {
+  const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+  
   const handlePrevCategory = () => {
     const currentIndex = metricsData.findIndex(c => c.id === activeCategory);
     if (currentIndex > 0) {
@@ -33,6 +36,14 @@ const MetricEvaluationPanel: React.FC<MetricEvaluationPanelProps> = ({
     if (currentIndex < metricsData.length - 1) {
       setActiveCategory(metricsData[currentIndex + 1].id);
     }
+  };
+  
+  const handleOpenMetricForm = (metricId: string) => {
+    setSelectedMetric(metricId);
+  };
+  
+  const handleCloseMetricForm = () => {
+    setSelectedMetric(null);
   };
 
   return (
@@ -97,7 +108,9 @@ const MetricEvaluationPanel: React.FC<MetricEvaluationPanelProps> = ({
                     key={metric.id}
                     metric={metricWithEvaluation}
                     category={category.id}
+                    evaluation={evaluation}
                     onUpdate={handleUpdateMetric}
+                    onViewDetail={() => handleOpenMetricForm(metric.id)}
                   />
                 );
               })}

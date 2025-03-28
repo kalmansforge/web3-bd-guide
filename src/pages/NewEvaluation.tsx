@@ -37,12 +37,16 @@ const NewEvaluation = () => {
   };
   
   const handleUpdateMetric = (categoryId: string, metricId: string, evaluation: MetricEvaluation) => {
-    updateMetric(categoryId, metricId, evaluation);
+    if (updateMetric) {
+      updateMetric(categoryId, metricId, evaluation);
+    }
   };
   
   const handleSaveProject = () => {
-    saveProject();
-    navigate("/projects");
+    if (saveProject) {
+      saveProject();
+      navigate("/projects");
+    }
   };
   
   // Get evaluation progress stats

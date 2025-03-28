@@ -11,6 +11,7 @@ import MetricThresholds from './metric-card/metric-thresholds';
 import MetricTools from './metric-card/metric-tools';
 import MetricBadges from './metric-card/metric-badges';
 import TierBadge from './metric-card/tier-badge';
+import MetricEvaluationForm from '@/components/evaluation/MetricEvaluationForm';
 
 interface MetricCardProps {
   metric: Metric;
@@ -34,6 +35,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
   readOnly = false
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [showEvaluationForm, setShowEvaluationForm] = useState(false);
   const tierNames = getAllTierNames();
   
   // Use category or categoryId (for backward compatibility)
@@ -42,6 +44,33 @@ const MetricCard: React.FC<MetricCardProps> = ({
   // Get tier names from the evaluation if available
   const evalTier = evaluation?.tier || metric?.tier || null;
   const evalTierDisplay = evalTier ? getTierDisplayName(evalTier) : null;
+
+  const handleViewDetail = () => {
+    if (onViewDetail) {
+      onViewDetail();
+    } else if (onUpdate && !readOnly) {
+      setShowEvaluationForm(true);
+    }
+  };
+
+  const handleSaveEvaluation = (categoryId: string, metricId: string, evaluation: MetricEvaluation) => {
+    if (onUpdate) {
+      onUpdate(categoryId, metricId, evaluation);
+      setShowEvaluationForm(false);
+    }
+  };
+
+  if (showEvaluationForm && onUpdate) {
+    return (
+      <MetricEvaluationForm
+        metric={metric}
+        categoryId={effectiveCategory}
+        evaluation={evaluation}
+        onSave={handleSaveEvaluation}
+        onCancel={() => setShowEvaluationForm(false)}
+      />
+    );
+  }
 
   return (
     <Card className={cn(
@@ -91,16 +120,16 @@ const MetricCard: React.FC<MetricCardProps> = ({
         </CardContent>
       )}
       
-      {(expanded || onViewDetail) && (
+      {(expanded || onViewDetail || onUpdate) && (
         <CardFooter className={cn("px-6 pb-4 pt-0", isPreview ? "hidden" : "")}>
-          {onViewDetail && (
+          {(onViewDetail || onUpdate) && !showEvaluationForm && (
             <Button
               variant="outline"
               className="w-full"
-              onClick={onViewDetail}
+              onClick={handleViewDetail}
               size="sm"
             >
-              {expanded ? "Edit Evaluation" : "View Details"}
+              {evalTier ? "Edit Evaluation" : "Evaluate Metric"}
             </Button>
           )}
         </CardFooter>
