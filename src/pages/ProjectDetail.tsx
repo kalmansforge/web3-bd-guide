@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit, DownloadIcon } from "lucide-react";
@@ -110,6 +109,89 @@ const ProjectDetail = () => {
       
       <Card className="mb-6">
         <CardHeader className="pb-0">
+          <CardTitle className="text-lg">Evaluation Summary</CardTitle>
+          <CardDescription>
+            Overall assessment of {project.name} based on the Web3 BD metrics framework
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <h3 className="text-lg font-medium mb-2">Classification</h3>
+              <p className="text-3xl font-bold">
+                {project.overallTier ? getTierDisplayName(project.overallTier) : 'Unclassified'}
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {project.overallTier === 'T0' 
+                  ? `${tierNames.t0} tier project with high potential` 
+                  : project.overallTier === 'T1'
+                  ? `${tierNames.t1} tier project with moderate potential`
+                  : 'Not enough data to classify'
+                }
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-medium mb-2">Evaluation Coverage</h3>
+              <p className="text-3xl font-bold">{Math.round((completedMetrics / totalMetrics) * 100)}%</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {completedMetrics} of {totalMetrics} metrics evaluated
+              </p>
+            </div>
+          </div>
+          
+          <Separator className="my-6" />
+          
+          <div>
+            <h3 className="text-lg font-medium mb-3">Category Breakdown</h3>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {metricsData.map(category => {
+                const categoryMetrics = category.metrics.length;
+                const categoryEvaluations = Object.keys(project.metrics)
+                  .filter(key => key.startsWith(`${category.id}_`));
+                const completedCount = categoryEvaluations.length;
+                
+                const t0Count = categoryEvaluations
+                  .filter(key => project.metrics[key].tier === 'T0')
+                  .length;
+                
+                const t1Count = categoryEvaluations
+                  .filter(key => project.metrics[key].tier === 'T1')
+                  .length;
+                
+                const percentComplete = (completedCount / categoryMetrics) * 100;
+                
+                return (
+                  <Card key={category.id} className="overflow-hidden">
+                    <CardHeader className="py-3">
+                      <CardTitle className="text-base">{category.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="py-3">
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Completion</span>
+                          <span>{Math.round(percentComplete)}%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">{tierNames.t0} Metrics</span>
+                          <span>{t0Count} of {completedCount}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">{tierNames.t1} Metrics</span>
+                          <span>{t1Count} of {completedCount}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader className="pb-0">
           <CardTitle className="text-lg">Jump to Category</CardTitle>
         </CardHeader>
         <CardContent>
@@ -129,114 +211,31 @@ const ProjectDetail = () => {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6">
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Evaluation Summary</CardTitle>
-            <CardDescription>
-              Overall assessment of {project.name} based on the Web3 BD metrics framework
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      
+      
+      <h2 className="text-2xl font-semibold tracking-tight mb-4">Detailed Metric Evaluation</h2>
+      
+      <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+        {metricsData.map(category => (
+          <TabsContent key={category.id} value={category.id} className="animate-fade-in">
+            <div className="space-y-2 mb-4">
+              <h3 className="text-lg font-medium">{category.name}</h3>
+              <p className="text-muted-foreground">{category.description}</p>
+            </div>
+            
             <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <h3 className="text-lg font-medium mb-2">Classification</h3>
-                <p className="text-3xl font-bold">
-                  {project.overallTier ? getTierDisplayName(project.overallTier) : 'Unclassified'}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {project.overallTier === 'T0' 
-                    ? `${tierNames.t0} tier project with high potential` 
-                    : project.overallTier === 'T1'
-                    ? `${tierNames.t1} tier project with moderate potential`
-                    : 'Not enough data to classify'
-                  }
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-medium mb-2">Evaluation Coverage</h3>
-                <p className="text-3xl font-bold">{Math.round((completedMetrics / totalMetrics) * 100)}%</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {completedMetrics} of {totalMetrics} metrics evaluated
-                </p>
-              </div>
+              {generateMetricsWithEvaluation(category.id).map(metric => (
+                <MetricCard
+                  key={metric.id}
+                  metric={metric}
+                  categoryId={category.id}
+                  readOnly={true}
+                />
+              ))}
             </div>
-            
-            <Separator className="my-6" />
-            
-            <div>
-              <h3 className="text-lg font-medium mb-3">Category Breakdown</h3>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {metricsData.map(category => {
-                  const categoryMetrics = category.metrics.length;
-                  const categoryEvaluations = Object.keys(project.metrics)
-                    .filter(key => key.startsWith(`${category.id}_`));
-                  const completedCount = categoryEvaluations.length;
-                  
-                  const t0Count = categoryEvaluations
-                    .filter(key => project.metrics[key].tier === 'T0')
-                    .length;
-                  
-                  const t1Count = categoryEvaluations
-                    .filter(key => project.metrics[key].tier === 'T1')
-                    .length;
-                  
-                  const percentComplete = (completedCount / categoryMetrics) * 100;
-                  
-                  return (
-                    <Card key={category.id} className="overflow-hidden">
-                      <CardHeader className="py-3">
-                        <CardTitle className="text-base">{category.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="py-3">
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Completion</span>
-                            <span>{Math.round(percentComplete)}%</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">{tierNames.t0} Metrics</span>
-                            <span>{t0Count} of {completedCount}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">{tierNames.t1} Metrics</span>
-                            <span>{t1Count} of {completedCount}</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">Detailed Metric Evaluation</h2>
-        
-        <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-          {metricsData.map(category => (
-            <TabsContent key={category.id} value={category.id} className="animate-fade-in">
-              <div className="space-y-2 mb-4">
-                <h3 className="text-lg font-medium">{category.name}</h3>
-                <p className="text-muted-foreground">{category.description}</p>
-              </div>
-              
-              <div className="grid gap-4 md:grid-cols-2">
-                {generateMetricsWithEvaluation(category.id).map(metric => (
-                  <MetricCard
-                    key={metric.id}
-                    metric={metric}
-                    categoryId={category.id}
-                    readOnly={true}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </div>
+          </TabsContent>
+        ))}
+      </Tabs>
     </AppLayout>
   );
 };
