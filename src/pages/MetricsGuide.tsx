@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Search, Settings } from "lucide-react";
@@ -19,18 +18,15 @@ const MetricsGuide = () => {
   const [activeTab, setActiveTab] = React.useState<string>("foundational");
   const { thresholds, loading } = useThresholds();
   
-  // Update active tab from location state when component mounts or location changes
   useEffect(() => {
     if (location.state?.activeTab) {
       setActiveTab(location.state.activeTab);
-      // Clear the state after using it to avoid persisting
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location, navigate]);
   
   const category = metricsData.find(c => c.id === activeTab);
   if (!category) {
-    // Default to foundational if category is not found
     setActiveTab("foundational");
     return null;
   }
@@ -42,22 +38,19 @@ const MetricsGuide = () => {
     : category.metrics;
 
   const getThresholdValue = (metricId: string, tier: "T0" | "T1") => {
-    // If not yet loaded, use the default values
     if (loading || thresholds.length === 0) {
       const metric = category.metrics.find(m => m.id === metricId);
       return metric ? metric.thresholds[tier] : "";
     }
     
-    // Use custom threshold if available
     const threshold = thresholds.find(
       t => t.metricId === metricId && t.categoryId === category.id
     );
     
     if (threshold) {
-      return tier === "T0" ? threshold.t0Threshold : threshold.t1Threshold;
+      return threshold.thresholds[tier];
     }
     
-    // Fallback to default
     const metric = category.metrics.find(m => m.id === metricId);
     return metric ? metric.thresholds[tier] : "";
   };

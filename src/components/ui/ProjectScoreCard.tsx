@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { TierType } from '@/types/metrics';
 import { cn } from '@/lib/utils';
-import { getTierDisplayName } from '@/utils/localStorageUtils';
+import { getTierDisplayName } from '@/utils/storage';
 
 interface ProjectScoreCardProps {
   score: number;

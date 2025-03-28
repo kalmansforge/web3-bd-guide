@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { getAllTierNames, getTierDisplayName, getTierInternalName } from "@/utils/localStorageUtils";
+import { getAllTierNames, getTierDisplayName, getTierInternalName } from "@/utils/storage";
 
 interface MetricCardProps {
   metric: Metric;

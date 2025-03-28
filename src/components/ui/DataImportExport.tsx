@@ -1,10 +1,9 @@
-
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, Upload, FileText } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { exportAllData, importData } from "@/utils/localStorageUtils";
+import { exportAllData, importData } from "@/utils/storage";
 
 interface DataImportExportProps {
   onDataImported?: () => void;

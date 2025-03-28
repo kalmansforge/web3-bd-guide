@@ -1,8 +1,7 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { ProjectEvaluation, MetricEvaluation, TierType } from "@/types/metrics";
 import { toast } from "sonner";
-import { saveEvaluationsToStorage, getEvaluationsFromStorage } from "@/utils/localStorageUtils";
+import { saveEvaluationsToStorage, getEvaluationsFromStorage } from "@/utils/storage";
 
 interface EvaluationContextType {
   projects: ProjectEvaluation[];
@@ -32,7 +31,6 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [currentProject, setCurrentProject] = useState<ProjectEvaluation | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Load projects from local storage
   const loadProjects = () => {
     try {
       setLoading(true);
@@ -47,12 +45,10 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   };
   
-  // Refresh data (used after import)
   const refreshData = () => {
     loadProjects();
   };
 
-  // Load projects on initial mount
   useEffect(() => {
     loadProjects();
   }, []);
@@ -118,14 +114,12 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         overallTier: tier
       };
       
-      // Update local state
       setProjects(prev => {
         const existing = prev.findIndex(p => p.id === updatedProject.id);
         const updatedProjects = existing >= 0 
           ? prev.map(p => p.id === updatedProject.id ? updatedProject : p)
           : [...prev, updatedProject];
           
-        // Save to local storage
         saveEvaluationsToStorage(updatedProjects);
         return updatedProjects;
       });
@@ -147,10 +141,8 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       
-      // Update local state
       setProjects(prev => {
         const updatedProjects = prev.filter(p => p.id !== id);
-        // Save to local storage
         saveEvaluationsToStorage(updatedProjects);
         return updatedProjects;
       });

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "@/hooks/use-toast";
 import { metricsData } from "@/data/metricsData";
@@ -42,19 +41,15 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
-  // Load thresholds from local storage or initialize with defaults
   const loadThresholds = async () => {
     setLoading(true);
     try {
-      // Check if there are threshold configurations in local storage
       const storedThresholds = getThresholdsFromStorage();
 
       if (storedThresholds && storedThresholds.length > 0) {
-        // Use stored thresholds
         setThresholds(storedThresholds);
         setOriginalThresholds(JSON.parse(JSON.stringify(storedThresholds)));
       } else {
-        // If no configurations exist, initialize with defaults from metricsData
         const defaultThresholds: ThresholdConfig[] = [];
         
         metricsData.forEach(category => {
@@ -72,7 +67,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
         setThresholds(defaultThresholds);
         setOriginalThresholds(JSON.parse(JSON.stringify(defaultThresholds)));
         
-        // Save the default thresholds to local storage
         saveThresholdsToStorage(defaultThresholds);
       }
     } catch (error) {
@@ -87,7 +81,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Refresh data (used after import)
   const refreshData = () => {
     loadThresholds();
   };
@@ -96,7 +89,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
     loadThresholds();
   }, []);
 
-  // Update a specific threshold
   const updateThreshold = async (
     metricId: string, 
     categoryId: string, 
@@ -117,7 +109,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
     setUnsavedChanges(true);
   };
 
-  // Save all changes to local storage
   const saveChanges = async () => {
     try {
       const success = saveThresholdsToStorage(thresholds);
@@ -143,7 +134,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Reset changes to last saved state
   const resetChanges = () => {
     setThresholds(JSON.parse(JSON.stringify(originalThresholds)));
     setUnsavedChanges(false);

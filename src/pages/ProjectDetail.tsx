@@ -6,7 +6,7 @@ import { useEvaluation } from "@/contexts/EvaluationContext";
 import { metricsData } from "@/data/metricsData";
 import ProjectScoreCard from "@/components/ui/ProjectScoreCard";
 import { Metric, TierType } from "@/types/metrics";
-import { exportSingleEvaluation } from "@/utils/localStorageUtils";
+import { exportSingleEvaluation } from "@/utils/storage";
 import AppLayout from "@/components/layout/AppLayout";
 
 // Import our new components

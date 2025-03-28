@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, ChevronRight, Trash2, Search, Filter } from "lucide-react";
@@ -31,7 +30,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import { useEvaluation } from "@/contexts/EvaluationContext";
 import { cn } from "@/lib/utils";
 import { metricsData } from "@/data/metricsData";
-import { getTierDisplayName } from "@/utils/localStorageUtils";
+import { getTierDisplayName } from "@/utils/storage";
 import { ProjectEvaluation } from "@/types/metrics";
 
 const Projects = () => {

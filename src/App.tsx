@@ -5,7 +5,7 @@ import { Toaster as SonnerToaster } from "sonner";
 import { ThresholdProvider } from '@/contexts/ThresholdContext';
 import { EvaluationProvider } from '@/contexts/EvaluationContext';
 import { useEffect } from 'react';
-import { getAppearanceFromStorage } from '@/utils/localStorageUtils';
+import { getAppearanceFromStorage } from '@/utils/storage';
 
 // Pages
 import Index from './pages/Index';

@@ -1,11 +1,10 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Database, HardDrive } from "lucide-react";
 import DataImportExport from "@/components/ui/DataImportExport";
-import { calculateStorageSize } from "@/utils/localStorageUtils";
+import { calculateStorageSize } from "@/utils/storage";
 
 interface DataManagementTabProps {
   projects: any[];
