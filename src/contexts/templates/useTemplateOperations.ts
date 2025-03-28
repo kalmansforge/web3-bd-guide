@@ -49,9 +49,15 @@ export function useTemplateOperations() {
     importExportOps.loading
   ]);
   
-  // Wrapped refresh function
-  const refreshData = useCallback(() => {
-    templateData.refreshData();
+  // Wrapped refresh function that returns a promise
+  const refreshData = useCallback(async () => {
+    return new Promise<void>((resolve) => {
+      templateData.refreshData();
+      // Use a small timeout to ensure the data is refreshed before resolving
+      setTimeout(() => {
+        resolve();
+      }, 100);
+    });
   }, [templateData]);
 
   // Combine all the hooks into a single API
@@ -91,10 +97,11 @@ export function useTemplateOperations() {
       }
       return success;
     },
-    importTemplateFromJson: (json: string) => {
+    importTemplateFromJson: async (json: string) => {
       const result = importExportOps.importTemplateFromJson(json);
       if (result.success) {
-        refreshData();
+        // Wait for the refresh to complete before returning
+        await refreshData();
       }
       return result;
     },

@@ -2,28 +2,22 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { EvaluationTemplate } from "@/types/templates";
-import {
-  importTemplate,
-  exportTemplate
-} from "@/utils/storage/templates";
+import { importTemplate, exportTemplate } from "@/utils/storage/templates";
 
 export function useTemplateImportExport() {
   const [loading, setLoading] = useState(false);
 
-  const importTemplateFromJson = (json: string) => {
+  const importTemplateFromJson = (json: string): { success: boolean; template?: EvaluationTemplate } => {
     try {
       setLoading(true);
-      
       const result = importTemplate(json);
       
-      if (result.success && result.template) {
-        toast.success("Template imported", {
-          description: `"${result.template.name}" has been imported`
-        });
-      } else {
+      if (!result.success) {
         toast.error("Failed to import template", {
-          description: "The template format is invalid or the import failed"
+          description: "The file contains invalid template data"
         });
+      } else if (result.template) {
+        toast.success("Template imported successfully");
       }
       
       return result;
@@ -40,16 +34,13 @@ export function useTemplateImportExport() {
   const exportTemplateById = (id: string): boolean => {
     try {
       setLoading(true);
+      const success = exportTemplate(id);
       
-      if (exportTemplate(id)) {
-        toast.success("Template exported", {
-          description: "The template has been exported to a JSON file"
-        });
-        return true;
-      } else {
+      if (!success) {
         toast.error("Failed to export template");
-        return false;
       }
+      
+      return success;
     } catch (error: any) {
       toast.error("Error exporting template", {
         description: error.message

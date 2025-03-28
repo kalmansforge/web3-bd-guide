@@ -5,6 +5,7 @@ import TemplateHeader from "./templates/TemplateHeader";
 import TemplateSearch from "./templates/TemplateSearch";
 import TemplateTabContent from "./templates/TemplateTabContent";
 import TemplateActionsConfirmDialog from "@/components/templates/list/TemplateActionsConfirmDialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TemplatesTab = () => {
   const {
@@ -15,6 +16,7 @@ const TemplatesTab = () => {
     fileInputRef,
     confirmDialogOpen,
     setConfirmDialogOpen,
+    loading,
     refreshData,
     handleCreateTemplate,
     handleSetActive,
@@ -31,6 +33,28 @@ const TemplatesTab = () => {
   useEffect(() => {
     refreshData();
   }, [refreshData]);
+
+  if (loading || !activeTemplate) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Templates</h2>
+            <p className="text-muted-foreground">Manage your evaluation templates</p>
+          </div>
+          <Skeleton className="h-10 w-32" />
+        </div>
+        
+        <Skeleton className="h-12 w-full max-w-md mb-6" />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-64 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

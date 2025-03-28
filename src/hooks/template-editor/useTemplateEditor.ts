@@ -12,10 +12,11 @@ import { Metric } from "@/types/metrics";
 export const useTemplateEditor = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { templates } = useTemplates();
+  const { templates, refreshData } = useTemplates();
   const [template, setTemplate] = useState<EvaluationTemplate | null>(null);
   const [activeTab, setActiveTab] = useState("details");
   const [isLocked, setIsLocked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Import the focused hooks
   const {
@@ -41,19 +42,32 @@ export const useTemplateEditor = () => {
     handleToolsChange,
   } = useMetricOperations(template, isLocked, setHasUnsavedChanges);
 
-  // Load template data
+  // Load template data with a small delay to ensure templates are loaded
   useEffect(() => {
-    if (id) {
-      const foundTemplate = templates.find((t) => t.id === id);
-      if (foundTemplate) {
-        setTemplate(JSON.parse(JSON.stringify(foundTemplate))); // Deep clone to avoid reference issues
-        setIsLocked(foundTemplate.isLocked || false);
-      } else {
-        toast.error("Template not found");
-        navigate("/settings?tab=templates");
+    const loadTemplate = async () => {
+      setIsLoading(true);
+      
+      // Refresh data first to ensure we have the latest templates
+      await refreshData();
+      
+      if (id) {
+        const foundTemplate = templates.find((t) => t.id === id);
+        if (foundTemplate) {
+          setTemplate(JSON.parse(JSON.stringify(foundTemplate))); // Deep clone to avoid reference issues
+          setIsLocked(foundTemplate.isLocked || false);
+        } else {
+          toast.error("Template not found", {
+            description: "The selected template could not be found"
+          });
+          navigate("/settings?tab=templates");
+        }
       }
-    }
-  }, [id, templates, navigate]);
+      
+      setIsLoading(false);
+    };
+    
+    loadTemplate();
+  }, [id, templates, navigate, refreshData]);
   
   // Wrapper functions that update the template state
   const templateChangeWrapper = (field: keyof EvaluationTemplate, value: string) => {
@@ -144,6 +158,7 @@ export const useTemplateEditor = () => {
     setActiveTab,
     hasUnsavedChanges,
     isLocked,
+    isLoading,
     handleDuplicateAndEdit,
     handleBackClick,
     handleSaveTemplate,

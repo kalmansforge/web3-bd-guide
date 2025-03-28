@@ -16,7 +16,8 @@ export const useTemplateOperations = () => {
     importTemplateFromJson,
     exportTemplateById,
     createTemplate,
-    refreshData
+    refreshData,
+    loading
   } = useTemplates();
   
   const { refreshData: refreshThresholds, applyTemplateThresholds } = useThresholds();
@@ -25,6 +26,7 @@ export const useTemplateOperations = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingTemplateId, setPendingTemplateId] = useState<string | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
   
   const handleCreateTemplate = () => {
     const newTemplate = createTemplate();
@@ -59,9 +61,12 @@ export const useTemplateOperations = () => {
     }
   };
   
-  const handleDuplicate = (templateId: string) => {
+  const handleDuplicate = async (templateId: string) => {
     const success = duplicateTemplateById(templateId);
     if (success) {
+      // Ensure templates are refreshed before navigating
+      await refreshData();
+      
       // Find the newly created duplicate template (it will have "Copy" in the name)
       const original = templates.find(t => t.id === templateId);
       if (original) {
@@ -93,20 +98,21 @@ export const useTemplateOperations = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
+    setIsImporting(true);
     
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const fileContent = event.target?.result as string;
-        const result = importTemplateFromJson(fileContent);
+        const result = await importTemplateFromJson(fileContent);
         
         if (result.success && result.template) {
           navigate(`/template-editor/${result.template.id}`);
-        } else {
+        } else if (!result.success) {
           toast.error("Import Failed", {
             description: "The file contains invalid template data"
           });
@@ -116,10 +122,11 @@ export const useTemplateOperations = () => {
           description: "There was an error importing the template"
         });
       } finally {
-        // Reset file input
+        // Reset file input and importing state
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
+        setIsImporting(false);
       }
     };
     
@@ -127,12 +134,20 @@ export const useTemplateOperations = () => {
       toast.error("Import Failed", {
         description: "There was an error reading the file"
       });
+      setIsImporting(false);
     };
     
     reader.readAsText(file);
   };
   
   const handleDelete = (templateId: string) => {
+    if (!activeTemplate) {
+      toast.error("No active template", {
+        description: "Please wait for templates to load"
+      });
+      return;
+    }
+    
     if (templateId === activeTemplate.id) {
       toast.error("Cannot delete active template", {
         description: "Switch to another template before deleting this one"
@@ -168,6 +183,8 @@ export const useTemplateOperations = () => {
     confirmDialogOpen,
     setConfirmDialogOpen,
     pendingTemplateId,
+    isImporting,
+    loading,
     refreshData,
     handleCreateTemplate,
     handleSetActive,
