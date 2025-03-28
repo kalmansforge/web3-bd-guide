@@ -143,11 +143,10 @@ const Settings = () => {
       />
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="mb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-1">
+        <TabsList className="mb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="tier-names">Tier Names</TabsTrigger>
           <TabsTrigger value="data-management">Data Management</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
         </TabsList>
         
         <TabsContent value="appearance" className="mt-0">
@@ -173,13 +172,12 @@ const Settings = () => {
         <TabsContent value="data-management" className="mt-0">
           <DataManagementTab 
             projects={projects}
-            storageInfo={storageInfo}
+            storageInfo={{
+              totalSize: storageInfo.totalSize,
+              breakdown: storageInfo.breakdown
+            }}
             onDataImported={handleDataImported}
           />
-        </TabsContent>
-        
-        <TabsContent value="templates" className="mt-0">
-          <TemplatesTab />
         </TabsContent>
       </Tabs>
     </AppLayout>

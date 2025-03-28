@@ -77,6 +77,11 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
               <ClearLocalDataDialog 
                 itemCount={projects.length}
                 onDataCleared={onDataImported} 
+                trigger={
+                  <Button variant="destructive" className="w-full" size="sm">
+                    Clear All Local Data
+                  </Button>
+                }
               />
             </div>
           </CardContent>

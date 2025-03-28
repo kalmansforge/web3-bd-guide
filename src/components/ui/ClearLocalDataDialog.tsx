@@ -17,13 +17,15 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface ClearLocalDataDialogProps {
-  trigger: React.ReactNode;
   onDataCleared: () => void;
+  trigger?: React.ReactNode;
+  itemCount?: number;
 }
 
 const ClearLocalDataDialog: React.FC<ClearLocalDataDialogProps> = ({ 
   trigger,
-  onDataCleared
+  onDataCleared,
+  itemCount
 }) => {
   const [hasExported, setHasExported] = useState(false);
   const [open, setOpen] = useState(false);
@@ -67,7 +69,15 @@ const ClearLocalDataDialog: React.FC<ClearLocalDataDialogProps> = ({
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
-        {trigger}
+        {trigger || (
+          <Button 
+            variant="destructive" 
+            className="w-full" 
+            size="sm"
+          >
+            Clear All Local Data
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -76,7 +86,8 @@ const ClearLocalDataDialog: React.FC<ClearLocalDataDialogProps> = ({
             <div className="flex items-start gap-2 text-amber-600 dark:text-amber-400">
               <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5" />
               <p>
-                This will permanently delete ALL your data including project evaluations, 
+                This will permanently delete ALL your data
+                {itemCount ? ` including ${itemCount} project evaluations, ` : ' including '}
                 threshold configurations, and appearance settings.
                 This action cannot be undone.
               </p>

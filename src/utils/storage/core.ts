@@ -35,6 +35,19 @@ export const getFromStorage = <T>(key: string, defaultValue: T): T => {
 };
 
 /**
+ * Format byte size to human-readable format
+ */
+export const formatBytes = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+/**
  * Calculate storage usage statistics
  */
 export const calculateStorageSize = (): { 
@@ -44,6 +57,7 @@ export const calculateStorageSize = (): {
   totalSize: number;
   totalSizeFormatted: string;
   percentUsed: number;
+  breakdown: Record<string, number>;
 } => {
   try {
     const evaluations = localStorage.getItem(EVALUATIONS_KEY) || '';
@@ -54,6 +68,13 @@ export const calculateStorageSize = (): {
     const thresholdsSize = new Blob([thresholds]).size;
     const appearanceSize = new Blob([appearance]).size;
     const totalSize = evaluationsSize + thresholdsSize + appearanceSize;
+    
+    // Create breakdown object
+    const breakdown: Record<string, number> = {
+      'Evaluations': evaluationsSize,
+      'Thresholds': thresholdsSize,
+      'Appearance': appearanceSize
+    };
     
     // Format total size for display
     let totalSizeFormatted = '';
@@ -74,7 +95,8 @@ export const calculateStorageSize = (): {
       appearanceSize,
       totalSize,
       totalSizeFormatted,
-      percentUsed: Math.min(percentUsed, 100) // Cap at 100%
+      percentUsed: Math.min(percentUsed, 100), // Cap at 100%
+      breakdown
     };
   } catch (error) {
     console.error('Error calculating storage size:', error);
@@ -84,7 +106,8 @@ export const calculateStorageSize = (): {
       appearanceSize: 0,
       totalSize: 0,
       totalSizeFormatted: '0 B',
-      percentUsed: 0
+      percentUsed: 0,
+      breakdown: {}
     };
   }
 };
