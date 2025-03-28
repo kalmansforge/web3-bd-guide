@@ -21,9 +21,9 @@ import "./App.css";
 
 function App() {
   return (
-    <ThresholdProvider>
-      <EvaluationProvider>
-        <TemplateProvider>
+    <TemplateProvider>
+      <ThresholdProvider>
+        <EvaluationProvider>
           <Router>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -38,9 +38,9 @@ function App() {
             </Routes>
           </Router>
           <Toaster position="top-right" closeButton richColors />
-        </TemplateProvider>
-      </EvaluationProvider>
-    </ThresholdProvider>
+        </EvaluationProvider>
+      </ThresholdProvider>
+    </TemplateProvider>
   );
 }
 

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "@/hooks/use-toast";
 import { metricsData } from "@/data/metricsData";
@@ -45,7 +44,7 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   
   // Get the templates context
-  const { activeTemplate, templates } = useTemplates?.() || { activeTemplate: null, templates: [] };
+  const { activeTemplate, templates } = useTemplates();
 
   const loadThresholds = async () => {
     setLoading(true);
