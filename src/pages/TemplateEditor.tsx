@@ -54,14 +54,14 @@ const TemplateEditor = () => {
         }
         actions={
           <div className="flex gap-3">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  Back
-                </Button>
-              </AlertDialogTrigger>
-              {hasUnsavedChanges && !isLocked ? (
+            {hasUnsavedChanges && !isLocked ? (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                  </Button>
+                </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
@@ -76,23 +76,17 @@ const TemplateEditor = () => {
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
-              ) : (
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Return to templates</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to go back to the templates list?
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter className="gap-2 mt-4">
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleBackClick}>
-                      Go back
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              )}
-            </AlertDialog>
+              </AlertDialog>
+            ) : (
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={handleBackClick}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
+            )}
             
             {isLocked ? (
               <Button onClick={handleDuplicateAndEdit} className="flex items-center gap-2">
