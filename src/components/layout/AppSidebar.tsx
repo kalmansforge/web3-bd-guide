@@ -43,7 +43,7 @@ const navItems = [
     path: "/projects",
   },
   { 
-    title: "Evaluation", 
+    title: "New Evaluation", 
     icon: BarChart2, 
     path: "/new-evaluation",
   },
@@ -105,7 +105,7 @@ const AppSidebar = () => {
                     <>
                       <div 
                         className="flex items-center gap-3 w-full rounded-md p-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
-                        onClick={() => toggleGroup(item.title)}
+                        onClick={() => item.path && navigate(item.path)}
                       >
                         <item.icon className="h-5 w-5" />
                         <span>{item.title}</span>
