@@ -61,7 +61,7 @@ const TemplateEditor = () => {
                   Back
                 </Button>
               </AlertDialogTrigger>
-              {hasUnsavedChanges && !isLocked && (
+              {hasUnsavedChanges && !isLocked ? (
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
@@ -73,6 +73,21 @@ const TemplateEditor = () => {
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction onClick={handleBackClick}>
                       Leave without saving
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              ) : (
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Return to templates</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to go back to the templates list?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="gap-2 mt-4">
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleBackClick}>
+                      Go back
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
