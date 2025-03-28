@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/ui/PageHeader";
 import DeleteProjectDialog from "@/components/ui/DeleteProjectDialog";
 import { ProjectEvaluation } from "@/types/metrics";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ProjectActionsProps {
   project: ProjectEvaluation;
@@ -15,6 +16,7 @@ interface ProjectActionsProps {
 
 const ProjectActions = ({ project, onEditProject, onExportPDF }: ProjectActionsProps) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   return (
     <>
@@ -22,12 +24,19 @@ const ProjectActions = ({ project, onEditProject, onExportPDF }: ProjectActionsP
         title={project.name}
         description={`Evaluation created on ${new Date(project.date).toLocaleDateString()}`}
         actions={
-          <div className="flex space-x-2">
-            <Button variant="outline" onClick={onExportPDF}>
+          <div className={isMobile ? "w-full grid grid-cols-1 gap-2" : "flex space-x-2"}>
+            <Button 
+              variant="outline" 
+              onClick={onExportPDF}
+              className={isMobile ? "w-full justify-center" : ""}
+            >
               <DownloadIcon className="mr-2 h-4 w-4" />
               Export
             </Button>
-            <Button onClick={onEditProject}>
+            <Button 
+              onClick={onEditProject}
+              className={isMobile ? "w-full justify-center" : ""}
+            >
               <Edit className="mr-2 h-4 w-4" />
               Edit Evaluation
             </Button>
@@ -35,7 +44,13 @@ const ProjectActions = ({ project, onEditProject, onExportPDF }: ProjectActionsP
               project={project}
               onDeleted={() => navigate("/projects")}
               trigger={
-                <Button variant="outline" className="bg-red-50 border-red-200 text-red-600 hover:bg-red-100 hover:text-red-700">
+                <Button 
+                  variant="outline" 
+                  className={cn(
+                    "bg-red-50 border-red-200 text-red-600 hover:bg-red-100 hover:text-red-700",
+                    isMobile ? "w-full justify-center" : ""
+                  )}
+                >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete
                 </Button>

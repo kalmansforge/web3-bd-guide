@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { TierType } from "@/types/metrics";
 import { getTierDisplayName, getAllTierNames } from "@/utils/storage";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ProjectSummaryProps {
   name: string;
@@ -23,6 +24,7 @@ const ProjectSummary = ({
   metrics 
 }: ProjectSummaryProps) => {
   const tierNames = getAllTierNames();
+  const isMobile = useIsMobile();
   
   // Find tier display names by their internal names
   const findTierDisplayName = (internalName: string): string => {
@@ -47,7 +49,7 @@ const ProjectSummary = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
           <div>
             <h3 className="text-lg font-medium mb-2">Classification</h3>
             <p className="text-3xl font-bold">
@@ -76,7 +78,7 @@ const ProjectSummary = ({
         
         <div>
           <h3 className="text-lg font-medium mb-3">Category Breakdown</h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {metricsData.map(category => {
               const categoryMetrics = category.metrics.length;
               const categoryEvaluations = Object.keys(metrics)

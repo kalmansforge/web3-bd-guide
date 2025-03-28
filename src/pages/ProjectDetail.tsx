@@ -9,6 +9,7 @@ import { Metric, TierType } from "@/types/metrics";
 import { exportSingleEvaluation } from "@/utils/storage";
 import AppLayout from "@/components/layout/AppLayout";
 import { getProjectCompletionData } from "@/utils/scoring";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Import our new components
 import ProjectActions from "@/components/project-detail/ProjectActions";
@@ -21,6 +22,7 @@ const ProjectDetail = () => {
   const navigate = useNavigate();
   const { projects, setCurrentProject } = useEvaluation();
   const [activeCategory, setActiveCategory] = useState(metricsData[0].id);
+  const isMobile = useIsMobile();
   
   const project = projects.find(p => p.id === id);
   
@@ -74,42 +76,44 @@ const ProjectDetail = () => {
 
   return (
     <AppLayout>
-      <ProjectActions 
-        project={project}
-        onEditProject={handleEditProject}
-        onExportPDF={handleExportPDF}
-      />
-      
-      <div className="mb-6">
-        <ProjectScoreCard 
-          score={project.overallScore || 0} 
-          tier={project.overallTier as TierType} 
-          completedMetrics={completedMetrics} 
+      <div className="max-w-[1600px] mx-auto">
+        <ProjectActions 
+          project={project}
+          onEditProject={handleEditProject}
+          onExportPDF={handleExportPDF}
+        />
+        
+        <div className={`mb-6 ${isMobile ? "px-1" : ""}`}>
+          <ProjectScoreCard 
+            score={project.overallScore || 0} 
+            tier={project.overallTier as TierType} 
+            completedMetrics={completedMetrics} 
+            totalMetrics={totalMetrics}
+          />
+        </div>
+        
+        <ProjectSummary 
+          name={project.name}
+          overallTier={project.overallTier as TierType}
+          completedMetrics={completedMetrics}
           totalMetrics={totalMetrics}
+          metricsData={metricsData}
+          metrics={project.metrics}
+        />
+        
+        <CategoryNavigation 
+          categories={metricsData}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
+        
+        <DetailedMetrics 
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          metricsData={metricsData}
+          generateMetricsWithEvaluation={generateMetricsWithEvaluation}
         />
       </div>
-      
-      <ProjectSummary 
-        name={project.name}
-        overallTier={project.overallTier as TierType}
-        completedMetrics={completedMetrics}
-        totalMetrics={totalMetrics}
-        metricsData={metricsData}
-        metrics={project.metrics}
-      />
-      
-      <CategoryNavigation 
-        categories={metricsData}
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-      />
-      
-      <DetailedMetrics 
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-        metricsData={metricsData}
-        generateMetricsWithEvaluation={generateMetricsWithEvaluation}
-      />
     </AppLayout>
   );
 };

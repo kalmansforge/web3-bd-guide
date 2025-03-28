@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CategoryNavigationProps {
   categories: Array<{id: string, name: string}>;
@@ -14,6 +15,8 @@ const CategoryNavigation = ({
   activeCategory, 
   onCategoryChange 
 }: CategoryNavigationProps) => {
+  const isMobile = useIsMobile();
+  
   return (
     <Card className="mb-6">
       <CardHeader className="pb-0">
@@ -26,9 +29,12 @@ const CategoryNavigation = ({
               <TabsTrigger 
                 key={category.id} 
                 value={category.id}
-                className={activeCategory === category.id ? "text-primary font-medium" : ""}
+                className={cn(
+                  activeCategory === category.id ? "text-primary font-medium" : "",
+                  isMobile ? "text-xs" : ""
+                )}
               >
-                {index + 1}. {category.name}
+                {isMobile ? (index + 1) : `${index + 1}. ${category.name}`}
               </TabsTrigger>
             ))}
           </TabsList>
