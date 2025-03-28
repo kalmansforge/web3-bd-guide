@@ -1,25 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Textarea } from "@/components/ui/textarea";
-import { AlertCircle, Save, Undo, Moon, Sun, Laptop, Database, HardDrive } from "lucide-react";
-import { useThresholds } from "@/contexts/ThresholdContext";
-import { useEvaluation } from "@/contexts/EvaluationContext";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
-import { metricsData } from "@/data/metricsData";
 import AppLayout from "@/components/layout/AppLayout";
 import PageHeader from "@/components/ui/PageHeader";
-import DataImportExport from "@/components/ui/DataImportExport";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Switch } from "@/components/ui/switch";
-import { Progress } from "@/components/ui/progress";
-import { toast } from "@/hooks/use-toast";
+import { useThresholds } from "@/contexts/ThresholdContext";
+import { useEvaluation } from "@/contexts/EvaluationContext";
 import { 
   calculateStorageSize, 
   getAppearanceFromStorage, 
@@ -27,9 +12,14 @@ import {
   AppearanceSettings,
   defaultAppearanceSettings 
 } from "@/utils/localStorageUtils";
+import { toast } from "@/hooks/use-toast";
+import ThresholdConfigTab from "@/components/settings/ThresholdConfigTab";
+import AppearanceTab from "@/components/settings/AppearanceTab";
+import TierNamesTab from "@/components/settings/TierNamesTab";
+import DataManagementTab from "@/components/settings/DataManagementTab";
 
 const Settings = () => {
-  const { thresholds, loading, updateThreshold, saveChanges, resetChanges, unsavedChanges, refreshData: refreshThresholds } = useThresholds();
+  const { thresholds, refreshData: refreshThresholds } = useThresholds();
   const { projects, refreshData: refreshEvaluations } = useEvaluation();
   const [activeTab, setActiveTab] = useState("config");
   const [storageInfo, setStorageInfo] = useState(calculateStorageSize());
@@ -42,45 +32,6 @@ const Settings = () => {
     setStorageInfo(calculateStorageSize());
     applyAppearanceSettings(settings);
   }, []);
-  
-  const handleThresholdChange = (
-    metricId: string,
-    categoryId: string,
-    tier: "t0" | "t1",
-    value: string
-  ) => {
-    const threshold = thresholds.find(
-      t => t.metricId === metricId && t.categoryId === categoryId
-    );
-    
-    if (threshold) {
-      updateThreshold(
-        metricId,
-        categoryId,
-        tier === "t0" ? value : threshold.t0Threshold,
-        tier === "t1" ? value : threshold.t1Threshold
-      );
-    }
-  };
-  
-  const getThresholdValue = (metricId: string, categoryId: string, tier: "t0" | "t1") => {
-    const threshold = thresholds.find(
-      t => t.metricId === metricId && t.categoryId === categoryId
-    );
-    
-    if (threshold) {
-      return tier === "t0" ? threshold.t0Threshold : threshold.t1Threshold;
-    }
-    
-    const category = metricsData.find(c => c.id === categoryId);
-    const metric = category?.metrics.find(m => m.id === metricId);
-    
-    if (metric) {
-      return tier === "t0" ? metric.thresholds.T0 : metric.thresholds.T1;
-    }
-    
-    return "";
-  };
 
   const handleDataImported = () => {
     refreshThresholds();
@@ -151,9 +102,7 @@ const Settings = () => {
     }
     
     htmlElement.setAttribute('data-color-scheme', settings.colorScheme);
-    
     htmlElement.setAttribute('data-font-size', settings.fontSize);
-    
     htmlElement.setAttribute('data-border-radius', settings.borderRadius);
     
     if (settings.animation) {
@@ -178,583 +127,37 @@ const Settings = () => {
           <TabsTrigger value="data-management">Data Management</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="config" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-2xl font-semibold">Threshold Configurations</h2>
-              <p className="text-muted-foreground">Customize metric thresholds for evaluation criteria</p>
-            </div>
-            
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                onClick={resetChanges}
-                disabled={!unsavedChanges || loading}
-                className="flex items-center gap-2"
-              >
-                <Undo className="h-4 w-4" />
-                Reset
-              </Button>
-              
-              <Button
-                onClick={saveChanges}
-                disabled={!unsavedChanges || loading}
-                className="flex items-center gap-2"
-              >
-                <Save className="h-4 w-4" />
-                Save Changes
-              </Button>
-            </div>
-          </div>
-          
-          {unsavedChanges && (
-            <Alert className="bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Unsaved Changes</AlertTitle>
-              <AlertDescription>
-                You have unsaved changes to your threshold configurations. Be sure to save them before leaving this page.
-              </AlertDescription>
-            </Alert>
-          )}
-          
-          {loading ? (
-            <div className="py-8 text-center text-muted-foreground">
-              <p>Loading threshold configurations...</p>
-            </div>
-          ) : (
-            <Accordion
-              type="multiple"
-              defaultValue={metricsData.map(category => category.id)}
-              className="space-y-4"
-            >
-              {metricsData.map(category => (
-                <AccordionItem
-                  key={category.id}
-                  value={category.id}
-                  className="border rounded-lg px-2"
-                >
-                  <AccordionTrigger className="hover:no-underline py-4 px-2">
-                    <div className="flex items-center text-left">
-                      <h3 className="text-lg font-medium">{category.name}</h3>
-                      <Badge variant="outline" className="ml-2 bg-primary/10">
-                        {category.metrics.length} metrics
-                      </Badge>
-                    </div>
-                  </AccordionTrigger>
-                  
-                  <AccordionContent>
-                    <div className="space-y-6 py-2">
-                      {category.metrics.map(metric => (
-                        <Card key={metric.id} className="overflow-hidden">
-                          <CardHeader>
-                            <CardTitle className="text-base">{metric.name}</CardTitle>
-                            <CardDescription>{metric.description}</CardDescription>
-                          </CardHeader>
-                          
-                          <CardContent className="space-y-4">
-                            <div className="grid gap-4 sm:grid-cols-2">
-                              <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <Label htmlFor={`${metric.id}-t0`} className="flex items-center">
-                                    <Badge variant="outline" className="mr-2 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                                      T0
-                                    </Badge>
-                                    <span>Strategic Tier Threshold</span>
-                                  </Label>
-                                </div>
-                                
-                                <Textarea
-                                  id={`${metric.id}-t0`}
-                                  value={getThresholdValue(metric.id, category.id, "t0")}
-                                  onChange={(e) => handleThresholdChange(metric.id, category.id, "t0", e.target.value)}
-                                  className="min-h-[80px]"
-                                  placeholder="Enter threshold criteria for T0 (Strategic) classification"
-                                />
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <Label htmlFor={`${metric.id}-t1`} className="flex items-center">
-                                    <Badge variant="outline" className="mr-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                                      T1
-                                    </Badge>
-                                    <span>Secondary Tier Threshold</span>
-                                  </Label>
-                                </div>
-                                
-                                <Textarea
-                                  id={`${metric.id}-t1`}
-                                  value={getThresholdValue(metric.id, category.id, "t1")}
-                                  onChange={(e) => handleThresholdChange(metric.id, category.id, "t1", e.target.value)}
-                                  className="min-h-[80px]"
-                                  placeholder="Enter threshold criteria for T1 (Secondary) classification"
-                                />
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          )}
+        <TabsContent value="config">
+          <ThresholdConfigTab />
         </TabsContent>
         
         <TabsContent value="appearance">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="text-2xl font-semibold">Appearance Settings</h2>
-              <p className="text-muted-foreground">Customize the appearance and theme of your application</p>
-            </div>
-            
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                onClick={resetAppearanceChanges}
-                disabled={!unsavedAppearanceChanges}
-                className="flex items-center gap-2"
-              >
-                <Undo className="h-4 w-4" />
-                Reset
-              </Button>
-              
-              <Button
-                onClick={saveAppearanceChanges}
-                disabled={!unsavedAppearanceChanges}
-                className="flex items-center gap-2"
-              >
-                <Save className="h-4 w-4" />
-                Save Changes
-              </Button>
-            </div>
-          </div>
-          
-          {unsavedAppearanceChanges && (
-            <Alert className="mb-6 bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Unsaved Changes</AlertTitle>
-              <AlertDescription>
-                You have unsaved changes to your appearance settings. Be sure to save them before leaving this page.
-              </AlertDescription>
-            </Alert>
-          )}
-          
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Theme</CardTitle>
-                <CardDescription>
-                  Select your preferred color theme
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label>Theme Mode</Label>
-                  <RadioGroup 
-                    value={appearanceSettings.theme} 
-                    onValueChange={(value) => updateAppearanceSetting('theme', value as 'light' | 'dark' | 'system')}
-                    className="grid grid-cols-3 gap-4"
-                  >
-                    <div>
-                      <RadioGroupItem value="light" id="theme-light" className="peer sr-only" />
-                      <Label
-                        htmlFor="theme-light"
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        <Sun className="h-6 w-6 mb-2" />
-                        <span>Light</span>
-                      </Label>
-                    </div>
-                    
-                    <div>
-                      <RadioGroupItem value="dark" id="theme-dark" className="peer sr-only" />
-                      <Label
-                        htmlFor="theme-dark"
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        <Moon className="h-6 w-6 mb-2" />
-                        <span>Dark</span>
-                      </Label>
-                    </div>
-                    
-                    <div>
-                      <RadioGroupItem value="system" id="theme-system" className="peer sr-only" />
-                      <Label
-                        htmlFor="theme-system"
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        <Laptop className="h-6 w-6 mb-2" />
-                        <span>System</span>
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Color Scheme</Label>
-                  <RadioGroup 
-                    value={appearanceSettings.colorScheme} 
-                    onValueChange={(value) => updateAppearanceSetting('colorScheme', value as 'default' | 'purple' | 'blue' | 'green')}
-                    className="grid grid-cols-4 gap-2"
-                  >
-                    <div>
-                      <RadioGroupItem value="default" id="color-default" className="peer sr-only" />
-                      <Label
-                        htmlFor="color-default"
-                        className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        <span className="h-10 w-10 rounded-full bg-primary" />
-                      </Label>
-                    </div>
-                    
-                    <div>
-                      <RadioGroupItem value="purple" id="color-purple" className="peer sr-only" />
-                      <Label
-                        htmlFor="color-purple"
-                        className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        <span className="h-10 w-10 rounded-full bg-purple-500" />
-                      </Label>
-                    </div>
-                    
-                    <div>
-                      <RadioGroupItem value="blue" id="color-blue" className="peer sr-only" />
-                      <Label
-                        htmlFor="color-blue"
-                        className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        <span className="h-10 w-10 rounded-full bg-blue-500" />
-                      </Label>
-                    </div>
-                    
-                    <div>
-                      <RadioGroupItem value="green" id="color-green" className="peer sr-only" />
-                      <Label
-                        htmlFor="color-green"
-                        className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        <span className="h-10 w-10 rounded-full bg-green-500" />
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>UI Preferences</CardTitle>
-                <CardDescription>
-                  Adjust the user interface to your preferences
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-base">Font Size</Label>
-                    <RadioGroup 
-                      value={appearanceSettings.fontSize} 
-                      onValueChange={(value) => updateAppearanceSetting('fontSize', value as 'small' | 'medium' | 'large')}
-                      className="grid grid-cols-3 gap-2 mt-2"
-                    >
-                      <div>
-                        <RadioGroupItem value="small" id="font-small" className="peer sr-only" />
-                        <Label
-                          htmlFor="font-small"
-                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary text-sm"
-                        >
-                          Small
-                        </Label>
-                      </div>
-                      
-                      <div>
-                        <RadioGroupItem value="medium" id="font-medium" className="peer sr-only" />
-                        <Label
-                          htmlFor="font-medium"
-                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                        >
-                          Medium
-                        </Label>
-                      </div>
-                      
-                      <div>
-                        <RadioGroupItem value="large" id="font-large" className="peer sr-only" />
-                        <Label
-                          htmlFor="font-large"
-                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary text-lg"
-                        >
-                          Large
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-base">Border Radius</Label>
-                    <RadioGroup 
-                      value={appearanceSettings.borderRadius} 
-                      onValueChange={(value) => updateAppearanceSetting('borderRadius', value as 'none' | 'small' | 'medium' | 'large')}
-                      className="grid grid-cols-4 gap-2 mt-2"
-                    >
-                      <div>
-                        <RadioGroupItem value="none" id="radius-none" className="peer sr-only" />
-                        <Label
-                          htmlFor="radius-none"
-                          className="flex aspect-square flex-col items-center justify-center rounded-none border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                        >
-                          <div className="h-10 w-10 bg-primary/20" />
-                        </Label>
-                      </div>
-                      
-                      <div>
-                        <RadioGroupItem value="small" id="radius-small" className="peer sr-only" />
-                        <Label
-                          htmlFor="radius-small"
-                          className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                        >
-                          <div className="h-10 w-10 rounded-sm bg-primary/20" />
-                        </Label>
-                      </div>
-                      
-                      <div>
-                        <RadioGroupItem value="medium" id="radius-medium" className="peer sr-only" />
-                        <Label
-                          htmlFor="radius-medium"
-                          className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                        >
-                          <div className="h-10 w-10 rounded-md bg-primary/20" />
-                        </Label>
-                      </div>
-                      
-                      <div>
-                        <RadioGroupItem value="large" id="radius-large" className="peer sr-only" />
-                        <Label
-                          htmlFor="radius-large"
-                          className="flex aspect-square flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                        >
-                          <div className="h-10 w-10 rounded-full bg-primary/20" />
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                  
-                  <div className="flex items-center justify-between pt-3">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="animation">Animation Effects</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Enable UI animation effects
-                      </p>
-                    </div>
-                    <Switch
-                      id="animation"
-                      checked={appearanceSettings.animation}
-                      onCheckedChange={(checked) => updateAppearanceSetting('animation', checked)}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <AppearanceTab 
+            appearanceSettings={appearanceSettings}
+            unsavedChanges={unsavedAppearanceChanges}
+            updateAppearanceSetting={updateAppearanceSetting}
+            saveChanges={saveAppearanceChanges}
+            resetChanges={resetAppearanceChanges}
+          />
         </TabsContent>
         
         <TabsContent value="tier-names">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="text-2xl font-semibold">Classification Tier Names</h2>
-              <p className="text-muted-foreground">Customize how classification tiers are displayed throughout the application</p>
-            </div>
-            
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                onClick={resetAppearanceChanges}
-                disabled={!unsavedAppearanceChanges}
-                className="flex items-center gap-2"
-              >
-                <Undo className="h-4 w-4" />
-                Reset
-              </Button>
-              
-              <Button
-                onClick={saveAppearanceChanges}
-                disabled={!unsavedAppearanceChanges}
-                className="flex items-center gap-2"
-              >
-                <Save className="h-4 w-4" />
-                Save Changes
-              </Button>
-            </div>
-          </div>
-          
-          {unsavedAppearanceChanges && (
-            <Alert className="mb-6 bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Unsaved Changes</AlertTitle>
-              <AlertDescription>
-                You have unsaved changes to your tier name settings. Be sure to save them before leaving this page.
-              </AlertDescription>
-            </Alert>
-          )}
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Project Classification Tiers</CardTitle>
-              <CardDescription>
-                Customize the names of your classification tiers. These will be used throughout the application.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="t0-name">Primary Tier (Default: T0)</Label>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Projects that meet higher threshold requirements. Typically strategic partners.
-                  </p>
-                  <Input
-                    id="t0-name"
-                    placeholder="e.g., T0, P0, Strategic, etc."
-                    value={appearanceSettings.tierNames.t0}
-                    onChange={(e) => {
-                      updateAppearanceSetting('tierNames', {
-                        ...appearanceSettings.tierNames,
-                        t0: e.target.value
-                      });
-                    }}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="t1-name">Secondary Tier (Default: T1)</Label>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Projects that meet lower threshold requirements. Typically core or secondary partners.
-                  </p>
-                  <Input
-                    id="t1-name"
-                    placeholder="e.g., T1, P1, Core, etc."
-                    value={appearanceSettings.tierNames.t1}
-                    onChange={(e) => {
-                      updateAppearanceSetting('tierNames', {
-                        ...appearanceSettings.tierNames,
-                        t1: e.target.value
-                      });
-                    }}
-                  />
-                </div>
-              </div>
-              
-              <div className="p-4 bg-muted/50 rounded-md">
-                <h3 className="text-sm font-medium mb-2">Preview:</h3>
-                <div className="flex items-center gap-3">
-                  <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                    {appearanceSettings.tierNames.t0}
-                  </Badge>
-                  <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                    {appearanceSettings.tierNames.t1}
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <TierNamesTab 
+            appearanceSettings={appearanceSettings}
+            unsavedChanges={unsavedAppearanceChanges}
+            updateAppearanceSetting={updateAppearanceSetting}
+            saveChanges={saveAppearanceChanges}
+            resetChanges={resetAppearanceChanges}
+          />
         </TabsContent>
         
-        <TabsContent value="data-management" className="space-y-6">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="text-2xl font-semibold">Data Management</h2>
-              <p className="text-muted-foreground">Manage your locally stored data and backup settings</p>
-            </div>
-          </div>
-          
-          <Card className="mb-6">
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center">
-                <Database className="h-5 w-5 mr-2" />
-                Data Summary
-              </CardTitle>
-              <CardDescription>
-                Overview of your locally stored data
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <div className="text-sm text-muted-foreground mb-1">Project Evaluations</div>
-                  <div className="text-2xl font-bold">{projects.length}</div>
-                </div>
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <div className="text-sm text-muted-foreground mb-1">Threshold Configurations</div>
-                  <div className="text-2xl font-bold">{thresholds.length}</div>
-                </div>
-              </div>
-              
-              <div>
-                <div className="flex justify-between mb-1">
-                  <h3 className="text-sm font-medium">Total Storage Used</h3>
-                  <span className="text-sm font-medium text-primary">
-                    {storageInfo.totalSizeFormatted} ({storageInfo.percentUsed.toFixed(1)}% of 5MB)
-                  </span>
-                </div>
-                <Progress 
-                  value={storageInfo.percentUsed} 
-                  className={`h-2 ${storageInfo.percentUsed > 80 ? 'bg-destructive/20' : 'bg-muted'}`}
-                />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <DataImportExport onDataImported={handleDataImported} />
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <HardDrive className="h-5 w-5 mr-2" />
-                Storage Details
-              </CardTitle>
-              <CardDescription>
-                Detailed breakdown of your local storage usage
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Evaluations Data</span>
-                  <span className="text-sm font-medium">
-                    {Math.round(storageInfo.evaluationsSize / 1024).toFixed(1)} KB
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Thresholds Data</span>
-                  <span className="text-sm font-medium">
-                    {Math.round(storageInfo.thresholdsSize / 1024).toFixed(1)} KB
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Appearance Settings</span>
-                  <span className="text-sm font-medium">
-                    {Math.round(storageInfo.appearanceSize / 1024).toFixed(1)} KB
-                  </span>
-                </div>
-                <Separator className="my-1" />
-                <div className="flex justify-between items-center font-medium">
-                  <span className="text-sm">Total</span>
-                  <span className="text-sm">
-                    {storageInfo.totalSizeFormatted}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="bg-muted/50 p-4 rounded-md text-sm">
-                <p className="mb-2 font-medium">About Local Storage</p>
-                <p className="text-muted-foreground">
-                  All your data is stored locally in your browser's storage. This means your data stays private on your device. 
-                  Make sure to regularly export your data as a backup, as clearing your browser cache or storage will 
-                  permanently delete all your evaluations and settings.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="data-management">
+          <DataManagementTab 
+            projects={projects}
+            thresholds={thresholds}
+            storageInfo={storageInfo}
+            onDataImported={handleDataImported}
+          />
         </TabsContent>
       </Tabs>
     </AppLayout>
