@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, MessageSquare } from "lucide-react";
+import { Settings, Filter, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
@@ -21,6 +21,7 @@ const MetricsGuide = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<string>("foundational");
+  const [evaluationFilter, setEvaluationFilter] = useState<string>("all");
   const [notesFilter, setNotesFilter] = useState<string>("all");
   const { thresholds, loading } = useThresholds();
   const tierNames = getAllTierNames();
@@ -33,15 +34,15 @@ const MetricsGuide = () => {
   // Find the active category or default to the first one
   const category = metricsData.find(c => c.id === activeTab) || metricsData[0];
   
-  // Filter metrics based on all criteria (search, notes filter)
+  // Filter metrics based on all criteria (search, evaluation filter, notes filter)
   const filteredMetrics = category?.metrics.filter(metric => {
     // Text search filter
     const matchesSearch = !searchQuery || 
       metric.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
       metric.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // Notes filter - in the metrics guide, we don't have notes yet
-    // but keeping this filter for consistency with project details
+    // In the metrics guide, we don't have evaluated metrics yet, so this filter doesn't apply directly
+    // We'll keep it in the UI for consistency but it won't filter anything
     
     return matchesSearch;
   }) || [];
@@ -85,17 +86,15 @@ const MetricsGuide = () => {
       
       <BackButton onClick={() => navigate("/")} />
       
-      {/* Simplified search and filter UI with category selector to the right */}
+      {/* Enhanced search and filter UI matching the project details page */}
       <div className="space-y-4 mb-6">
+        <MetricsSearch 
+          value={searchQuery} 
+          onChange={setSearchQuery}
+          placeholder="Search metrics by name, description or notes..." 
+        />
+        
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="w-full md:w-2/3">
-            <MetricsSearch 
-              value={searchQuery} 
-              onChange={setSearchQuery}
-              placeholder="Search metrics by name or description..." 
-            />
-          </div>
-          
           <div className="w-full md:w-1/3">
             <Label htmlFor="category-select" className="mb-2 block text-sm font-medium">
               Jump to Category
@@ -113,23 +112,44 @@ const MetricsGuide = () => {
               </SelectContent>
             </Select>
           </div>
-        </div>
-        
-        <div className="w-full">
-          <Label className="mb-2 block text-sm font-medium">
-            <MessageSquare className="inline mr-2 h-4 w-4" />
-            Filter by Notes
-          </Label>
-          <ToggleGroup 
-            type="single" 
-            value={notesFilter} 
-            onValueChange={(value) => value && setNotesFilter(value)}
-            className="justify-start"
-          >
-            <ToggleGroupItem value="all" aria-label="Show all metrics">All</ToggleGroupItem>
-            <ToggleGroupItem value="with-notes" aria-label="Show metrics with notes">With Notes</ToggleGroupItem>
-            <ToggleGroupItem value="without-notes" aria-label="Show metrics without notes">Without Notes</ToggleGroupItem>
-          </ToggleGroup>
+          
+          <div className="w-full md:w-2/3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label className="mb-2 block text-sm font-medium">
+                  <Filter className="inline mr-2 h-4 w-4" />
+                  Filter by Evaluation Status
+                </Label>
+                <ToggleGroup 
+                  type="single" 
+                  value={evaluationFilter} 
+                  onValueChange={(value) => value && setEvaluationFilter(value)}
+                  className="justify-start"
+                >
+                  <ToggleGroupItem value="all" aria-label="Show all metrics">All</ToggleGroupItem>
+                  <ToggleGroupItem value="evaluated" aria-label="Show evaluated metrics">Evaluated</ToggleGroupItem>
+                  <ToggleGroupItem value="not-evaluated" aria-label="Show not evaluated metrics">Not Evaluated</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              
+              <div>
+                <Label className="mb-2 block text-sm font-medium">
+                  <MessageSquare className="inline mr-2 h-4 w-4" />
+                  Filter by Notes
+                </Label>
+                <ToggleGroup 
+                  type="single" 
+                  value={notesFilter} 
+                  onValueChange={(value) => value && setNotesFilter(value)}
+                  className="justify-start"
+                >
+                  <ToggleGroupItem value="all" aria-label="Show all metrics">All</ToggleGroupItem>
+                  <ToggleGroupItem value="with-notes" aria-label="Show metrics with notes">With Notes</ToggleGroupItem>
+                  <ToggleGroupItem value="without-notes" aria-label="Show metrics without notes">Without Notes</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
