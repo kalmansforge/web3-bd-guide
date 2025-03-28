@@ -15,7 +15,7 @@ import TemplateEditor from "@/pages/TemplateEditor";
 
 import { ThresholdProvider } from "@/contexts/ThresholdContext";
 import { EvaluationProvider } from "@/contexts/EvaluationContext";
-import { TemplateProvider } from "@/contexts/TemplateContext";
+import { TemplateProvider } from "@/contexts/templates";
 
 import "./App.css";
 
