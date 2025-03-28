@@ -4,16 +4,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { useEvaluation } from "@/contexts/EvaluationContext";
-import { metricsData } from "@/data/metricsData";
+import { useTemplates } from "@/contexts/TemplateContext";
 import { MetricEvaluation, TierType } from "@/types/metrics";
 import EvaluationTabs from "@/components/evaluation/EvaluationTabs";
 import { getProjectCompletionData } from "@/utils/scoring";
 
 const NewEvaluation = () => {
+  // Get active template
+  const { activeTemplate } = useTemplates();
+  
   // Local state
   const [projectName, setProjectName] = useState("");
   const [currentStep, setCurrentStep] = useState("project");
-  const [activeCategory, setActiveCategory] = useState(metricsData[0].id);
+  const [activeCategory, setActiveCategory] = useState(
+    activeTemplate.categories.length > 0 ? activeTemplate.categories[0].id : ""
+  );
   const [isEditMode, setIsEditMode] = useState(false);
   
   // Navigation and context
@@ -40,6 +45,13 @@ const NewEvaluation = () => {
     }
   }, [location.state, setCurrentProject]);
   
+  // Update active category when template changes
+  useEffect(() => {
+    if (activeTemplate.categories.length > 0 && !activeCategory) {
+      setActiveCategory(activeTemplate.categories[0].id);
+    }
+  }, [activeTemplate, activeCategory]);
+  
   // Handlers
   const handleCreateProject = () => {
     if (!projectName.trim()) return;
@@ -61,7 +73,7 @@ const NewEvaluation = () => {
   };
   
   // Get evaluation progress stats
-  const { completedMetrics, totalMetrics } = getProjectCompletionData(currentProject, metricsData);
+  const { completedMetrics, totalMetrics } = getProjectCompletionData(currentProject, activeTemplate.categories);
   
   // Get score and tier
   const { score, tier } = currentProject 
@@ -96,7 +108,7 @@ const NewEvaluation = () => {
         handleSaveProject={handleSaveProject}
         activeCategory={activeCategory}
         setActiveCategory={setActiveCategory}
-        metricsData={metricsData}
+        metricsData={activeTemplate.categories}
         score={score}
         tier={tier}
         completedMetrics={completedMetrics}

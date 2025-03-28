@@ -3,6 +3,7 @@ import React from "react";
 import { BarChart2, HardDrive, Shield, Users } from "lucide-react";
 import DashboardCard from "./DashboardCard";
 import { ProjectEvaluation } from "@/types/metrics";
+import { useTemplates } from "@/contexts/TemplateContext";
 
 interface StatsOverviewProps {
   projects: ProjectEvaluation[];
@@ -11,8 +12,10 @@ interface StatsOverviewProps {
 }
 
 const StatsOverview = ({ projects, onViewProjects, onViewMetrics }: StatsOverviewProps) => {
+  const { activeTemplate } = useTemplates();
   const t0Projects = projects.filter(p => p.overallTier === 'T0').length;
   const t1Projects = projects.filter(p => p.overallTier === 'T1').length;
+  const categoryCount = activeTemplate?.categories?.length || 0;
 
   return (
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4 mb-8">
@@ -39,7 +42,7 @@ const StatsOverview = ({ projects, onViewProjects, onViewMetrics }: StatsOvervie
       />
       <DashboardCard 
         title="Evaluation Categories" 
-        value="6" 
+        value={categoryCount.toString()} 
         icon={Users}
         description="Framework dimensions"
         onClick={onViewMetrics}

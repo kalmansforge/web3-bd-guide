@@ -1,9 +1,10 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { ProjectEvaluation, MetricEvaluation, TierType } from "@/types/metrics";
 import { toast } from "sonner";
 import { saveEvaluationsToStorage, getEvaluationsFromStorage } from "@/utils/storage";
 import { calculateProjectScore } from "@/utils/scoring";
-import { metricsData } from "@/data/metricsData";
+import { useTemplates } from "@/contexts/TemplateContext";
 
 interface EvaluationContextType {
   projects: ProjectEvaluation[];
@@ -32,6 +33,7 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [projects, setProjects] = useState<ProjectEvaluation[]>([]);
   const [currentProject, setCurrentProject] = useState<ProjectEvaluation | null>(null);
   const [loading, setLoading] = useState(false);
+  const { activeTemplate } = useTemplates();
 
   const loadProjects = () => {
     try {
@@ -87,7 +89,7 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const calculateProjectScoreWrapper = (project = currentProject) => {
     if (!project) return { score: 0, tier: null };
     
-    const result = calculateProjectScore(project, metricsData);
+    const result = calculateProjectScore(project, activeTemplate.categories);
     return { score: result.score, tier: result.tier };
   };
 

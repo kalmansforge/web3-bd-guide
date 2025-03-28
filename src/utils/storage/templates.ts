@@ -1,27 +1,26 @@
+
 import { EvaluationTemplate, TemplateStorage } from "@/types/templates";
 import { saveToStorage, getFromStorage } from "./core";
-import { metricsData } from "@/data/metricsData";
 
 // Storage key for templates
 export const TEMPLATES_KEY = 'web3_templates';
 
-// Default built-in template based on our existing metrics data
-export const DEFAULT_TEMPLATE: EvaluationTemplate = {
-  id: "default-web3-template",
-  name: "Web3 Project Evaluation",
-  description: "Shai's foundational framework honed in on comprehensive evaluation for blockchain projects with metrics for foundational strength, product, financials, strategic alignment, ecosystem health, and risk assessment.",
-  author: "Shai Perednik",
+// Basic empty template to start with
+export const BASIC_TEMPLATE: EvaluationTemplate = {
+  id: "basic-template",
+  name: "Basic Template",
+  description: "A starter template with minimal structure. You can customize this or import your own templates.",
+  author: "You",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  isBuiltIn: true,
-  isLocked: true,
-  categories: metricsData
+  isBuiltIn: false,
+  categories: []
 };
 
-// Initial template storage state - We'll modify the initialization logic
+// Initial template storage state
 const initialStorage: TemplateStorage = {
-  templates: [DEFAULT_TEMPLATE],
-  activeTemplateId: DEFAULT_TEMPLATE.id
+  templates: [BASIC_TEMPLATE],
+  activeTemplateId: BASIC_TEMPLATE.id
 };
 
 /**
@@ -32,51 +31,16 @@ export const saveTemplatesToStorage = (templates: TemplateStorage): boolean => {
 };
 
 /**
- * Initialize templates if this is the first time or if updates to built-in template occurred
+ * Initialize templates if this is the first time
  */
 export const initializeTemplates = (): TemplateStorage => {
   // Get existing templates from storage if any
   const existingStorage = getFromStorage<TemplateStorage>(TEMPLATES_KEY, null);
   
-  // If no templates exist, create initial setup with a personal copy
+  // If no templates exist, create initial setup with basic template
   if (!existingStorage) {
-    // Create a personal copy of the default template
-    const personalTemplate: EvaluationTemplate = {
-      ...DEFAULT_TEMPLATE,
-      id: crypto.randomUUID(),
-      name: "My Web3 Evaluation Template",
-      description: "My customized version of Shai's foundational framework",
-      author: "You",
-      isBuiltIn: false,
-      isLocked: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    
-    const initialSetup: TemplateStorage = {
-      templates: [DEFAULT_TEMPLATE, personalTemplate],
-      activeTemplateId: personalTemplate.id
-    };
-    
-    saveTemplatesToStorage(initialSetup);
-    return initialSetup;
-  }
-  
-  // Make sure the built-in template is always present and up-to-date
-  const builtInTemplateExists = existingStorage.templates.some(t => t.id === DEFAULT_TEMPLATE.id);
-  
-  if (!builtInTemplateExists) {
-    // Add the built-in template if it doesn't exist
-    existingStorage.templates.push(DEFAULT_TEMPLATE);
-    saveTemplatesToStorage(existingStorage);
-  } else {
-    // Update the built-in template to ensure it's current
-    const updatedTemplates = existingStorage.templates.map(t => 
-      t.id === DEFAULT_TEMPLATE.id ? { ...DEFAULT_TEMPLATE } : t
-    );
-    
-    existingStorage.templates = updatedTemplates;
-    saveTemplatesToStorage(existingStorage);
+    saveTemplatesToStorage(initialStorage);
+    return initialStorage;
   }
   
   return existingStorage;
@@ -95,7 +59,7 @@ export const getTemplatesFromStorage = (): TemplateStorage => {
 export const getActiveTemplate = (): EvaluationTemplate => {
   const { templates, activeTemplateId } = getTemplatesFromStorage();
   const activeTemplate = templates.find(t => t.id === activeTemplateId);
-  return activeTemplate || DEFAULT_TEMPLATE;
+  return activeTemplate || BASIC_TEMPLATE;
 };
 
 /**
