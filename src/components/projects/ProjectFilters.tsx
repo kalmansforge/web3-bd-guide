@@ -27,9 +27,9 @@ const ProjectFilters = ({
   setFilterTier 
 }: ProjectFiltersProps) => {
   return (
-    <div className="flex flex-col md:flex-row gap-4 mb-6">
+    <div className="flex flex-col sm:flex-row gap-3 mb-6">
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search projects..."
           value={searchTerm}
@@ -39,9 +39,12 @@ const ProjectFilters = ({
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 whitespace-nowrap">
             <Filter className="h-4 w-4" />
-            {filterTier ? `Tier: ${getTierDisplayName(filterTier as 'T0' | 'T1')}` : 'Filter by Tier'}
+            <span className="hidden sm:inline">
+              {filterTier ? `Tier: ${getTierDisplayName(filterTier as 'T0' | 'T1')}` : 'Filter by Tier'}
+            </span>
+            <span className="sm:hidden">Filter</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">

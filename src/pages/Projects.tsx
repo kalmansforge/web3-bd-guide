@@ -10,6 +10,7 @@ import { metricsData } from "@/data/metricsData";
 import { ProjectEvaluation } from "@/types/metrics";
 import { toast } from "sonner";
 import { importData } from "@/utils/storage";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Import our components
 import ProjectFilters from "@/components/projects/ProjectFilters";
@@ -23,6 +24,7 @@ const Projects = () => {
   const [filterTier, setFilterTier] = useState<string | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
   
   const totalMetrics = metricsData.reduce((acc, category) => acc + category.metrics.length, 0);
   
@@ -98,22 +100,33 @@ const Projects = () => {
   });
 
   return (
-    <AppLayout>
+    <AppLayout className="px-3 sm:px-6">
       <PageHeader
         title="Project Evaluations"
         description="View and manage your blockchain project evaluations"
         actions={
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={handleImportClick} disabled={isImporting}>
-              <Upload className="mr-2 h-4 w-4" />
-              Import Evaluation
+          <div className="flex gap-2 flex-wrap justify-end">
+            <Button 
+              variant="outline" 
+              onClick={handleImportClick} 
+              disabled={isImporting}
+              size={isMobile ? "sm" : "default"}
+            >
+              <Upload className="mr-1 h-4 w-4" />
+              <span className="hidden sm:inline">Import Evaluation</span>
+              <span className="sm:hidden">Import</span>
             </Button>
-            <Button onClick={handleNewEvaluation}>
-              <Plus className="mr-2 h-4 w-4" />
-              New Evaluation
+            <Button 
+              onClick={handleNewEvaluation}
+              size={isMobile ? "sm" : "default"}
+            >
+              <Plus className="mr-1 h-4 w-4" />
+              <span className="hidden sm:inline">New Evaluation</span>
+              <span className="sm:hidden">New</span>
             </Button>
           </div>
         }
+        className="flex-col space-y-4 md:flex-row"
       />
       
       <input
