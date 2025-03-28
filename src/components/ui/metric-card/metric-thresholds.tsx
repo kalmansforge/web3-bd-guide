@@ -2,6 +2,7 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { getTierDisplayName } from "@/utils/storage";
+import { cn } from "@/lib/utils";
 
 interface MetricThresholdsProps {
   thresholds: Record<string, string>;
@@ -11,40 +12,33 @@ interface MetricThresholdsProps {
 const MetricThresholds: React.FC<MetricThresholdsProps> = ({ thresholds, tierNames }) => {
   if (!thresholds) return null;
   
-  const firstTierName = tierNames && tierNames.length > 0 ? tierNames[0].internalName : 'T0';
-  const secondTierName = tierNames && tierNames.length > 1 ? tierNames[1].internalName : 'T1';
-  
-  const firstTierDisplay = getTierDisplayName(firstTierName);
-  const secondTierDisplay = getTierDisplayName(secondTierName);
+  // Helper function to determine badge color based on tier index
+  const getTierBadgeColor = (tierKey: string) => {
+    const tierIndex = tierNames.findIndex(t => t.internalName === tierKey);
+    
+    switch (tierIndex) {
+      case 0:
+        return "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300";
+      case 1:
+        return "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300";
+      default:
+        return "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300";
+    }
+  };
   
   return (
     <div className="space-y-2 text-sm">
       <p className="font-medium">Classification Thresholds:</p>
       <div className="grid grid-cols-1 gap-2">
-        {firstTierName && thresholds[firstTierName] && (
-          <div className="flex items-start gap-2">
-            <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300">
-              {firstTierDisplay}
-            </Badge>
-            <span className="text-muted-foreground">{thresholds[firstTierName]}</span>
-          </div>
-        )}
-        
-        {secondTierName && thresholds[secondTierName] && (
-          <div className="flex items-start gap-2">
-            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">
-              {secondTierDisplay}
-            </Badge>
-            <span className="text-muted-foreground">{thresholds[secondTierName]}</span>
-          </div>
-        )}
-        
-        {Object.keys(thresholds).filter(key => key !== firstTierName && key !== secondTierName).map(tierKey => (
+        {Object.entries(thresholds).map(([tierKey, description]) => (
           <div key={tierKey} className="flex items-start gap-2">
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+            <Badge 
+              variant="outline" 
+              className={cn(getTierBadgeColor(tierKey))}
+            >
               {getTierDisplayName(tierKey)}
             </Badge>
-            <span className="text-muted-foreground">{thresholds[tierKey]}</span>
+            <span className="text-muted-foreground">{description}</span>
           </div>
         ))}
       </div>

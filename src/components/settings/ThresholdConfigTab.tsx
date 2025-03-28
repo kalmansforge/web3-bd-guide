@@ -10,19 +10,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useThresholds } from "@/contexts/ThresholdContext";
 import { metricsData } from "@/data/metricsData";
-import { getAllTierNames } from "@/utils/storage";
+import { getAllTierNames, getTierDisplayName } from "@/utils/storage";
+import { cn } from "@/lib/utils";
 
 const ThresholdConfigTab = () => {
   const { thresholds, loading, updateThreshold, saveChanges, resetChanges, unsavedChanges } = useThresholds();
   const tierNames = getAllTierNames();
-  
-  // Get the first tier (formerly T0)
-  const firstTierName = tierNames.length > 0 ? tierNames[0].internalName : 'T0';
-  const firstTierDisplay = tierNames.length > 0 ? tierNames[0].displayName : 'T0';
-  
-  // Get the second tier (formerly T1)
-  const secondTierName = tierNames.length > 1 ? tierNames[1].internalName : 'T1';
-  const secondTierDisplay = tierNames.length > 1 ? tierNames[1].displayName : 'T1';
 
   const handleThresholdChange = (
     metricId: string,
@@ -63,6 +56,18 @@ const ThresholdConfigTab = () => {
     }
     
     return "";
+  };
+
+  // Helper function to determine badge color based on tier index
+  const getTierBadgeColor = (index: number) => {
+    switch (index) {
+      case 0:
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+      case 1:
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
+      default:
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+    }
   };
 
   return (
@@ -139,45 +144,31 @@ const ThresholdConfigTab = () => {
                         <CardDescription>{metric.description}</CardDescription>
                       </CardHeader>
                       
-                      <CardContent className="space-y-4">
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <Label htmlFor={`${metric.id}-${firstTierName}`} className="flex items-center">
-                                <Badge variant="outline" className="mr-2 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                                  {firstTierDisplay}
-                                </Badge>
-                                <span>Strategic Tier Threshold</span>
-                              </Label>
+                      <CardContent>
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                          {tierNames.map((tier, index) => (
+                            <div key={tier.id} className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <Label htmlFor={`${metric.id}-${tier.internalName}`} className="flex items-center">
+                                  <Badge 
+                                    variant="outline" 
+                                    className={cn("mr-2", getTierBadgeColor(index))}
+                                  >
+                                    {tier.displayName}
+                                  </Badge>
+                                  <span>Threshold</span>
+                                </Label>
+                              </div>
+                              
+                              <Textarea
+                                id={`${metric.id}-${tier.internalName}`}
+                                value={getThresholdValue(metric.id, category.id, tier.internalName)}
+                                onChange={(e) => handleThresholdChange(metric.id, category.id, tier.internalName, e.target.value)}
+                                className="min-h-[80px]"
+                                placeholder={`Enter threshold criteria for ${tier.displayName} classification`}
+                              />
                             </div>
-                            
-                            <Textarea
-                              id={`${metric.id}-${firstTierName}`}
-                              value={getThresholdValue(metric.id, category.id, firstTierName)}
-                              onChange={(e) => handleThresholdChange(metric.id, category.id, firstTierName, e.target.value)}
-                              className="min-h-[80px]"
-                              placeholder={`Enter threshold criteria for ${firstTierDisplay} (Strategic) classification`}
-                            />
-                          </div>
-                          
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <Label htmlFor={`${metric.id}-${secondTierName}`} className="flex items-center">
-                                <Badge variant="outline" className="mr-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                                  {secondTierDisplay}
-                                </Badge>
-                                <span>Secondary Tier Threshold</span>
-                              </Label>
-                            </div>
-                            
-                            <Textarea
-                              id={`${metric.id}-${secondTierName}`}
-                              value={getThresholdValue(metric.id, category.id, secondTierName)}
-                              onChange={(e) => handleThresholdChange(metric.id, category.id, secondTierName, e.target.value)}
-                              className="min-h-[80px]"
-                              placeholder={`Enter threshold criteria for ${secondTierDisplay} (Secondary) classification`}
-                            />
-                          </div>
+                          ))}
                         </div>
                       </CardContent>
                     </Card>
