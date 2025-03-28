@@ -1,7 +1,7 @@
 
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTemplates } from "@/contexts/TemplateContext";
+import { useTemplates } from "@/contexts/templates";
 import { toast } from "sonner";
 import { EvaluationTemplate } from "@/types/templates";
 

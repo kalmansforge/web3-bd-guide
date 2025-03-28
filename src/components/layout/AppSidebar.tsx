@@ -1,3 +1,4 @@
+
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { 
@@ -10,7 +11,8 @@ import {
   Settings,
   Shield,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  FileJson
 } from "lucide-react";
 import {
   Sidebar,
@@ -49,6 +51,11 @@ const navItems = [
     title: "Metrics", 
     icon: LineChart, 
     path: "/metrics-guide",
+  },
+  { 
+    title: "Templates", 
+    icon: FileJson, 
+    path: "/templates",
   },
   { title: "Risk Assessment", icon: Shield, path: "/risk-assessment" },
   { title: "Settings", icon: Settings, path: "/settings" },

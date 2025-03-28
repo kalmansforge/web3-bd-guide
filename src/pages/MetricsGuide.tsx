@@ -1,12 +1,11 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, Filter, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
-import { useThresholds } from "@/contexts/ThresholdContext";
-import { useTemplates } from "@/contexts/TemplateContext";
+import { useThresholds } from "@/contexts/thresholds";
+import { useTemplates } from "@/contexts/templates";
 import { getAllTierNames } from "@/utils/storage";
 import MetricsSearch from "@/components/metrics-guide/MetricsSearch";
 import MetricsCategoryTabs from "@/components/metrics-guide/MetricsCategoryTabs";
@@ -25,13 +24,11 @@ const MetricsGuide = () => {
   const { activeTemplate, loading: templateLoading } = useTemplates();
   const tierNames = getAllTierNames();
   
-  // Initialize activeTab with the first category from the template
   const [activeTab, setActiveTab] = useState<string>(
     activeTemplate?.categories[0]?.id || ""
   );
   
   useEffect(() => {
-    // Update active tab when template changes
     if (activeTemplate && activeTemplate.categories.length > 0) {
       setActiveTab(activeTemplate.categories[0].id);
     }
@@ -56,28 +53,22 @@ const MetricsGuide = () => {
     );
   }
   
-  // Check if there are no categories in the template
   if (!activeTemplate?.categories || activeTemplate.categories.length === 0) {
     return <CategoryNotFound />;
   }
   
-  // Find the active category or default to the first one
   const category = activeTemplate.categories.find(c => c.id === activeTab) || activeTemplate.categories[0];
   
-  // If category doesn't exist but we have other categories, redirect to the first one
   if (!category) {
     return <CategoryNotFound />;
   }
   
-  // Filter metrics based on all criteria (search, notes filter)
   const filteredMetrics = category?.metrics.filter(metric => {
-    // Text search filter
     const matchesSearch = !searchQuery || 
       metric.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
       metric.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // Notes filter (not implemented yet, will be part of project evaluations)
-    const matchesNotes = notesFilter === "all" || false; // Will be updated when we have notes
+    const matchesNotes = notesFilter === "all" || false;
     
     return matchesSearch && (notesFilter === "all" || matchesNotes);
   }) || [];
@@ -121,7 +112,6 @@ const MetricsGuide = () => {
         }
       />
       
-      {/* Enhanced search and filter UI matching the project details page */}
       <div className="space-y-4 mb-6">
         <MetricsSearch 
           value={searchQuery} 
@@ -171,7 +161,6 @@ const MetricsGuide = () => {
         </div>
       </div>
       
-      {/* Keep the category tabs for easy switching between categories */}
       <MetricsCategoryTabs 
         categories={activeTemplate.categories} 
         activeTab={activeTab} 

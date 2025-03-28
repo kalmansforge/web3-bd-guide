@@ -1,8 +1,8 @@
 
 import React from "react";
 import { EvaluationTemplate } from "@/types/templates";
+import { Card } from "@/components/ui/card";
 import TemplateCard from "./TemplateCard";
-import EmptyTemplateState from "./EmptyTemplateState";
 
 interface TemplatesListProps {
   templates: EvaluationTemplate[];
@@ -17,7 +17,7 @@ interface TemplatesListProps {
   onImportClick: () => void;
 }
 
-const TemplatesList = ({
+const TemplatesList: React.FC<TemplatesListProps> = ({
   templates,
   activeTemplateId,
   searchTerm,
@@ -28,19 +28,20 @@ const TemplatesList = ({
   onDelete,
   onCreateTemplate,
   onImportClick
-}: TemplatesListProps) => {
+}) => {
   if (templates.length === 0) {
     return (
-      <EmptyTemplateState 
-        searchTerm={searchTerm}
-        onCreateTemplate={onCreateTemplate}
-        onImportClick={onImportClick}
-      />
+      <Card className="p-6 text-center">
+        <h3 className="text-lg font-medium mb-2">No templates found</h3>
+        <p className="text-muted-foreground mb-4">
+          No matching templates found. Try adjusting your search or create a new template.
+        </p>
+      </Card>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {templates.map(template => (
         <TemplateCard
           key={template.id}
@@ -48,7 +49,7 @@ const TemplatesList = ({
           isActive={template.id === activeTemplateId}
           onSetActive={onSetActive}
           onDuplicate={onDuplicate}
-          onEdit={onEdit}
+          onEdit={() => onEdit(template)}
           onExport={onExport}
           onDelete={onDelete}
         />
