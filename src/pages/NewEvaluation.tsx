@@ -1,26 +1,21 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { useEvaluation } from "@/contexts/EvaluationContext";
 import { metricsData } from "@/data/metricsData";
-import MetricCard from "@/components/ui/MetricCard";
-import ProjectScoreCard from "@/components/ui/ProjectScoreCard";
 import { MetricEvaluation, TierType } from "@/types/metrics";
-import { ChevronLeft, ChevronRight, Save } from "lucide-react";
+import EvaluationTabs from "@/components/evaluation/EvaluationTabs";
 
 const NewEvaluation = () => {
+  // Local state
   const [projectName, setProjectName] = useState("");
   const [currentStep, setCurrentStep] = useState("project");
   const [activeCategory, setActiveCategory] = useState(metricsData[0].id);
   const [isEditMode, setIsEditMode] = useState(false);
   
+  // Navigation and context
   const navigate = useNavigate();
   const { createProject, currentProject, updateMetric, saveProject, calculateProjectScore } = useEvaluation();
   
@@ -33,6 +28,7 @@ const NewEvaluation = () => {
     }
   }, [currentProject]);
   
+  // Handlers
   const handleCreateProject = () => {
     if (!projectName.trim()) return;
     createProject(projectName);
@@ -46,20 +42,6 @@ const NewEvaluation = () => {
   const handleSaveProject = () => {
     saveProject();
     navigate("/projects");
-  };
-  
-  const handleNextCategory = () => {
-    const currentIndex = metricsData.findIndex(c => c.id === activeCategory);
-    if (currentIndex < metricsData.length - 1) {
-      setActiveCategory(metricsData[currentIndex + 1].id);
-    }
-  };
-  
-  const handlePrevCategory = () => {
-    const currentIndex = metricsData.findIndex(c => c.id === activeCategory);
-    if (currentIndex > 0) {
-      setActiveCategory(metricsData[currentIndex - 1].id);
-    }
   };
   
   // Calculate stats for the evaluation progress
@@ -82,172 +64,30 @@ const NewEvaluation = () => {
         }
         actions={
           currentProject && (
-            <Button onClick={handleSaveProject}>
-              <Save className="mr-2 h-4 w-4" />
+            <button onClick={handleSaveProject} className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="mr-2 h-4 w-4"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
               Save Evaluation
-            </Button>
+            </button>
           )
         }
       />
       
-      <Tabs value={currentStep} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="project" disabled={!!currentProject}>Project Details</TabsTrigger>
-          <TabsTrigger value="evaluation" disabled={!currentProject}>Metrics Evaluation</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="project" className="space-y-4 animate-slide-in">
-          <Card>
-            <CardHeader>
-              <CardTitle>Create New Project</CardTitle>
-              <CardDescription>
-                Enter the details of the blockchain project you're evaluating
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="project-name">Project Name</Label>
-                <Input
-                  id="project-name"
-                  placeholder="Enter project name..."
-                  value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
-                />
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => navigate("/")}>Cancel</Button>
-              <Button onClick={handleCreateProject} disabled={!projectName.trim()}>
-                Continue to Evaluation
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="evaluation" className="space-y-4 animate-slide-in">
-          {currentProject && (
-            <div className="grid gap-6 md:grid-cols-4">
-              <div className="md:col-span-3">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="space-y-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">{
-                      metricsData.find(c => c.id === activeCategory)?.name
-                    }</h2>
-                    <p className="text-sm text-muted-foreground">{
-                      metricsData.find(c => c.id === activeCategory)?.description
-                    }</p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handlePrevCategory}
-                      disabled={metricsData[0].id === activeCategory}
-                    >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
-                      Previous
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleNextCategory}
-                      disabled={metricsData[metricsData.length - 1].id === activeCategory}
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-                  <TabsList className="mb-4 w-full flex overflow-x-auto no-scrollbar">
-                    {metricsData.map((category) => (
-                      <TabsTrigger key={category.id} value={category.id} className="flex-shrink-0">
-                        {category.name}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                  
-                  {metricsData.map((category) => (
-                    <TabsContent key={category.id} value={category.id} className="animate-fade-in">
-                      <div className="grid gap-4 md:grid-cols-2">
-                        {category.metrics.map((metric) => {
-                          const metricKey = `${category.id}_${metric.id}`;
-                          const evaluation = currentProject.metrics[metricKey];
-                          
-                          // Merge evaluation data with metric for display
-                          const metricWithEvaluation = {
-                            ...metric,
-                            tier: evaluation?.tier || null,
-                            notes: evaluation?.notes || "",
-                            value: evaluation?.value || "",
-                          };
-                          
-                          return (
-                            <MetricCard
-                              key={metric.id}
-                              metric={metricWithEvaluation}
-                              category={category.id}
-                              onUpdate={handleUpdateMetric}
-                            />
-                          );
-                        })}
-                      </div>
-                    </TabsContent>
-                  ))}
-                </Tabs>
-              </div>
-              
-              <div className="space-y-4">
-                <ProjectScoreCard 
-                  score={score} 
-                  tier={tier} 
-                  completedMetrics={completedMetrics} 
-                  totalMetrics={totalMetrics}
-                />
-                
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Navigation</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    {metricsData.map((category, index) => {
-                      const categoryMetrics = category.metrics.length;
-                      const completedCategoryMetrics = Object.keys(currentProject.metrics)
-                        .filter(key => key.startsWith(`${category.id}_`))
-                        .length;
-                      
-                      const percentComplete = Math.round((completedCategoryMetrics / categoryMetrics) * 100);
-                      
-                      return (
-                        <div key={category.id} className="flex items-center justify-between py-1">
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => setActiveCategory(category.id)}
-                            className={activeCategory === category.id ? "text-primary font-medium" : ""}
-                          >
-                            {index + 1}. {category.name}
-                          </Button>
-                          <span className="text-xs text-muted-foreground">
-                            {percentComplete}%
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </CardContent>
-                  <CardFooter>
-                    <Button onClick={handleSaveProject} className="w-full">
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Evaluation
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </div>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+      <EvaluationTabs
+        currentStep={currentStep}
+        projectName={projectName}
+        setProjectName={setProjectName}
+        handleCreateProject={handleCreateProject}
+        currentProject={currentProject}
+        handleUpdateMetric={handleUpdateMetric}
+        handleSaveProject={handleSaveProject}
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
+        metricsData={metricsData}
+        score={score}
+        tier={tier}
+        completedMetrics={completedMetrics}
+        totalMetrics={totalMetrics}
+      />
     </AppLayout>
   );
 };
