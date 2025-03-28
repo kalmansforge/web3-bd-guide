@@ -46,7 +46,7 @@ const navItems = [
     path: "/new-evaluation",
   },
   { 
-    title: "Metrics", 
+    title: "Metrics Guide", 
     icon: LineChart, 
     path: "/metrics-guide",
   },
