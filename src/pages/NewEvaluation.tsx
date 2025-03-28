@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { useEvaluation } from "@/contexts/EvaluationContext";
@@ -18,16 +18,27 @@ const NewEvaluation = () => {
   
   // Navigation and context
   const navigate = useNavigate();
-  const { createProject, currentProject, updateMetric, saveProject, calculateProjectScore } = useEvaluation();
+  const location = useLocation();
+  const { createProject, currentProject, setCurrentProject, updateMetric, saveProject, calculateProjectScore } = useEvaluation();
   
-  // Check if we're in edit mode
+  // Check if we're in edit mode - only if explicitly passed via state
   useEffect(() => {
-    if (currentProject) {
-      setProjectName(currentProject.name);
+    // Only set edit mode if we have state passed with the project to edit
+    const editProject = location.state?.project;
+    
+    if (editProject) {
+      setProjectName(editProject.name);
       setCurrentStep("evaluation");
       setIsEditMode(true);
+      setCurrentProject(editProject);
+    } else {
+      // Clear current project when accessing the page directly
+      setCurrentProject(null);
+      setProjectName("");
+      setCurrentStep("project");
+      setIsEditMode(false);
     }
-  }, [currentProject]);
+  }, [location.state, setCurrentProject]);
   
   // Handlers
   const handleCreateProject = () => {

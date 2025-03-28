@@ -34,7 +34,7 @@ import { getTierDisplayName } from "@/utils/storage";
 import { ProjectEvaluation } from "@/types/metrics";
 
 const Projects = () => {
-  const { projects, deleteProject } = useEvaluation();
+  const { projects, deleteProject, setCurrentProject } = useEvaluation();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTier, setFilterTier] = useState<string | null>(null);
@@ -42,10 +42,14 @@ const Projects = () => {
   const totalMetrics = metricsData.reduce((acc, category) => acc + category.metrics.length, 0);
   
   const handleNewEvaluation = () => {
+    setCurrentProject(null);
     navigate('/new-evaluation');
   };
 
-  // Filter projects based on search term and tier filter
+  const handleEditProject = (project: ProjectEvaluation) => {
+    navigate(`/new-evaluation`, { state: { project } });
+  };
+
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTier = filterTier ? project.overallTier === filterTier : true;
@@ -158,6 +162,14 @@ const Projects = () => {
                           >
                             Details
                             <ChevronRight className="ml-1 h-4 w-4" />
+                          </Button>
+                          
+                          <Button 
+                            variant="outline" 
+                            className="rounded-full px-4"
+                            onClick={() => handleEditProject(project)}
+                          >
+                            Edit
                           </Button>
                           
                           <AlertDialog>
