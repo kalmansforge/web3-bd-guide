@@ -35,7 +35,9 @@ const TierNamesTab: React.FC<TierNamesTabProps> = ({
   resetChanges
 }) => {
   // Ensure tierNames exists with default values if not present
-  const tierNames = appearanceSettings?.tierNames || [];
+  const tierNames = Array.isArray(appearanceSettings?.tierNames) 
+    ? appearanceSettings.tierNames 
+    : [];
   
   const handleTierNameChange = (index: number, field: keyof TierName, value: string) => {
     const updatedTierNames = [...tierNames];

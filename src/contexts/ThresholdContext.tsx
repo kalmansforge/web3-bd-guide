@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "@/hooks/use-toast";
 import { metricsData } from "@/data/metricsData";
@@ -94,7 +95,7 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
     categoryId: string, 
     thresholds: Record<string, string>
   ) => {
-    const updatedThresholds = thresholds.map(threshold => {
+    const updatedThresholds = thresholds.map((threshold: ThresholdConfig) => {
       if (threshold.metricId === metricId && threshold.categoryId === categoryId) {
         return {
           ...threshold,
