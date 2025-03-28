@@ -46,15 +46,18 @@ const MetricEvaluationPanel: React.FC<MetricEvaluationPanelProps> = ({
     setSelectedMetric(null);
   };
 
+  const currentCategory = metricsData.find(c => c.id === activeCategory);
+  const selectedMetricData = currentCategory?.metrics.find(m => m.id === selectedMetric);
+
   return (
     <>
       <div className="flex items-center justify-between mb-4">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold tracking-tight">{
-            metricsData.find(c => c.id === activeCategory)?.name
+            currentCategory?.name
           }</h2>
           <p className="text-sm text-muted-foreground">{
-            metricsData.find(c => c.id === activeCategory)?.description
+            currentCategory?.description
           }</p>
         </div>
         <div className="flex space-x-2">
@@ -90,31 +93,44 @@ const MetricEvaluationPanel: React.FC<MetricEvaluationPanelProps> = ({
         
         {metricsData.map((category) => (
           <TabsContent key={category.id} value={category.id} className="animate-fade-in">
-            <div className="grid gap-4 md:grid-cols-2">
-              {category.metrics.map((metric) => {
-                const metricKey = `${category.id}_${metric.id}`;
-                const evaluation = currentProject.metrics[metricKey];
-                
-                // Merge evaluation data with metric for display
-                const metricWithEvaluation = {
-                  ...metric,
-                  tier: evaluation?.tier || null,
-                  notes: evaluation?.notes || "",
-                  value: evaluation?.value || "",
-                };
-                
-                return (
-                  <MetricCard
-                    key={metric.id}
-                    metric={metricWithEvaluation}
-                    category={category.id}
-                    evaluation={evaluation}
-                    onUpdate={handleUpdateMetric}
-                    onViewDetail={() => handleOpenMetricForm(metric.id)}
-                  />
-                );
-              })}
-            </div>
+            {selectedMetric && selectedMetricData && category.id === activeCategory ? (
+              <MetricEvaluationForm
+                metric={selectedMetricData}
+                categoryId={category.id}
+                evaluation={currentProject.metrics[`${category.id}_${selectedMetric}`]}
+                onSave={(categoryId, metricId, evaluation) => {
+                  handleUpdateMetric(categoryId, metricId, evaluation);
+                  handleCloseMetricForm();
+                }}
+                onCancel={handleCloseMetricForm}
+              />
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                {category.metrics.map((metric) => {
+                  const metricKey = `${category.id}_${metric.id}`;
+                  const evaluation = currentProject.metrics[metricKey];
+                  
+                  // Merge evaluation data with metric for display
+                  const metricWithEvaluation = {
+                    ...metric,
+                    tier: evaluation?.tier || null,
+                    notes: evaluation?.notes || "",
+                    value: evaluation?.value || "",
+                  };
+                  
+                  return (
+                    <MetricCard
+                      key={metric.id}
+                      metric={metricWithEvaluation}
+                      category={category.id}
+                      evaluation={evaluation}
+                      onUpdate={handleUpdateMetric}
+                      onViewDetail={() => handleOpenMetricForm(metric.id)}
+                    />
+                  );
+                })}
+              </div>
+            )}
           </TabsContent>
         ))}
       </Tabs>

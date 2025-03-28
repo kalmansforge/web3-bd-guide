@@ -11,7 +11,6 @@ import MetricThresholds from './metric-card/metric-thresholds';
 import MetricTools from './metric-card/metric-tools';
 import MetricBadges from './metric-card/metric-badges';
 import TierBadge from './metric-card/tier-badge';
-import MetricEvaluationForm from '@/components/evaluation/MetricEvaluationForm';
 
 interface MetricCardProps {
   metric: Metric;
@@ -35,7 +34,6 @@ const MetricCard: React.FC<MetricCardProps> = ({
   readOnly = false
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [showEvaluationForm, setShowEvaluationForm] = useState(false);
   const tierNames = getAllTierNames();
   
   // Use category or categoryId (for backward compatibility)
@@ -48,29 +46,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
   const handleViewDetail = () => {
     if (onViewDetail) {
       onViewDetail();
-    } else if (onUpdate && !readOnly) {
-      setShowEvaluationForm(true);
     }
   };
-
-  const handleSaveEvaluation = (categoryId: string, metricId: string, evaluation: MetricEvaluation) => {
-    if (onUpdate) {
-      onUpdate(categoryId, metricId, evaluation);
-      setShowEvaluationForm(false);
-    }
-  };
-
-  if (showEvaluationForm && onUpdate) {
-    return (
-      <MetricEvaluationForm
-        metric={metric}
-        categoryId={effectiveCategory}
-        evaluation={evaluation}
-        onSave={handleSaveEvaluation}
-        onCancel={() => setShowEvaluationForm(false)}
-      />
-    );
-  }
 
   return (
     <Card className={cn(
@@ -122,7 +99,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
       
       {(expanded || onViewDetail || onUpdate) && (
         <CardFooter className={cn("px-6 pb-4 pt-0", isPreview ? "hidden" : "")}>
-          {(onViewDetail || onUpdate) && !showEvaluationForm && (
+          {(onViewDetail || onUpdate) && (
             <Button
               variant="outline"
               className="w-full"

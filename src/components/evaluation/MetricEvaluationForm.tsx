@@ -14,6 +14,7 @@ import {
 import { getAllTierNames } from '@/utils/storage';
 import { MetricEvaluation, Metric } from '@/types/metrics';
 import { X } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface MetricEvaluationFormProps {
   metric: Metric;
@@ -32,10 +33,13 @@ const MetricEvaluationForm: React.FC<MetricEvaluationFormProps> = ({
 }) => {
   const [selectedTier, setSelectedTier] = useState<string | null>(evaluation?.tier || null);
   const [notes, setNotes] = useState(evaluation?.notes || '');
-  const tierNames = getAllTierNames();
+  const [tierNames, setTierNames] = useState(getAllTierNames());
   
   const handleSave = () => {
-    if (!selectedTier) return;
+    if (!selectedTier) {
+      toast.error("Please select a classification tier");
+      return;
+    }
     
     const newEvaluation: MetricEvaluation = {
       tier: selectedTier,
