@@ -16,12 +16,13 @@ import { Metric, TierType } from "@/types/metrics";
 import { toast } from "sonner";
 
 const ProjectDetail = () => {
-  const { projectId } = useParams<{ projectId: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { projects, setCurrentProject } = useEvaluation();
   const [activeCategory, setActiveCategory] = useState(metricsData[0].id);
   
-  const project = projects.find(p => p.id === projectId);
+  // Fix: Use the correct parameter name for the project ID
+  const project = projects.find(p => p.id === id);
   
   useEffect(() => {
     if (!project) {
@@ -39,7 +40,7 @@ const ProjectDetail = () => {
   
   const handleEditProject = () => {
     setCurrentProject(project);
-    navigate("/evaluation/new");
+    navigate("/new-evaluation");
   };
   
   const handleExportPDF = () => {

@@ -30,7 +30,7 @@ const Projects = () => {
   const totalMetrics = metricsData.reduce((acc, category) => acc + category.metrics.length, 0);
   
   const handleNewEvaluation = () => {
-    navigate('/evaluation/new');
+    navigate('/new-evaluation');
   };
 
   return (
