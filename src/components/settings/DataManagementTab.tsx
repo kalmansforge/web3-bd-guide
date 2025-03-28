@@ -1,13 +1,12 @@
 
-import React from "react";
+import React, { useRef } from "react";
 import { ProjectEvaluation } from "@/types/metrics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Upload, Database, FileText, InfoIcon, AlertTriangle } from "lucide-react";
-import { exportAllData } from "@/utils/storage";
+import { exportAllData, importData } from "@/utils/storage";
 import { formatBytes } from "@/utils/storage/core";
 import ClearLocalDataDialog from "@/components/ui/ClearLocalDataDialog";
-import DataImportExport from "@/components/ui/DataImportExport";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { 
@@ -17,6 +16,7 @@ import {
   getTemplatesFromStorage 
 } from "@/utils/storage";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 
 interface DataManagementTabProps {
   projects: ProjectEvaluation[];
@@ -29,8 +29,69 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
   storageInfo,
   onDataImported
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleExportData = () => {
     exportAllData();
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    
+    reader.onload = (event) => {
+      try {
+        const fileContent = event.target?.result as string;
+        const result = importData(fileContent);
+        
+        if (result.success) {
+          if (result.type === 'complete') {
+            toast.success("Import Successful", {
+              description: "Your complete data (evaluations, thresholds, and settings) has been imported successfully."
+            });
+          } else if (result.type === 'evaluation') {
+            toast.success("Evaluation Import Successful", {
+              description: "The project evaluation has been imported and added to your existing projects."
+            });
+          } else if (result.type === 'template') {
+            toast.success("Template Import Successful", {
+              description: "The template has been imported successfully."
+            });
+          }
+          
+          if (onDataImported) {
+            onDataImported();
+          }
+        } else {
+          toast.error("Import Failed", {
+            description: "The file contains invalid data. Please check the file and try again."
+          });
+        }
+      } catch (error) {
+        toast.error("Import Failed", {
+          description: "There was an error importing your data. Please try again."
+        });
+      } finally {
+        // Reset file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      }
+    };
+    
+    reader.onerror = () => {
+      toast.error("Import Failed", {
+        description: "There was an error reading the file. Please try again."
+      });
+    };
+    
+    reader.readAsText(file);
   };
 
   // Get counts for each data type
@@ -133,21 +194,24 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
               </Button>
               
               <Button
-                onClick={() => document.getElementById('import-data-input')?.click()}
+                onClick={handleImportClick}
                 className="w-full flex items-center justify-center gap-2"
                 variant="outline"
               >
                 <Upload className="h-4 w-4" />
                 Import Data
               </Button>
+
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept=".json"
+                className="hidden"
+              />
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Data Import/Export Component */}
-      <div className="hidden">
-        <DataImportExport onDataImported={onDataImported} />
       </div>
 
       {/* Danger Zone Section */}
