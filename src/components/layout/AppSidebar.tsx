@@ -1,4 +1,3 @@
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { 
@@ -9,7 +8,6 @@ import {
   GitBranch, 
   FileText,
   Settings,
-  Shield,
   PanelLeftClose,
   PanelLeftOpen,
   FileJson
@@ -57,7 +55,6 @@ const navItems = [
     icon: FileJson, 
     path: "/templates",
   },
-  { title: "Risk Assessment", icon: Shield, path: "/risk-assessment" },
   { title: "Settings", icon: Settings, path: "/settings" },
 ];
 
