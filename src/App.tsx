@@ -13,6 +13,7 @@ import MetricsGuide from "@/pages/MetricsGuide";
 import NotFound from "@/pages/NotFound";
 import TemplateEditor from "@/pages/TemplateEditor";
 import Templates from "@/pages/Templates";
+import RiskAssessment from "@/pages/RiskAssessment";
 
 import { TemplateProvider } from "@/contexts/templates";
 import { ThresholdProvider } from "@/contexts/thresholds";
@@ -36,6 +37,7 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/templates" element={<Templates />} />
               <Route path="/template-editor/:id" element={<TemplateEditor />} />
+              <Route path="/risk-assessment" element={<RiskAssessment />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster position="top-right" closeButton richColors />
