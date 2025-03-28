@@ -48,6 +48,26 @@ export const formatBytes = (bytes: number): string => {
 };
 
 /**
+ * Helper function to get display name for a tier
+ */
+export const getTierDisplayName = (tier: string | null): string => {
+  if (!tier) return 'Not Evaluated';
+  
+  switch(tier.toLowerCase()) {
+    case 'high':
+      return 'High';
+    case 'medium':
+      return 'Medium';
+    case 'low':
+      return 'Low';
+    case 'none':
+      return 'None';
+    default:
+      return tier;
+  }
+};
+
+/**
  * Calculate storage usage statistics
  */
 export const calculateStorageSize = (): { 
