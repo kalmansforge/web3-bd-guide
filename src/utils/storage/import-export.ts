@@ -54,13 +54,13 @@ export const importData = (jsonData: string): { success: boolean; type: 'complet
         const currentEvaluations = getEvaluationsFromStorage();
         
         // Check for duplicate IDs and rename if necessary
-        const importedEvaluations = parsedData.evaluations.map(eval => {
+        const importedEvaluations = parsedData.evaluations.map(evaluation => {
           // Create new ID to avoid conflicts
           const newId = crypto.randomUUID();
           return {
-            ...eval,
+            ...evaluation,
             id: newId,
-            name: eval.name + ' (Imported)',
+            name: evaluation.name + ' (Imported)',
             date: new Date().toISOString()
           };
         });
