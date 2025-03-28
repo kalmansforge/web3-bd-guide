@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit, FileText, DownloadIcon } from "lucide-react";
@@ -14,6 +13,7 @@ import MetricCard from "@/components/ui/MetricCard";
 import ProjectScoreCard from "@/components/ui/ProjectScoreCard";
 import { Metric, TierType } from "@/types/metrics";
 import { toast } from "sonner";
+import { exportAllData } from "@/utils/localStorageUtils";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +21,6 @@ const ProjectDetail = () => {
   const { projects, setCurrentProject } = useEvaluation();
   const [activeCategory, setActiveCategory] = useState(metricsData[0].id);
   
-  // Fix: Use the correct parameter name for the project ID
   const project = projects.find(p => p.id === id);
   
   useEffect(() => {
@@ -44,10 +43,15 @@ const ProjectDetail = () => {
   };
   
   const handleExportPDF = () => {
-    toast.success("Export initiated", {
-      description: "Your report is being prepared for download."
-    });
-    // In a real app, this would trigger PDF generation
+    if (exportAllData()) {
+      toast.success("Export successful", {
+        description: "Your evaluation data has been exported"
+      });
+    } else {
+      toast.error("Export failed", {
+        description: "There was a problem exporting your data"
+      });
+    }
   };
   
   const generateMetricsWithEvaluation = (categoryId: string): Metric[] => {
