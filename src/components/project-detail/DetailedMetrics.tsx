@@ -6,6 +6,7 @@ import { Metric } from "@/types/metrics";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
 import { getTierDisplayName } from "@/utils/storage";
+import { cn } from "@/lib/utils";
 
 interface DetailedMetricsProps {
   activeCategory: string;
@@ -29,12 +30,15 @@ const DetailedMetrics = ({
       <Tabs value={activeCategory} onValueChange={onCategoryChange}>
         {metricsData.map(category => (
           <TabsContent key={category.id} value={category.id} className="animate-fade-in">
-            <div className="space-y-2 mb-4">
+            <div className="space-y-2 mb-6">
               <h3 className="text-lg font-medium">{category.name}</h3>
-              <p className="text-muted-foreground">{category.description}</p>
+              <p className="text-muted-foreground text-sm">{category.description}</p>
             </div>
             
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+            <div className={cn(
+              "grid gap-5", 
+              isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+            )}>
               {generateMetricsWithEvaluation(category.id).map(metric => (
                 <div key={metric.id} className="flex flex-col">
                   <MetricCard
