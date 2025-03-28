@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Settings, Save, ArrowLeft, PlusCircle, Trash, MoveDiagonal } from "lucide-react";
+import { Settings, Save, ArrowLeft, PlusCircle, Trash, MoveDiagonal, Copy } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -31,10 +30,11 @@ import {
 const TemplateEditor = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { templates, updateTemplate } = useTemplates();
+  const { templates, updateTemplate, duplicateTemplateById } = useTemplates();
   const [template, setTemplate] = useState<EvaluationTemplate | null>(null);
   const [activeTab, setActiveTab] = useState("details");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
 
   // Load template data
   useEffect(() => {
@@ -42,6 +42,7 @@ const TemplateEditor = () => {
       const foundTemplate = templates.find((t) => t.id === id);
       if (foundTemplate) {
         setTemplate(JSON.parse(JSON.stringify(foundTemplate))); // Deep clone to avoid reference issues
+        setIsLocked(foundTemplate.isLocked || false);
       } else {
         toast.error("Template not found");
         navigate("/settings?tab=templates");
@@ -49,9 +50,20 @@ const TemplateEditor = () => {
     }
   }, [id, templates, navigate]);
 
+  // Handle duplicate and edit flow for locked templates
+  const handleDuplicateAndEdit = () => {
+    if (template && isLocked) {
+      duplicateTemplateById(template.id);
+      toast.success("Template duplicated", {
+        description: "You can now edit your copy of this template"
+      });
+      navigate("/settings?tab=templates");
+    }
+  };
+
   // Handle back button with unsaved changes warning
   const handleBackClick = () => {
-    if (hasUnsavedChanges) {
+    if (hasUnsavedChanges && !isLocked) {
       // We'll handle this with an alert dialog below
     } else {
       navigate("/settings?tab=templates");
@@ -60,7 +72,7 @@ const TemplateEditor = () => {
 
   // Save template changes
   const handleSaveTemplate = () => {
-    if (template) {
+    if (template && !isLocked) {
       updateTemplate({
         ...template,
         updatedAt: new Date().toISOString(),
@@ -72,7 +84,7 @@ const TemplateEditor = () => {
 
   // Handle template detail changes
   const handleTemplateChange = (field: keyof EvaluationTemplate, value: string) => {
-    if (template) {
+    if (template && !isLocked) {
       setTemplate({
         ...template,
         [field]: value,
@@ -261,8 +273,14 @@ const TemplateEditor = () => {
   return (
     <AppLayout>
       <PageHeader
-        title={`Editing: ${template.name}`}
-        description={template.isBuiltIn ? "Built-in template (customized copy)" : "Custom template"}
+        title={`${isLocked ? 'Viewing' : 'Editing'}: ${template.name}`}
+        description={
+          template.isBuiltIn && isLocked 
+            ? "Built-in template (locked for editing)" 
+            : template.isBuiltIn 
+              ? "Built-in template (customized copy)" 
+              : "Custom template"
+        }
         actions={
           <div className="flex gap-2">
             <AlertDialog>
@@ -272,7 +290,7 @@ const TemplateEditor = () => {
                   Back
                 </Button>
               </AlertDialogTrigger>
-              {hasUnsavedChanges && (
+              {hasUnsavedChanges && !isLocked && (
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
@@ -289,10 +307,18 @@ const TemplateEditor = () => {
                 </AlertDialogContent>
               )}
             </AlertDialog>
-            <Button onClick={handleSaveTemplate} className="flex items-center gap-1">
-              <Save className="h-4 w-4" />
-              Save Template
-            </Button>
+            
+            {isLocked ? (
+              <Button onClick={handleDuplicateAndEdit} className="flex items-center gap-1">
+                <Copy className="h-4 w-4" />
+                Duplicate to Edit
+              </Button>
+            ) : (
+              <Button onClick={handleSaveTemplate} className="flex items-center gap-1">
+                <Save className="h-4 w-4" />
+                Save Template
+              </Button>
+            )}
           </div>
         }
       />
@@ -309,12 +335,25 @@ const TemplateEditor = () => {
               <CardTitle>Template Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {isLocked && (
+                <div className="bg-yellow-50 dark:bg-yellow-950 p-4 rounded-md mb-4 border border-yellow-200 dark:border-yellow-800">
+                  <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-300 mb-1">
+                    This template is locked
+                  </h3>
+                  <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                    This is a built-in template that cannot be edited. You can duplicate it to create your own editable version.
+                  </p>
+                </div>
+              )}
+              
               <div className="space-y-2">
                 <label className="text-sm font-medium">Template Name</label>
                 <Input
                   value={template.name}
                   onChange={(e) => handleTemplateChange("name", e.target.value)}
                   placeholder="Enter template name"
+                  readOnly={isLocked}
+                  className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                 />
               </div>
 
@@ -325,6 +364,8 @@ const TemplateEditor = () => {
                   onChange={(e) => handleTemplateChange("description", e.target.value)}
                   placeholder="Enter template description"
                   rows={4}
+                  readOnly={isLocked}
+                  className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                 />
               </div>
 
@@ -334,6 +375,8 @@ const TemplateEditor = () => {
                   value={template.author}
                   onChange={(e) => handleTemplateChange("author", e.target.value)}
                   placeholder="Enter author name"
+                  readOnly={isLocked}
+                  className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                 />
               </div>
 
@@ -350,12 +393,25 @@ const TemplateEditor = () => {
         </TabsContent>
 
         <TabsContent value="categories" className="mt-6 space-y-6">
+          {isLocked && (
+            <div className="bg-yellow-50 dark:bg-yellow-950 p-4 rounded-md mb-4 border border-yellow-200 dark:border-yellow-800">
+              <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-300 mb-1">
+                This template is locked
+              </h3>
+              <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                This is a built-in template that cannot be edited. You can duplicate it to create your own editable version.
+              </p>
+            </div>
+          )}
+          
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Categories</h3>
-            <Button onClick={handleAddCategory} size="sm" className="flex items-center gap-1">
-              <PlusCircle className="h-4 w-4" />
-              Add Category
-            </Button>
+            {!isLocked && (
+              <Button onClick={handleAddCategory} size="sm" className="flex items-center gap-1">
+                <PlusCircle className="h-4 w-4" />
+                Add Category
+              </Button>
+            )}
           </div>
 
           {template.categories.map((category, categoryIndex) => (
@@ -370,6 +426,8 @@ const TemplateEditor = () => {
                       }
                       className="font-medium text-lg bg-transparent border-transparent focus:bg-background"
                       placeholder="Category Name"
+                      readOnly={isLocked}
+                      className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                     />
                     <Textarea
                       value={category.description}
@@ -378,6 +436,8 @@ const TemplateEditor = () => {
                       }
                       className="bg-transparent border-transparent resize-none focus:bg-background text-muted-foreground"
                       placeholder="Category Description"
+                      readOnly={isLocked}
+                      className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                     />
                   </div>
                   <div className="flex gap-1">
@@ -427,6 +487,8 @@ const TemplateEditor = () => {
                             }
                             className="font-medium bg-transparent border-transparent focus:bg-background"
                             placeholder="Metric Name"
+                            readOnly={isLocked}
+                            className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                           />
                           <Textarea
                             value={metric.description}
@@ -441,6 +503,8 @@ const TemplateEditor = () => {
                             className="bg-transparent border-transparent resize-none focus:bg-background text-muted-foreground"
                             placeholder="Metric Description"
                             rows={2}
+                            readOnly={isLocked}
+                            className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                           />
                         </div>
                         <Button
@@ -468,6 +532,8 @@ const TemplateEditor = () => {
                             }
                             placeholder="e.g., High, Medium, Low"
                             className="text-sm"
+                            readOnly={isLocked}
+                            className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                           />
                         </div>
                       </div>
@@ -496,6 +562,8 @@ const TemplateEditor = () => {
                               }
                               placeholder="Enter T0 threshold criteria"
                               className="min-h-[80px] text-sm"
+                              readOnly={isLocked}
+                              className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                             />
                           </div>
                           <div className="space-y-2">
@@ -517,6 +585,8 @@ const TemplateEditor = () => {
                               }
                               placeholder="Enter T1 threshold criteria"
                               className="min-h-[80px] text-sm"
+                              readOnly={isLocked}
+                              className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                             />
                           </div>
                         </div>
@@ -538,6 +608,8 @@ const TemplateEditor = () => {
                           placeholder="Enter tools, one per line"
                           className="min-h-[80px] text-sm"
                           rows={4}
+                          readOnly={isLocked}
+                          className={isLocked ? "bg-muted cursor-not-allowed" : ""}
                         />
                       </div>
                     </div>

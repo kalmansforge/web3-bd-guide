@@ -16,6 +16,7 @@ export interface EvaluationTemplate {
   createdAt: string;
   updatedAt: string;
   isBuiltIn: boolean;
+  isLocked?: boolean;  // Added isLocked property
   categories: MetricCategory[];
 }
 

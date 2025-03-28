@@ -10,4 +10,5 @@ export type ThresholdContextType = {
   unsavedChanges: boolean;
   refreshData: () => void;
   applyTemplateThresholds: (templateId?: string) => void;
+  isActiveTemplateLocked: () => boolean;  // Added this function
 };

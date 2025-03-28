@@ -1,6 +1,6 @@
 
-import React, { useState, useRef } from "react";
-import { Plus, Upload, Download, Copy, Trash, Settings, Edit } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Plus, Upload, Download, Copy, Trash, Settings, Edit, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,8 @@ const TemplatesTab = () => {
     duplicateTemplateById,
     importTemplateFromJson,
     exportTemplateById,
-    createTemplate
+    createTemplate,
+    refreshData
   } = useTemplates();
   
   const { thresholds, refreshData: refreshThresholds, applyTemplateThresholds } = useThresholds();
@@ -33,6 +34,11 @@ const TemplatesTab = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingTemplateId, setPendingTemplateId] = useState<string | null>(null);
+  
+  // Refresh data when component mounts to ensure we have the latest templates
+  useEffect(() => {
+    refreshData();
+  }, []);
   
   const handleCreateTemplate = () => {
     const newTemplate = createTemplate();
@@ -84,7 +90,12 @@ const TemplatesTab = () => {
     }
   };
   
-  const handleEdit = (templateId: string) => {
+  const handleEdit = (templateId: string, isLocked: boolean) => {
+    if (isLocked) {
+      toast.info("This template cannot be edited directly", {
+        description: "You can view it or duplicate it to create your own version",
+      });
+    }
     navigate(`/template-editor/${templateId}`);
   };
   
@@ -139,6 +150,15 @@ const TemplatesTab = () => {
     if (templateId === activeTemplate.id) {
       toast.error("Cannot delete active template", {
         description: "Switch to another template before deleting this one"
+      });
+      return;
+    }
+    
+    // Check if template is locked
+    const template = templates.find(t => t.id === templateId);
+    if (template && template.isLocked) {
+      toast.error("Cannot delete locked template", {
+        description: "This is a built-in template that cannot be deleted"
       });
       return;
     }
@@ -209,7 +229,12 @@ const TemplatesTab = () => {
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg">{template.name}</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg">{template.name}</CardTitle>
+                    {template.isLocked && (
+                      <Lock className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </div>
                   <CardDescription className="mt-1">
                     {template.isBuiltIn && <Badge variant="outline" className="mr-2">Built-in</Badge>}
                     By {template.author}
@@ -257,10 +282,22 @@ const TemplatesTab = () => {
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => handleEdit(template.id)}
+                onClick={() => handleEdit(template.id, template.isLocked || false)}
               >
-                <Edit className="mr-1 h-3 w-3" />
-                Edit
+                {template.isLocked ? (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1 h-3 w-3">
+                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    View
+                  </>
+                ) : (
+                  <>
+                    <Edit className="mr-1 h-3 w-3" />
+                    Edit
+                  </>
+                )}
               </Button>
               
               <Button 
@@ -281,7 +318,7 @@ const TemplatesTab = () => {
                 Export
               </Button>
               
-              {!template.isBuiltIn && template.id !== activeTemplate.id && (
+              {!template.isLocked && template.id !== activeTemplate.id && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button 

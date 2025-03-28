@@ -69,11 +69,25 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
     loadThresholds();
   }, []);
 
+  const isActiveTemplateLocked = (): boolean => {
+    return activeTemplate?.isLocked || false;
+  };
+
   const updateThreshold = async (
     metricId: string, 
     categoryId: string, 
     updatedThresholds: Record<string, string>
   ) => {
+    // Check if active template is locked
+    if (isActiveTemplateLocked()) {
+      toast({
+        title: "Cannot modify thresholds",
+        description: "The active template is locked. Create a copy to modify thresholds.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const updatedThresholdsList = thresholds.map((threshold) => {
       if (threshold.metricId === metricId && threshold.categoryId === categoryId) {
         return {
@@ -90,6 +104,16 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const saveChanges = async () => {
+    // Check if active template is locked
+    if (isActiveTemplateLocked()) {
+      toast({
+        title: "Cannot save threshold changes",
+        description: "The active template is locked. Create a copy to modify thresholds.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     try {
       const success = saveThresholdsToStorage(thresholds);
       
@@ -184,7 +208,8 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
         resetChanges,
         unsavedChanges,
         refreshData,
-        applyTemplateThresholds
+        applyTemplateThresholds,
+        isActiveTemplateLocked
       }}
     >
       {children}

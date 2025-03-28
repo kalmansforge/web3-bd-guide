@@ -1,4 +1,3 @@
-
 import { EvaluationTemplate, TemplateStorage } from "@/types/templates";
 import { saveToStorage, getFromStorage } from "./core";
 import { metricsData } from "@/data/metricsData";
@@ -10,15 +9,16 @@ export const TEMPLATES_KEY = 'web3_templates';
 export const DEFAULT_TEMPLATE: EvaluationTemplate = {
   id: "default-web3-template",
   name: "Web3 Project Evaluation",
-  description: "Comprehensive evaluation framework for blockchain projects with metrics for foundational strength, product, financials, strategic alignment, ecosystem health, and risk assessment.",
-  author: "Metrics Guide",
+  description: "Shai's foundational framework honed in on comprehensive evaluation for blockchain projects with metrics for foundational strength, product, financials, strategic alignment, ecosystem health, and risk assessment.",
+  author: "Shai Perednik",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   isBuiltIn: true,
+  isLocked: true,
   categories: metricsData
 };
 
-// Initial template storage state
+// Initial template storage state - We'll modify the initialization logic
 const initialStorage: TemplateStorage = {
   templates: [DEFAULT_TEMPLATE],
   activeTemplateId: DEFAULT_TEMPLATE.id
@@ -32,10 +32,61 @@ export const saveTemplatesToStorage = (templates: TemplateStorage): boolean => {
 };
 
 /**
+ * Initialize templates if this is the first time or if updates to built-in template occurred
+ */
+export const initializeTemplates = (): TemplateStorage => {
+  // Get existing templates from storage if any
+  const existingStorage = getFromStorage<TemplateStorage>(TEMPLATES_KEY, null);
+  
+  // If no templates exist, create initial setup with a personal copy
+  if (!existingStorage) {
+    // Create a personal copy of the default template
+    const personalTemplate: EvaluationTemplate = {
+      ...DEFAULT_TEMPLATE,
+      id: crypto.randomUUID(),
+      name: "My Web3 Evaluation Template",
+      description: "My customized version of Shai's foundational framework",
+      author: "You",
+      isBuiltIn: false,
+      isLocked: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    const initialSetup: TemplateStorage = {
+      templates: [DEFAULT_TEMPLATE, personalTemplate],
+      activeTemplateId: personalTemplate.id
+    };
+    
+    saveTemplatesToStorage(initialSetup);
+    return initialSetup;
+  }
+  
+  // Make sure the built-in template is always present and up-to-date
+  const builtInTemplateExists = existingStorage.templates.some(t => t.id === DEFAULT_TEMPLATE.id);
+  
+  if (!builtInTemplateExists) {
+    // Add the built-in template if it doesn't exist
+    existingStorage.templates.push(DEFAULT_TEMPLATE);
+    saveTemplatesToStorage(existingStorage);
+  } else {
+    // Update the built-in template to ensure it's current
+    const updatedTemplates = existingStorage.templates.map(t => 
+      t.id === DEFAULT_TEMPLATE.id ? { ...DEFAULT_TEMPLATE } : t
+    );
+    
+    existingStorage.templates = updatedTemplates;
+    saveTemplatesToStorage(existingStorage);
+  }
+  
+  return existingStorage;
+};
+
+/**
  * Get templates from local storage
  */
 export const getTemplatesFromStorage = (): TemplateStorage => {
-  return getFromStorage<TemplateStorage>(TEMPLATES_KEY, initialStorage);
+  return getFromStorage<TemplateStorage>(TEMPLATES_KEY, null) || initializeTemplates();
 };
 
 /**
@@ -71,6 +122,12 @@ export const saveTemplate = (template: EvaluationTemplate): boolean => {
   // Check if template exists
   const existingIndex = templateStorage.templates.findIndex(t => t.id === template.id);
   
+  // Prevent modifying locked templates
+  const existingTemplate = existingIndex >= 0 ? templateStorage.templates[existingIndex] : null;
+  if (existingTemplate && existingTemplate.isLocked) {
+    return false;
+  }
+  
   if (existingIndex >= 0) {
     // Update existing template
     templateStorage.templates[existingIndex] = {
@@ -96,6 +153,14 @@ export const saveTemplate = (template: EvaluationTemplate): boolean => {
  */
 export const deleteTemplate = (templateId: string): boolean => {
   const templateStorage = getTemplatesFromStorage();
+  
+  // Find the template
+  const templateToDelete = templateStorage.templates.find(t => t.id === templateId);
+  
+  // Prevent deleting locked templates
+  if (templateToDelete && templateToDelete.isLocked) {
+    return false;
+  }
   
   // Prevent deleting if it's the only template
   if (templateStorage.templates.length <= 1) {
@@ -210,6 +275,7 @@ export const duplicateTemplate = (templateId: string): boolean => {
     id: crypto.randomUUID(),
     name: `${template.name} (Copy)`,
     isBuiltIn: false,
+    isLocked: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
