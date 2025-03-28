@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit, DownloadIcon, Trash2 } from "lucide-react";
@@ -7,6 +6,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import DeleteProjectDialog from "@/components/ui/DeleteProjectDialog";
 import { ProjectEvaluation } from "@/types/metrics";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface ProjectActionsProps {
   project: ProjectEvaluation;
