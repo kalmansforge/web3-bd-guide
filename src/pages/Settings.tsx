@@ -19,8 +19,7 @@ import ThresholdConfigTab from "@/components/settings/ThresholdConfigTab";
 import AppearanceTab from "@/components/settings/AppearanceTab";
 import TierNamesTab from "@/components/settings/TierNamesTab";
 import DataManagementTab from "@/components/settings/DataManagementTab";
-import { Button } from "@/components/ui/button";
-import { FileText } from "lucide-react";
+import TemplatesTab from "@/components/settings/TemplatesTab";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -124,20 +123,15 @@ const Settings = () => {
       <PageHeader
         title="Settings"
         description="Configure application settings and thresholds"
-        actions={
-          <Button onClick={() => navigate('/templates')} variant="outline">
-            <FileText className="mr-2 h-4 w-4" />
-            Manage Templates
-          </Button>
-        }
       />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-4 mb-4">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-5 mb-4">
           <TabsTrigger value="config">Threshold Configuration</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="tier-names">Tier Names</TabsTrigger>
           <TabsTrigger value="data-management">Data Management</TabsTrigger>
+          <TabsTrigger value="templates">Templates</TabsTrigger>
         </TabsList>
         
         <TabsContent value="config">
@@ -171,6 +165,10 @@ const Settings = () => {
             storageInfo={storageInfo}
             onDataImported={handleDataImported}
           />
+        </TabsContent>
+        
+        <TabsContent value="templates">
+          <TemplatesTab />
         </TabsContent>
       </Tabs>
     </AppLayout>

@@ -10,7 +10,6 @@ import NewEvaluation from "@/pages/NewEvaluation";
 import Dashboard from "@/pages/Dashboard";
 import Settings from "@/pages/Settings";
 import MetricsGuide from "@/pages/MetricsGuide";
-import Templates from "@/pages/Templates";
 import NotFound from "@/pages/NotFound";
 
 import { ThresholdProvider } from "@/contexts/ThresholdContext";
@@ -32,7 +31,6 @@ function App() {
               <Route path="/projects/:id" element={<ProjectDetail />} />
               <Route path="/new-evaluation" element={<NewEvaluation />} />
               <Route path="/metrics-guide" element={<MetricsGuide />} />
-              <Route path="/templates" element={<Templates />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
