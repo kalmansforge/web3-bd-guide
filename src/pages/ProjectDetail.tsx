@@ -11,11 +11,11 @@ import AppLayout from "@/components/layout/AppLayout";
 import { getProjectCompletionData } from "@/utils/scoring";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Import our new components
+// Import our components
 import ProjectActions from "@/components/project-detail/ProjectActions";
 import ProjectSummary from "@/components/project-detail/ProjectSummary";
-import CategoryNavigation from "@/components/project-detail/CategoryNavigation";
 import DetailedMetrics from "@/components/project-detail/DetailedMetrics";
+import BackButton from "@/components/metrics-guide/BackButton";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,6 +77,8 @@ const ProjectDetail = () => {
   return (
     <AppLayout>
       <div className="w-full max-w-[1600px] mx-auto px-2 md:px-4">
+        <BackButton onClick={() => navigate("/projects")} />
+        
         <ProjectActions 
           project={project}
           onEditProject={handleEditProject}
@@ -99,12 +101,6 @@ const ProjectDetail = () => {
           totalMetrics={totalMetrics}
           metricsData={metricsData}
           metrics={project.metrics}
-        />
-        
-        <CategoryNavigation 
-          categories={metricsData}
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
         />
         
         <DetailedMetrics 
