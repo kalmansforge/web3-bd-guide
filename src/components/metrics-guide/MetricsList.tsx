@@ -20,7 +20,7 @@ const MetricsList: React.FC<MetricsListProps> = ({
   if (metrics.length === 0) {
     return (
       <Card>
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle>No metrics found</CardTitle>
         </CardHeader>
         <CardContent>
@@ -33,7 +33,7 @@ const MetricsList: React.FC<MetricsListProps> = ({
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in mb-6">
       {metrics.map(metric => (
         <MetricItem 
           key={metric.id}

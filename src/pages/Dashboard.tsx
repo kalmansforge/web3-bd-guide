@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, ChevronRight, BarChart2, HardDrive, Shield, Users, Database, AlertCircle } from "lucide-react";
@@ -34,14 +35,14 @@ const DashboardCard = ({
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
         {trend && (
-          <p className={`text-xs ${trend.positive ? 'text-green-600' : 'text-red-600'} flex items-center`}>
+          <p className={`text-xs ${trend.positive ? 'text-green-600' : 'text-red-600'} flex items-center mt-1`}>
             {trend.positive ? '+' : ''}{trend.value}%
           </p>
         )}
         {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
       </CardContent>
       {onClick && (
-        <CardFooter className="p-2 border-t">
+        <CardFooter className="p-2 pt-0 border-t">
           <Button variant="ghost" size="sm" className="w-full justify-between" onClick={onClick}>
             <span>View details</span>
             <ChevronRight className="h-4 w-4" />
@@ -93,7 +94,7 @@ const Dashboard = () => {
         }
       />
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4 mb-8">
         <DashboardCard 
           title="Total Evaluations" 
           value={projects.length} 
@@ -124,8 +125,8 @@ const Dashboard = () => {
         />
       </div>
       
-      <Card className="mt-6 mb-8 overflow-hidden">
-        <CardHeader className="pb-2">
+      <Card className="mb-8 overflow-hidden">
+        <CardHeader className="pb-3">
           <div className="flex justify-between items-start">
             <div className="flex items-center">
               <Database className="h-5 w-5 mr-2 text-muted-foreground" />
@@ -139,10 +140,10 @@ const Dashboard = () => {
             Overview of your browser's local storage usage for this application
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-6">
           <div className="space-y-4">
             <div>
-              <div className="flex justify-between mb-1">
+              <div className="flex justify-between mb-2">
                 <h3 className="text-sm font-medium">Total Storage Used</h3>
                 <span className="text-sm font-medium text-primary">
                   {storageInfo.totalSizeFormatted} ({storageInfo.percentUsed.toFixed(1)}% of 5MB)
@@ -155,7 +156,7 @@ const Dashboard = () => {
             </div>
             
             {storageInfo.percentUsed > 80 && (
-              <div className="flex items-center space-x-2 text-amber-600 dark:text-amber-400 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800">
+              <div className="flex items-center space-x-2 text-amber-600 dark:text-amber-400 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800 mt-3">
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
                 <p className="text-sm">Storage usage is high. Consider exporting and clearing old evaluations.</p>
               </div>
@@ -164,9 +165,12 @@ const Dashboard = () => {
         </CardContent>
       </Card>
       
-      <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tight">Recent Evaluations</h2>
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold tracking-tight">Recent Evaluations</h2>
+      </div>
+      
       {projects.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-4 mb-6">
           {projects.slice(0, 5).map((project) => (
             <Card key={project.id} className="overflow-hidden animate-fade-in">
               <CardHeader className="py-4">
@@ -188,13 +192,13 @@ const Dashboard = () => {
                   )}
                 </div>
               </CardHeader>
-              <CardFooter className="py-3 border-t flex justify-between">
-                <div className="flex items-center space-x-4">
+              <CardFooter className="py-3 px-6 border-t flex justify-between">
+                <div className="flex items-center space-x-6">
                   <div className="text-sm text-muted-foreground">
-                    Score: <span className="font-medium">{project.overallScore ? Math.round(project.overallScore) : 'N/A'}/100</span>
+                    <span className="font-medium">Score:</span> {project.overallScore ? Math.round(project.overallScore) : 'N/A'}/100
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Metrics: <span className="font-medium">{Object.keys(project.metrics).length}</span>
+                    <span className="font-medium">Metrics:</span> {Object.keys(project.metrics).length}
                   </div>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => navigate(`/projects/${project.id}`)}>
@@ -205,7 +209,7 @@ const Dashboard = () => {
           ))}
         </div>
       ) : (
-        <Card className="animate-pulse-slow">
+        <Card className="animate-pulse-slow mb-6">
           <CardHeader>
             <CardTitle>No evaluations yet</CardTitle>
             <CardDescription>

@@ -178,7 +178,7 @@ const TemplatesTab = () => {
             Manage your evaluation frameworks and templates
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Button 
             variant="outline" 
             onClick={handleImportClick}

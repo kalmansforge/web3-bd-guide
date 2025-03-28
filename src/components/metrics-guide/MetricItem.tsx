@@ -25,9 +25,9 @@ const MetricItem: React.FC<MetricItemProps> = ({
 }) => {
   return (
     <Card key={id} className="overflow-hidden">
-      <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl">{name}</CardTitle>
+        <CardDescription className="mt-1">{description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
@@ -35,9 +35,9 @@ const MetricItem: React.FC<MetricItemProps> = ({
           <p className="text-sm text-muted-foreground">{importance}</p>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-3">
           <h3 className="text-sm font-medium">Threshold Classifications</h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2">
             {tierNames.slice(0, 2).map((tier, index) => (
               <div key={tier.internalName} className="space-y-2">
                 <div className="flex items-center">
@@ -61,12 +61,12 @@ const MetricItem: React.FC<MetricItemProps> = ({
         </div>
         
         {tools && tools.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <h3 className="text-sm font-medium">Recommended Tools & Resources</h3>
-            <div className="space-y-1">
+            <div className="space-y-2">
               {tools.map(tool => (
                 <div key={tool} className="flex items-center">
-                  <ExternalLink className="h-3.5 w-3.5 text-muted-foreground mr-2" />
+                  <ExternalLink className="h-3.5 w-3.5 text-muted-foreground mr-2 flex-shrink-0" />
                   <span className="text-sm">{tool}</span>
                 </div>
               ))}

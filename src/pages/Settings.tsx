@@ -146,8 +146,8 @@ const Settings = () => {
         description="Configure application settings and thresholds"
       />
       
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-5 mb-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+        <TabsList className="mb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-1">
           <TabsTrigger value="config">Threshold Configuration</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="tier-names">Tier Names</TabsTrigger>
@@ -155,11 +155,11 @@ const Settings = () => {
           <TabsTrigger value="templates">Templates</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="config">
+        <TabsContent value="config" className="mt-0">
           <ThresholdConfigTab />
         </TabsContent>
         
-        <TabsContent value="appearance">
+        <TabsContent value="appearance" className="mt-0">
           <AppearanceTab 
             appearanceSettings={appearanceSettings}
             unsavedChanges={unsavedAppearanceChanges}
@@ -169,7 +169,7 @@ const Settings = () => {
           />
         </TabsContent>
         
-        <TabsContent value="tier-names">
+        <TabsContent value="tier-names" className="mt-0">
           <TierNamesTab 
             appearanceSettings={appearanceSettings}
             unsavedChanges={unsavedAppearanceChanges}
@@ -179,7 +179,7 @@ const Settings = () => {
           />
         </TabsContent>
         
-        <TabsContent value="data-management">
+        <TabsContent value="data-management" className="mt-0">
           <DataManagementTab 
             projects={projects}
             thresholds={thresholds}
@@ -188,7 +188,7 @@ const Settings = () => {
           />
         </TabsContent>
         
-        <TabsContent value="templates">
+        <TabsContent value="templates" className="mt-0">
           <TemplatesTab />
         </TabsContent>
       </Tabs>

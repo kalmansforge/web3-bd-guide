@@ -53,10 +53,10 @@ const TemplateEditor = () => {
               : "Custom template"
         }
         actions={
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-1">
+                <Button variant="outline" className="flex items-center gap-2">
                   <ArrowLeft className="h-4 w-4" />
                   Back
                 </Button>
@@ -69,7 +69,7 @@ const TemplateEditor = () => {
                       You have unsaved changes. Are you sure you want to leave without saving?
                     </AlertDialogDescription>
                   </AlertDialogHeader>
-                  <AlertDialogFooter>
+                  <AlertDialogFooter className="gap-2 mt-4">
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction onClick={handleBackClick}>
                       Leave without saving
@@ -80,12 +80,12 @@ const TemplateEditor = () => {
             </AlertDialog>
             
             {isLocked ? (
-              <Button onClick={handleDuplicateAndEdit} className="flex items-center gap-1">
+              <Button onClick={handleDuplicateAndEdit} className="flex items-center gap-2">
                 <Copy className="h-4 w-4" />
                 Duplicate to Edit
               </Button>
             ) : (
-              <Button onClick={handleSaveTemplate} className="flex items-center gap-1">
+              <Button onClick={handleSaveTemplate} className="flex items-center gap-2">
                 <Save className="h-4 w-4" />
                 Save Template
               </Button>
@@ -97,14 +97,14 @@ const TemplateEditor = () => {
       <Tabs 
         defaultValue={activeTab} 
         onValueChange={setActiveTab} 
-        className="mt-6"
+        className="mt-8"
       >
         <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 lg:w-[400px]">
           <TabsTrigger value="details">Template Details</TabsTrigger>
           <TabsTrigger value="categories">Categories & Metrics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="details" className="mt-6 space-y-4">
+        <TabsContent value="details" className="mt-6 space-y-6">
           <TemplateDetailsPanel
             template={template}
             isLocked={isLocked}
@@ -112,7 +112,7 @@ const TemplateEditor = () => {
           />
         </TabsContent>
 
-        <TabsContent value="categories" className="mt-6 space-y-6">
+        <TabsContent value="categories" className="mt-6 space-y-8">
           <CategoriesPanel
             template={template}
             isLocked={isLocked}

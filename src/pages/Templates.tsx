@@ -117,7 +117,7 @@ const Templates = () => {
         title="Evaluation Templates"
         description="Manage your evaluation frameworks and templates"
         actions={
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Button 
               variant="outline" 
               onClick={handleImportClick}
@@ -145,7 +145,7 @@ const Templates = () => {
         className="hidden"
       />
       
-      <div className="mb-6">
+      <div className="mb-8 mt-6">
         <Input
           placeholder="Search templates..."
           value={searchTerm}
@@ -154,7 +154,7 @@ const Templates = () => {
         />
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         {filteredTemplates.map(template => (
           <Card key={template.id} className={`relative ${template.id === activeTemplate.id ? 'border-primary' : ''}`}>
             {template.id === activeTemplate.id && (
@@ -163,7 +163,7 @@ const Templates = () => {
               </div>
             )}
             
-            <CardHeader>
+            <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="text-lg">{template.name}</CardTitle>
@@ -176,7 +176,7 @@ const Templates = () => {
             </CardHeader>
             
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-2">{template.description}</p>
+              <p className="text-sm text-muted-foreground mb-3">{template.description}</p>
               <div className="text-sm space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Categories:</span>
@@ -206,7 +206,7 @@ const Templates = () => {
                   size="sm"
                   onClick={() => handleSetActive(template.id)}
                 >
-                  <Settings className="mr-1 h-3 w-3" />
+                  <Settings className="mr-1.5 h-3 w-3" />
                   Set Active
                 </Button>
               )}
@@ -216,7 +216,7 @@ const Templates = () => {
                 size="sm"
                 onClick={() => handleEdit(template)}
               >
-                <Edit className="mr-1 h-3 w-3" />
+                <Edit className="mr-1.5 h-3 w-3" />
                 Edit
               </Button>
               
@@ -225,7 +225,7 @@ const Templates = () => {
                 size="sm"
                 onClick={() => handleDuplicate(template.id)}
               >
-                <Copy className="mr-1 h-3 w-3" />
+                <Copy className="mr-1.5 h-3 w-3" />
                 Duplicate
               </Button>
               
@@ -234,7 +234,7 @@ const Templates = () => {
                 size="sm"
                 onClick={() => handleExport(template.id)}
               >
-                <Download className="mr-1 h-3 w-3" />
+                <Download className="mr-1.5 h-3 w-3" />
                 Export
               </Button>
               
@@ -246,7 +246,7 @@ const Templates = () => {
                       size="sm"
                       className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
                     >
-                      <Trash className="mr-1 h-3 w-3" />
+                      <Trash className="mr-1.5 h-3 w-3" />
                       Delete
                     </Button>
                   </AlertDialogTrigger>
@@ -257,7 +257,7 @@ const Templates = () => {
                         Are you sure you want to delete this template? This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter>
+                    <AlertDialogFooter className="gap-2 mt-4">
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => handleDelete(template.id)}
@@ -275,14 +275,14 @@ const Templates = () => {
       </div>
       
       {filteredTemplates.length === 0 && (
-        <Card className="p-6 text-center">
-          <h3 className="text-lg font-medium mb-2">No templates found</h3>
-          <p className="text-muted-foreground mb-4">
+        <Card className="p-8 text-center">
+          <h3 className="text-lg font-medium mb-3">No templates found</h3>
+          <p className="text-muted-foreground mb-6">
             {searchTerm ? 
               `No templates match your search for "${searchTerm}"` : 
               "You don't have any templates yet. Create a new template or import one to get started."}
           </p>
-          <div className="flex gap-2 justify-center">
+          <div className="flex gap-3 justify-center">
             <Button onClick={handleCreateTemplate}>
               <Plus className="mr-2 h-4 w-4" />
               Create Template
