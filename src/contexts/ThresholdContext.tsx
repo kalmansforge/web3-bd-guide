@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useAuth } from "./AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { metricsData } from "@/data/metricsData";
 import { saveThresholdsToStorage, getThresholdsFromStorage } from "@/utils/localStorageUtils";
@@ -35,7 +34,6 @@ export const useThresholds = () => {
 };
 
 export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
   const [thresholds, setThresholds] = useState<ThresholdConfig[]>([]);
   const [originalThresholds, setOriginalThresholds] = useState<ThresholdConfig[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,14 +41,9 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
 
   // Load thresholds from local storage or initialize with defaults
   const loadThresholds = async () => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-
     setLoading(true);
     try {
-      // Check if user already has threshold configurations in local storage
+      // Check if there are threshold configurations in local storage
       const storedThresholds = getThresholdsFromStorage();
 
       if (storedThresholds && storedThresholds.length > 0) {
@@ -99,7 +92,7 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     loadThresholds();
-  }, [user]);
+  }, []);
 
   // Update a specific threshold
   const updateThreshold = async (
@@ -126,8 +119,6 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
 
   // Save all changes to local storage
   const saveChanges = async () => {
-    if (!user) return;
-    
     try {
       const success = saveThresholdsToStorage(thresholds);
       

@@ -1,7 +1,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
-import { SonnerToaster } from "@/components/ui/sonner";
+import { Toaster as SonnerToaster } from "sonner";
 import { ThresholdProvider } from '@/contexts/ThresholdContext';
 import { EvaluationProvider } from '@/contexts/EvaluationContext';
 import { useEffect } from 'react';

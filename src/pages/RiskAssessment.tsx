@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { AlertTriangle, Shield, ExternalLink, Filter, Download } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { AlertTriangle, Shield, ExternalLink, Filter, Download, BarChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,48 +23,129 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
+import { getEvaluationsFromStorage } from "@/utils/localStorageUtils";
+import { toast } from "sonner";
+import { ProjectEvaluation } from "@/types/metrics";
+
+// Risk status type
+type RiskStatus = 'high' | 'medium' | 'low';
+
+// Interface for risk assessment
+interface RiskAssessment {
+  metricId: string;
+  status: RiskStatus;
+  notes: string;
+}
+
+// Extended project with risk assessments
+interface ProjectWithRisks extends ProjectEvaluation {
+  risks: RiskAssessment[];
+  riskStatus?: RiskStatus;
+}
 
 const RiskAssessment = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [projects, setProjects] = useState<ProjectWithRisks[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   
   // Find risk metrics from metricsData
   const riskCategory = metricsData.find(c => c.id === "risk");
   const allRiskMetrics = riskCategory?.metrics || [];
   
-  // Add some sample pre-analyzed projects with risk metrics
-  const sampleProjects = [
-    {
-      id: "1",
-      name: "PolygonZK",
-      date: "2023-05-15",
-      risks: [
-        { metricId: "regulatory-risks", status: "high", notes: "Operating in jurisdictions with unclear regulatory frameworks" },
-        { metricId: "token-liquidity", status: "medium", notes: "2% of circulating supply in daily trading volume" },
-        { metricId: "runway-burn", status: "low", notes: "36+ months runway based on current treasury" }
-      ]
-    },
-    {
-      id: "2",
-      name: "EcoChain",
-      date: "2023-07-10",
-      risks: [
-        { metricId: "regulatory-risks", status: "low", notes: "Well-established legal entity in Singapore" },
-        { metricId: "token-liquidity", status: "high", notes: "Less than 0.5% of supply trading daily" },
-        { metricId: "runway-burn", status: "medium", notes: "14 months runway at current burn rate" }
-      ]
-    },
-    {
-      id: "3",
-      name: "DataDAO",
-      date: "2023-09-22",
-      risks: [
-        { metricId: "regulatory-risks", status: "medium", notes: "Potential data privacy concerns in EU markets" },
-        { metricId: "token-liquidity", status: "low", notes: "6% of supply trading daily across multiple venues" },
-        { metricId: "runway-burn", status: "medium", notes: "18 months runway, but accelerating development costs" }
-      ]
-    }
-  ];
+  // Load projects and analyze risks
+  useEffect(() => {
+    const loadProjects = () => {
+      setIsLoading(true);
+      try {
+        // Get all projects from local storage
+        const storedProjects = getEvaluationsFromStorage();
+        
+        // Analyze projects for risks
+        const projectsWithRisks = storedProjects.map(project => {
+          const risks: RiskAssessment[] = [];
+          
+          // Check regulatory risks
+          if (project.metrics["risk_regulatory-risks"]) {
+            const metricValue = project.metrics["risk_regulatory-risks"];
+            risks.push({
+              metricId: "regulatory-risks",
+              status: metricValue.tier === 'T0' ? 'low' : metricValue.tier === 'T1' ? 'medium' : 'high',
+              notes: metricValue.notes || "No additional notes provided."
+            });
+          }
+          
+          // Check token liquidity
+          if (project.metrics["risk_token-liquidity"]) {
+            const metricValue = project.metrics["risk_token-liquidity"];
+            risks.push({
+              metricId: "token-liquidity",
+              status: metricValue.tier === 'T0' ? 'low' : metricValue.tier === 'T1' ? 'medium' : 'high',
+              notes: metricValue.notes || "No additional notes provided."
+            });
+          }
+          
+          // Check runway/burn rate
+          if (project.metrics["risk_runway-burn"]) {
+            const metricValue = project.metrics["risk_runway-burn"];
+            risks.push({
+              metricId: "runway-burn",
+              status: metricValue.tier === 'T0' ? 'low' : metricValue.tier === 'T1' ? 'medium' : 'high',
+              notes: metricValue.notes || "No additional notes provided."
+            });
+          }
+          
+          // Check technical risks
+          if (project.metrics["risk_technical-risks"]) {
+            const metricValue = project.metrics["risk_technical-risks"];
+            risks.push({
+              metricId: "technical-risks",
+              status: metricValue.tier === 'T0' ? 'low' : metricValue.tier === 'T1' ? 'medium' : 'high',
+              notes: metricValue.notes || "No additional notes provided."
+            });
+          }
+          
+          // If project has no risk metrics evaluated
+          if (risks.length === 0) {
+            // Add placeholder risk assessments for projects without risk data
+            risks.push({
+              metricId: "regulatory-risks",
+              status: 'medium',
+              notes: "No evaluation data available for this risk."
+            });
+            risks.push({
+              metricId: "token-liquidity", 
+              status: 'medium',
+              notes: "No evaluation data available for this risk."
+            });
+          }
+          
+          // Determine overall risk status (highest risk level)
+          let overallRiskStatus: RiskStatus = 'low';
+          if (risks.some(r => r.status === 'high')) {
+            overallRiskStatus = 'high';
+          } else if (risks.some(r => r.status === 'medium')) {
+            overallRiskStatus = 'medium';
+          }
+          
+          return {
+            ...project,
+            risks,
+            riskStatus: overallRiskStatus
+          };
+        });
+        
+        setProjects(projectsWithRisks);
+      } catch (error) {
+        console.error("Error loading projects for risk assessment:", error);
+        toast.error("Failed to load project risk data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadProjects();
+  }, []);
   
   // Filter metrics based on search and category
   const filteredMetrics = allRiskMetrics.filter(metric => 
@@ -73,7 +154,7 @@ const RiskAssessment = () => {
   );
   
   // Get risk status color
-  const getRiskStatusColor = (status: string) => {
+  const getRiskStatusColor = (status: RiskStatus) => {
     switch (status) {
       case "high":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
@@ -93,10 +174,43 @@ const RiskAssessment = () => {
   
   // Filter projects based on selected category
   const filteredProjects = selectedCategory === "all" 
-    ? sampleProjects 
-    : sampleProjects.filter(project => 
-        project.risks.some(risk => risk.status === selectedCategory)
-      );
+    ? projects 
+    : projects.filter(project => project.riskStatus === selectedCategory);
+  
+  // Export risk assessment report
+  const exportRiskReport = () => {
+    try {
+      const reportData = {
+        generatedAt: new Date().toISOString(),
+        projects: projects.map(project => ({
+          name: project.name,
+          id: project.id,
+          date: project.date,
+          overallRisk: project.riskStatus,
+          risks: project.risks.map(risk => ({
+            metric: getRiskMetricById(risk.metricId)?.name || risk.metricId,
+            status: risk.status,
+            notes: risk.notes
+          }))
+        }))
+      };
+      
+      const dataStr = JSON.stringify(reportData, null, 2);
+      const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
+      
+      const exportFileName = `risk_assessment_report_${new Date().toISOString().split('T')[0]}.json`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileName);
+      linkElement.click();
+      
+      toast.success("Risk assessment report exported");
+    } catch (error) {
+      console.error("Error exporting risk report:", error);
+      toast.error("Failed to export risk assessment report");
+    }
+  };
 
   return (
     <AppLayout>
@@ -104,7 +218,7 @@ const RiskAssessment = () => {
         title="Risk Assessment"
         description="Analyze and manage potential risks associated with blockchain projects"
         actions={
-          <Button variant="outline">
+          <Button variant="outline" onClick={exportRiskReport}>
             <Download className="mr-2 h-4 w-4" />
             Export Report
           </Button>
@@ -149,7 +263,7 @@ const RiskAssessment = () => {
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="text-3xl font-bold">
-                  {sampleProjects.filter(p => p.risks.some(r => r.status === "high")).length}
+                  {projects.filter(p => p.riskStatus === "high").length}
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   Projects with at least one high-risk factor
@@ -167,10 +281,7 @@ const RiskAssessment = () => {
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="text-3xl font-bold">
-                  {sampleProjects.filter(p => 
-                    !p.risks.some(r => r.status === "high") && 
-                    p.risks.some(r => r.status === "medium")
-                  ).length}
+                  {projects.filter(p => p.riskStatus === "medium").length}
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   Projects with medium risk factors but no high risks
@@ -188,9 +299,7 @@ const RiskAssessment = () => {
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="text-3xl font-bold">
-                  {sampleProjects.filter(p => 
-                    p.risks.every(r => r.status === "low")
-                  ).length}
+                  {projects.filter(p => p.riskStatus === "low").length}
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   Projects with all risk factors rated low
@@ -201,28 +310,25 @@ const RiskAssessment = () => {
           
           <h2 className="text-xl font-semibold mt-8 mb-4">Project Risk Analysis</h2>
           
-          {filteredProjects.length > 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="flex flex-col items-center">
+                <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mb-4"></div>
+                <p className="text-muted-foreground">Loading risk assessments...</p>
+              </div>
+            </div>
+          ) : filteredProjects.length > 0 ? (
             <div className="space-y-4">
               {filteredProjects.map(project => (
-                <Card key={project.id}>
+                <Card key={project.id} className="overflow-hidden">
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div>
                         <CardTitle>{project.name}</CardTitle>
-                        <CardDescription>Last assessed: {project.date}</CardDescription>
+                        <CardDescription>Last assessed: {new Date(project.date).toLocaleDateString()}</CardDescription>
                       </div>
-                      <Badge className={getRiskStatusColor(
-                        project.risks.sort((a, b) => {
-                          const riskOrder = { high: 0, medium: 1, low: 2 };
-                          return riskOrder[a.status as keyof typeof riskOrder] - 
-                                 riskOrder[b.status as keyof typeof riskOrder];
-                        })[0].status
-                      )}>
-                        {project.risks.sort((a, b) => {
-                          const riskOrder = { high: 0, medium: 1, low: 2 };
-                          return riskOrder[a.status as keyof typeof riskOrder] - 
-                                 riskOrder[b.status as keyof typeof riskOrder];
-                        })[0].status.toUpperCase()} RISK
+                      <Badge className={getRiskStatusColor(project.riskStatus || 'medium')}>
+                        {project.riskStatus?.toUpperCase() || 'MEDIUM'} RISK
                       </Badge>
                     </div>
                   </CardHeader>
@@ -258,6 +364,13 @@ const RiskAssessment = () => {
                       })}
                     </Accordion>
                   </CardContent>
+                  <CardFooter>
+                    <Button variant="outline" size="sm" asChild>
+                      <a href={`/projects/${project.id}`}>
+                        View Project Details <BarChart className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  </CardFooter>
                 </Card>
               ))}
             </div>
@@ -265,8 +378,19 @@ const RiskAssessment = () => {
             <Card>
               <CardHeader>
                 <CardTitle>No projects match your filter</CardTitle>
-                <CardDescription>Try changing your filter criteria</CardDescription>
+                <CardDescription>
+                  {projects.length === 0 
+                    ? "No projects with risk assessments found. Create new evaluations to analyze risks." 
+                    : "Try changing your filter criteria"}
+                </CardDescription>
               </CardHeader>
+              <CardContent>
+                {projects.length === 0 && (
+                  <Button asChild>
+                    <a href="/new-evaluation">Create a New Evaluation</a>
+                  </Button>
+                )}
+              </CardContent>
             </Card>
           )}
         </TabsContent>
@@ -316,7 +440,7 @@ const RiskAssessment = () => {
                             <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 mr-2">
                               T1
                             </Badge>
-                            <span className="text-sm font-medium">High Risk</span>
+                            <span className="text-sm font-medium">Higher Risk</span>
                           </div>
                           <p className="text-sm text-muted-foreground">{metric.thresholds.T1}</p>
                         </div>

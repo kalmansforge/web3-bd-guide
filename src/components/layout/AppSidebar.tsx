@@ -5,15 +5,12 @@ import {
   Gauge, 
   BarChart2, 
   BookOpen, 
-  Users, 
-  Shield, 
   LineChart, 
   Database, 
   GitBranch, 
   FileText,
-  LogOut, 
-  User,
-  Settings
+  Settings,
+  Shield
 } from "lucide-react";
 import {
   Sidebar,
@@ -28,21 +25,17 @@ import {
   SidebarMenuButton,
   SidebarTrigger,
   SidebarMenuSub,
-  SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarMenuAction,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Structured navigation data
 const navItems = [
   { 
     title: "Dashboard", 
     icon: Gauge, 
-    path: "/",
+    path: "/dashboard",
   },
   { 
     title: "Projects", 
@@ -52,35 +45,28 @@ const navItems = [
   { 
     title: "Evaluation", 
     icon: BarChart2, 
-    path: "/evaluation",
-    isCollapsible: true,
-    children: [
-      { title: "New Evaluation", path: "/evaluation/new" },
-      { title: "History", path: "/evaluation/history" },
-    ]
+    path: "/new-evaluation",
   },
   { 
     title: "Metrics", 
     icon: LineChart, 
-    path: "/metrics",
+    path: "/metrics-guide",
     isCollapsible: true,
     children: [
-      { title: "Foundational", path: "/metrics/foundational" },
-      { title: "Product", path: "/metrics/product" },
-      { title: "Financial", path: "/metrics/financial" },
-      { title: "Strategic", path: "/metrics/strategic" },
-      { title: "Ecosystem", path: "/metrics/ecosystem" },
-      { title: "Risk", path: "/metrics/risk" },
+      { title: "Foundational", path: "/metrics-guide?category=foundational" },
+      { title: "Product", path: "/metrics-guide?category=product" },
+      { title: "Financial", path: "/metrics-guide?category=financial" },
+      { title: "Strategic", path: "/metrics-guide?category=strategic" },
+      { title: "Ecosystem", path: "/metrics-guide?category=ecosystem" },
+      { title: "Risk", path: "/metrics-guide?category=risk" },
     ]
   },
   { title: "Guide", icon: BookOpen, path: "/guide" },
-  { title: "Teams", icon: Users, path: "/teams" },
-  { title: "Risk Assessment", icon: Shield, path: "/risks" },
+  { title: "Risk Assessment", icon: Shield, path: "/risk-assessment" },
   { title: "Settings", icon: Settings, path: "/settings" },
 ];
 
 const AppSidebar = () => {
-  const { user, signOut } = useAuth();
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>({});
 
   const toggleGroup = (title: string) => {
@@ -178,29 +164,6 @@ const AppSidebar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        
-        {user && (
-          <SidebarGroup>
-            <SidebarGroupLabel>Account</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton className="flex items-center gap-3">
-                    <User className="h-5 w-5" />
-                    <span className="truncate">{user.email}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={signOut} className="text-red-500 hover:text-red-600 flex items-center gap-3">
-                    <LogOut className="h-5 w-5" />
-                    <span>Sign Out</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
       </SidebarContent>
       
       <SidebarFooter className="p-4">

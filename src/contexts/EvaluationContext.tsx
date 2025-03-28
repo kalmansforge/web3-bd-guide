@@ -2,7 +2,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { ProjectEvaluation, MetricEvaluation, TierType } from "@/types/metrics";
 import { toast } from "sonner";
-import { useAuth } from "./AuthContext";
 import { saveEvaluationsToStorage, getEvaluationsFromStorage } from "@/utils/localStorageUtils";
 
 interface EvaluationContextType {
@@ -32,15 +31,9 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [projects, setProjects] = useState<ProjectEvaluation[]>([]);
   const [currentProject, setCurrentProject] = useState<ProjectEvaluation | null>(null);
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
 
   // Load projects from local storage
   const loadProjects = () => {
-    if (!user) {
-      setProjects([]);
-      return;
-    }
-
     try {
       setLoading(true);
       const storedProjects = getEvaluationsFromStorage();
@@ -59,17 +52,12 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     loadProjects();
   };
 
-  // Load projects when user changes
+  // Load projects on initial mount
   useEffect(() => {
     loadProjects();
-  }, [user]);
+  }, []);
 
   const createProject = (name: string) => {
-    if (!user) {
-      toast.error("You must be logged in to create a project");
-      return;
-    }
-    
     const newProject: ProjectEvaluation = {
       id: crypto.randomUUID(),
       name,
@@ -118,7 +106,7 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   const saveProject = async () => {
-    if (!currentProject || !user) return;
+    if (!currentProject) return;
     
     try {
       setLoading(true);
@@ -156,8 +144,6 @@ export const EvaluationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   const deleteProject = async (id: string) => {
-    if (!user) return;
-    
     try {
       setLoading(true);
       
