@@ -9,9 +9,9 @@ export interface TemplateContextType {
   updateTemplate: (template: EvaluationTemplate) => void;
   removeTemplate: (id: string) => boolean;
   duplicateTemplateById: (id: string) => boolean;
-  importTemplateFromJson: (json: string) => {success: boolean; template?: EvaluationTemplate};
+  importTemplateFromJson: (json: string) => Promise<{success: boolean; template?: EvaluationTemplate}>;
   exportTemplateById: (id: string) => boolean;
   createTemplate: () => EvaluationTemplate;
   loading: boolean;
-  refreshData: () => void;
+  refreshData: () => Promise<void>;
 }

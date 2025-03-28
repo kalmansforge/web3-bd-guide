@@ -98,7 +98,7 @@ export function useTemplateOperations() {
       return success;
     },
     importTemplateFromJson: async (json: string) => {
-      const result = importExportOps.importTemplateFromJson(json);
+      const result = await importExportOps.importTemplateFromJson(json);
       if (result.success) {
         // Wait for the refresh to complete before returning
         await refreshData();

@@ -7,7 +7,7 @@ import { importTemplate, exportTemplate } from "@/utils/storage/templates";
 export function useTemplateImportExport() {
   const [loading, setLoading] = useState(false);
 
-  const importTemplateFromJson = (json: string): { success: boolean; template?: EvaluationTemplate } => {
+  const importTemplateFromJson = async (json: string): Promise<{ success: boolean; template?: EvaluationTemplate }> => {
     try {
       setLoading(true);
       const result = importTemplate(json);
