@@ -110,7 +110,7 @@ const TemplateCard = ({
           Export
         </Button>
         
-        {!template.isBuiltIn && template.id !== activeTemplate.id && (
+        {!template.isBuiltIn && !isActive && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button 
