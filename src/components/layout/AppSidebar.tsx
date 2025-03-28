@@ -62,7 +62,7 @@ const AppSidebar = () => {
   const isExpanded = state === "expanded";
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader className="h-14 flex items-center px-6 justify-between">
         <div className="flex items-center space-x-2">
           <GitBranch className="h-5 w-5 text-primary" />
