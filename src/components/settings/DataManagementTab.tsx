@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ProjectEvaluation } from "@/types/metrics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -14,7 +13,7 @@ import {
   getEvaluationsFromStorage, 
   getThresholdsFromStorage, 
   getAppearanceFromStorage,
-  getAllTemplatesFromStorage 
+  getTemplatesFromStorage 
 } from "@/utils/storage";
 import { Progress } from "@/components/ui/progress";
 
@@ -37,7 +36,7 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
   const evaluationsCount = getEvaluationsFromStorage().length;
   const thresholdsCount = getThresholdsFromStorage().length;
   const appearanceCount = 1; // Appearance is a single object
-  const templatesCount = getAllTemplatesFromStorage().length;
+  const templatesCount = getTemplatesFromStorage().length;
   
   // Calculate percentage of 5MB used
   const maxStorage = 5 * 1024 * 1024; // 5MB in bytes

@@ -13,5 +13,9 @@ export * from './templates/create';
 export * from './templates/update';
 export * from './templates/delete';
 export * from './templates/import-export';
+
+// Export the getTemplatesFromStorage function explicitly to match DataManagementTab
+export { getTemplatesFromStorage } from './templates/core';
+
 // Export constants separately to avoid naming conflicts
 export { BASIC_TEMPLATE } from './templates/constants';
