@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { EvaluationTemplate } from "@/types/templates";
 import { toast } from "sonner";
@@ -6,7 +7,7 @@ import {
   getActiveTemplate,
   saveTemplate,
   deleteTemplate,
-  setActiveTemplate,
+  setActiveTemplate as setActiveTemplateInStorage,
   importTemplate,
   exportTemplate,
   duplicateTemplate,
@@ -68,7 +69,7 @@ export const TemplateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       setLoading(true);
       
-      const success = setActiveTemplate(id);
+      const success = setActiveTemplateInStorage(id);
       if (success) {
         const template = templates.find(t => t.id === id);
         if (template) {
