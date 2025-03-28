@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit, FileText, DownloadIcon } from "lucide-react";
@@ -14,7 +13,7 @@ import MetricCard from "@/components/ui/MetricCard";
 import ProjectScoreCard from "@/components/ui/ProjectScoreCard";
 import { Metric, TierType } from "@/types/metrics";
 import { toast } from "sonner";
-import { exportSingleEvaluation } from "@/utils/localStorageUtils";
+import { exportSingleEvaluation, getTierDisplayName } from "@/utils/localStorageUtils";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -98,7 +97,6 @@ const ProjectDetail = () => {
         </Button>
       </div>
       
-      {/* Project Score Card moved to top */}
       <div className="mb-6">
         <ProjectScoreCard 
           score={project.overallScore || 0} 
@@ -108,7 +106,6 @@ const ProjectDetail = () => {
         />
       </div>
       
-      {/* Navigation Tabs */}
       <Card className="mb-6">
         <CardHeader className="pb-0">
           <CardTitle className="text-lg">Jump to Category</CardTitle>
@@ -141,7 +138,9 @@ const ProjectDetail = () => {
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <h3 className="text-lg font-medium mb-2">Classification</h3>
-                <p className="text-3xl font-bold">{project.overallTier || 'Unclassified'}</p>
+                <p className="text-3xl font-bold">
+                  {project.overallTier ? getTierDisplayName(project.overallTier) : 'Unclassified'}
+                </p>
                 <p className="text-sm text-muted-foreground mt-1">
                   {project.overallTier === 'T0' 
                     ? 'Strategic tier project with high potential' 
@@ -181,6 +180,7 @@ const ProjectDetail = () => {
                     .length;
                   
                   const percentComplete = (completedCount / categoryMetrics) * 100;
+                  const tierNames = { t0: getTierDisplayName('T0'), t1: getTierDisplayName('T1') };
                   
                   return (
                     <Card key={category.id} className="overflow-hidden">
@@ -194,11 +194,11 @@ const ProjectDetail = () => {
                             <span>{Math.round(percentComplete)}%</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">T0 Metrics</span>
+                            <span className="text-muted-foreground">{tierNames.t0} Metrics</span>
                             <span>{t0Count} of {completedCount}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">T1 Metrics</span>
+                            <span className="text-muted-foreground">{tierNames.t1} Metrics</span>
                             <span>{t1Count} of {completedCount}</span>
                           </div>
                         </div>

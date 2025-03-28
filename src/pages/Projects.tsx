@@ -22,6 +22,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import { useEvaluation } from "@/contexts/EvaluationContext";
 import { cn } from "@/lib/utils";
 import { metricsData } from "@/data/metricsData";
+import { getTierDisplayName } from "@/utils/localStorageUtils";
 
 const Projects = () => {
   const { projects, deleteProject } = useEvaluation();
@@ -51,6 +52,7 @@ const Projects = () => {
           {projects.map((project) => {
             const projectMetricsCount = Object.keys(project.metrics).length;
             const completionPercentage = Math.round((projectMetricsCount / totalMetrics) * 100);
+            const displayTierName = project.overallTier ? getTierDisplayName(project.overallTier) : null;
             
             return (
               <Card key={project.id} className="overflow-hidden transition-all hover:border-primary/50 animate-fade-in">
@@ -59,13 +61,13 @@ const Projects = () => {
                     <div className="flex-1 space-y-1">
                       <div className="flex justify-between items-start">
                         <CardTitle className="text-xl">{project.name}</CardTitle>
-                        {project.overallTier && (
+                        {displayTierName && (
                           <Badge className={cn(
                             project.overallTier === 'T0' 
                               ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" 
                               : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
                           )}>
-                            {project.overallTier}
+                            {displayTierName}
                           </Badge>
                         )}
                       </div>

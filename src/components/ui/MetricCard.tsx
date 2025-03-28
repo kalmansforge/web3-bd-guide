@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getAllTierNames, getTierDisplayName, getTierInternalName } from "@/utils/localStorageUtils";
 
 interface MetricCardProps {
   metric: Metric;
@@ -22,11 +23,14 @@ interface MetricCardProps {
 }
 
 const MetricCard = ({ metric, categoryId, readOnly = false, onUpdate }: MetricCardProps) => {
+  const tierNames = getAllTierNames();
+  
   const handleTierChange = (value: string) => {
     if (readOnly || !onUpdate) return;
+    const internalTier = getTierInternalName(value);
     onUpdate(categoryId, metric.id, {
       value: metric.value || "",
-      tier: value as TierType,
+      tier: internalTier,
       notes: metric.notes,
     });
   };
@@ -46,6 +50,8 @@ const MetricCard = ({ metric, categoryId, readOnly = false, onUpdate }: MetricCa
     null: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
   };
 
+  const displayTierName = metric.tier ? getTierDisplayName(metric.tier) : '';
+
   return (
     <Card className={cn("transition-all duration-300 overflow-hidden", 
       metric.tier === "T0" && "border-green-200 dark:border-green-900",
@@ -57,7 +63,7 @@ const MetricCard = ({ metric, categoryId, readOnly = false, onUpdate }: MetricCa
           <CardTitle className="text-lg font-semibold">{metric.name}</CardTitle>
           {metric.tier && (
             <Badge variant="outline" className={cn(tierColor[metric.tier])}>
-              {metric.tier}
+              {displayTierName}
             </Badge>
           )}
         </div>
@@ -86,13 +92,13 @@ const MetricCard = ({ metric, categoryId, readOnly = false, onUpdate }: MetricCa
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <div className="text-sm font-medium">T0 Threshold</div>
+              <div className="text-sm font-medium">{tierNames.t0} Threshold</div>
               <p className="text-sm rounded-md px-3 py-1.5 bg-green-50 text-green-900 dark:bg-green-950 dark:text-green-200">
                 {metric.thresholds.T0}
               </p>
             </div>
             <div className="space-y-1">
-              <div className="text-sm font-medium">T1 Threshold</div>
+              <div className="text-sm font-medium">{tierNames.t1} Threshold</div>
               <p className="text-sm rounded-md px-3 py-1.5 bg-yellow-50 text-yellow-900 dark:bg-yellow-950 dark:text-yellow-200">
                 {metric.thresholds.T1}
               </p>
@@ -132,13 +138,13 @@ const MetricCard = ({ metric, categoryId, readOnly = false, onUpdate }: MetricCa
             <Separator />
             <div className="space-y-3">
               <div className="text-sm font-medium">Your Evaluation</div>
-              <Select value={metric.tier || ''} onValueChange={handleTierChange}>
+              <Select value={displayTierName} onValueChange={handleTierChange}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select tier classification" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="T0">T0 - Strategic</SelectItem>
-                  <SelectItem value="T1">T1 - Secondary</SelectItem>
+                  <SelectItem value={tierNames.t0}>{tierNames.t0} - Strategic</SelectItem>
+                  <SelectItem value={tierNames.t1}>{tierNames.t1} - Secondary</SelectItem>
                 </SelectContent>
               </Select>
               <Textarea 

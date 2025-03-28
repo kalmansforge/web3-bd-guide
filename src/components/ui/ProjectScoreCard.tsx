@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { TierType } from '@/types/metrics';
 import { cn } from '@/lib/utils';
+import { getTierDisplayName } from '@/utils/localStorageUtils';
 
 interface ProjectScoreCardProps {
   score: number;
@@ -40,6 +41,7 @@ const ProjectScoreCard = ({ score, tier, completedMetrics, totalMetrics }: Proje
   };
 
   const completionPercentage = totalMetrics > 0 ? Math.round((completedMetrics / totalMetrics) * 100) : 0;
+  const displayTierName = tier ? getTierDisplayName(tier) : '';
   
   return (
     <Card className="overflow-hidden">
@@ -58,7 +60,7 @@ const ProjectScoreCard = ({ score, tier, completedMetrics, totalMetrics }: Proje
           {tier && (
             <div className="pt-3">
               <Badge className={cn("mx-auto px-3 py-1", getTierBadgeColor(tier))}>
-                Classification: {tier}
+                Classification: {displayTierName}
               </Badge>
             </div>
           )}

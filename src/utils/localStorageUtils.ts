@@ -203,6 +203,10 @@ export interface AppearanceSettings {
   fontSize: 'small' | 'medium' | 'large';
   borderRadius: 'none' | 'small' | 'medium' | 'large';
   animation: boolean;
+  tierNames: {
+    t0: string;
+    t1: string;
+  };
   updatedAt: string;
 }
 
@@ -212,6 +216,10 @@ export const defaultAppearanceSettings: AppearanceSettings = {
   fontSize: 'medium',
   borderRadius: 'medium',
   animation: true,
+  tierNames: {
+    t0: 'T0',
+    t1: 'T1'
+  },
   updatedAt: new Date().toISOString()
 };
 
@@ -233,4 +241,27 @@ export const getAppearanceFromStorage = (): AppearanceSettings => {
     console.error('Error reading appearance settings from local storage:', error);
     return defaultAppearanceSettings;
   }
+};
+
+// Tier Name Utilities
+export const getTierDisplayName = (tier: 'T0' | 'T1' | null): string => {
+  if (!tier) return '';
+  
+  const settings = getAppearanceFromStorage();
+  if (tier === 'T0') return settings.tierNames.t0;
+  if (tier === 'T1') return settings.tierNames.t1;
+  return tier;
+};
+
+export const getTierInternalName = (displayName: string): 'T0' | 'T1' | null => {
+  const settings = getAppearanceFromStorage();
+  
+  if (displayName === settings.tierNames.t0) return 'T0';
+  if (displayName === settings.tierNames.t1) return 'T1';
+  return null;
+};
+
+export const getAllTierNames = (): { t0: string; t1: string } => {
+  const settings = getAppearanceFromStorage();
+  return settings.tierNames;
 };
