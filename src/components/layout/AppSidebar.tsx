@@ -1,6 +1,6 @@
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { 
   Gauge, 
   BarChart2, 
@@ -11,7 +11,8 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
-  FileJson
+  FileJson,
+  X
 } from "lucide-react";
 import {
   Sidebar,
@@ -61,9 +62,15 @@ const navItems = [
 ];
 
 const AppSidebar = () => {
-  const { state, toggleSidebar } = useSidebar();
+  const { state, toggleSidebar, openMobile, setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
   const isExpanded = state === "expanded";
+  const location = useLocation();
+
+  // Check if the current path matches a nav item
+  const isActiveRoute = (path: string) => {
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <Sidebar collapsible={isMobile ? "offcanvas" : "icon"}>
@@ -87,6 +94,17 @@ const AppSidebar = () => {
             <PanelLeftClose className="h-5 w-5" />
           </Button>
         )}
+        {isMobile && openMobile && (
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => setOpenMobile(false)}
+            className="h-7 w-7 absolute right-4 top-4"
+            aria-label="Close sidebar"
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        )}
       </SidebarHeader>
       
       <SidebarContent>
@@ -102,10 +120,11 @@ const AppSidebar = () => {
                       className={({ isActive }) =>
                         cn(
                           "flex items-center gap-3 w-full rounded-md transition-colors",
-                          isActive ? "text-primary font-medium" : "text-muted-foreground hover:text-foreground",
+                          (isActive || isActiveRoute(item.path)) ? "text-primary font-medium" : "text-muted-foreground hover:text-foreground",
                           !isExpanded && "justify-center"
                         )
                       }
+                      onClick={isMobile ? () => setOpenMobile(false) : undefined}
                     >
                       <item.icon className="h-5 w-5" />
                       {isExpanded && (

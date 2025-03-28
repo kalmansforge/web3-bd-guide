@@ -19,12 +19,12 @@ const MetricsCategoryTabs: React.FC<MetricsCategoryTabsProps> = ({
   
   return (
     <Tabs value={activeTab} onValueChange={onTabChange}>
-      <TabsList className="w-full flex overflow-x-auto no-scrollbar mb-4 sm:mb-6">
+      <TabsList className="w-full flex overflow-x-auto no-scrollbar mb-4 sm:mb-6 p-1">
         {categories.map(category => (
           <TabsTrigger 
             key={category.id} 
             value={category.id} 
-            className="flex-shrink-0 text-xs sm:text-sm"
+            className="flex-shrink-0 text-xs sm:text-sm whitespace-nowrap"
           >
             {isMobile ? category.name.split(' ')[0] : category.name}
           </TabsTrigger>
