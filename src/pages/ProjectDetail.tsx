@@ -76,14 +76,14 @@ const ProjectDetail = () => {
 
   return (
     <AppLayout>
-      <div className="max-w-[1600px] mx-auto">
+      <div className="w-full max-w-[1600px] mx-auto px-2 md:px-4">
         <ProjectActions 
           project={project}
           onEditProject={handleEditProject}
           onExportPDF={handleExportPDF}
         />
         
-        <div className={`mb-6 ${isMobile ? "px-1" : ""}`}>
+        <div className="mb-6">
           <ProjectScoreCard 
             score={project.overallScore || 0} 
             tier={project.overallTier as TierType} 

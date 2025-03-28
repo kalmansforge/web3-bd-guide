@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,14 +23,15 @@ const CategoryNavigation = ({
       <CardHeader className="pb-0">
         <CardTitle className="text-lg">Jump to Category</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="overflow-x-auto">
         <Tabs value={activeCategory} onValueChange={onCategoryChange}>
-          <TabsList className="w-full flex overflow-x-auto no-scrollbar">
+          <TabsList className="w-full flex overflow-x-auto no-scrollbar pb-1">
             {categories.map((category, index) => (
               <TabsTrigger 
                 key={category.id} 
                 value={category.id}
                 className={cn(
+                  "flex-shrink-0 whitespace-nowrap",
                   activeCategory === category.id ? "text-primary font-medium" : "",
                   isMobile ? "text-xs" : ""
                 )}

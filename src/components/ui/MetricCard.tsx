@@ -11,6 +11,7 @@ import MetricThresholds from './metric-card/metric-thresholds';
 import MetricTools from './metric-card/metric-tools';
 import MetricBadges from './metric-card/metric-badges';
 import TierBadge from './metric-card/tier-badge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MetricCardProps {
   metric: Metric;
@@ -35,6 +36,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const tierNames = getAllTierNames();
+  const isMobile = useIsMobile();
   
   // Use category or categoryId (for backward compatibility)
   const effectiveCategory = category || categoryId || "";
@@ -55,11 +57,13 @@ const MetricCard: React.FC<MetricCardProps> = ({
       expanded ? "shadow-md" : "shadow-sm",
       isPreview ? "opacity-80" : ""
     )}>
-      <CardHeader className="pb-4">
+      <CardHeader className={cn("pb-4", isMobile ? "px-3 py-3" : "")}>
         <div className="flex justify-between items-start">
           <div className="space-y-1">
-            <CardTitle className="text-base font-semibold">{metric.name}</CardTitle>
-            <CardDescription className="line-clamp-2">
+            <CardTitle className={cn("font-semibold", isMobile ? "text-sm" : "text-base")}>
+              {metric.name}
+            </CardTitle>
+            <CardDescription className={cn("line-clamp-2", isMobile ? "text-xs" : "")}>
               {metric.description}
             </CardDescription>
           </div>
@@ -82,11 +86,17 @@ const MetricCard: React.FC<MetricCardProps> = ({
               </Button>
             </div>
           )}
+          
+          {readOnly && evalTier && (
+            <div className="flex items-center">
+              <TierBadge tier={evalTier} tierDisplay={evalTierDisplay} />
+            </div>
+          )}
         </div>
       </CardHeader>
       
       {expanded && (
-        <CardContent className="pb-3 space-y-4">
+        <CardContent className={cn("pb-3 space-y-4", isMobile ? "px-3" : "")}>
           <MetricBadges category={effectiveCategory} importance={metric.importance} />
           
           <Separator />
@@ -97,8 +107,11 @@ const MetricCard: React.FC<MetricCardProps> = ({
         </CardContent>
       )}
       
-      {(expanded || onViewDetail || onUpdate) && (
-        <CardFooter className={cn("px-6 pb-4 pt-0", isPreview ? "hidden" : "")}>
+      {(expanded || onViewDetail || onUpdate) && !readOnly && (
+        <CardFooter className={cn(
+          isMobile ? "px-3 pb-3 pt-0" : "px-6 pb-4 pt-0", 
+          isPreview ? "hidden" : ""
+        )}>
           {(onViewDetail || onUpdate) && (
             <Button
               variant="outline"
