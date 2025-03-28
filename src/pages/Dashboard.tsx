@@ -1,13 +1,15 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, ChevronRight, BarChart2, HardDrive, Shield, Users } from "lucide-react";
+import { Plus, ChevronRight, BarChart2, HardDrive, Shield, Users, Database, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { useEvaluation } from "@/contexts/EvaluationContext";
 import { Badge } from "@/components/ui/badge";
+import { calculateStorageSize } from "@/utils/storage";
 
 const DashboardCard = ({ 
   title, 
@@ -54,9 +56,15 @@ const DashboardCard = ({
 const Dashboard = () => {
   const { projects } = useEvaluation();
   const navigate = useNavigate();
+  const [storageInfo, setStorageInfo] = useState(calculateStorageSize());
   
   const t0Projects = projects.filter(p => p.overallTier === 'T0').length;
   const t1Projects = projects.filter(p => p.overallTier === 'T1').length;
+  
+  useEffect(() => {
+    // Refresh storage info when dashboard loads
+    setStorageInfo(calculateStorageSize());
+  }, []);
   
   const handleNewEvaluation = () => {
     navigate('/new-evaluation');
@@ -68,6 +76,10 @@ const Dashboard = () => {
   
   const handleViewMetrics = () => {
     navigate('/metrics-guide');
+  };
+
+  const handleViewStorage = () => {
+    navigate('/settings');
   };
 
   return (
@@ -113,6 +125,82 @@ const Dashboard = () => {
           onClick={handleViewMetrics}
         />
       </div>
+      
+      {/* Storage usage card */}
+      <Card className="mt-6 mb-8 overflow-hidden">
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-start">
+            <div className="flex items-center">
+              <Database className="h-5 w-5 mr-2 text-muted-foreground" />
+              <CardTitle className="text-xl">Local Storage Usage</CardTitle>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleViewStorage}>
+              Manage Storage
+            </Button>
+          </div>
+          <CardDescription>
+            Overview of your browser's local storage usage for this application
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <div className="flex justify-between mb-1">
+                <h3 className="text-sm font-medium">Total Storage Used</h3>
+                <span className="text-sm font-medium text-primary">
+                  {storageInfo.totalSizeFormatted} ({storageInfo.percentUsed.toFixed(1)}% of 5MB)
+                </span>
+              </div>
+              <Progress 
+                value={storageInfo.percentUsed} 
+                className={`h-2 ${storageInfo.percentUsed > 80 ? 'bg-destructive/20' : 'bg-muted'}`}
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-muted/30 p-4 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium">Evaluations</span>
+                  <span className="text-sm">{Math.round(storageInfo.evaluationsSize / 1024).toFixed(1)} KB</span>
+                </div>
+                <Progress 
+                  value={(storageInfo.evaluationsSize / storageInfo.totalSize) * 100} 
+                  className="h-1.5 bg-muted"
+                />
+              </div>
+              
+              <div className="bg-muted/30 p-4 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium">Thresholds</span>
+                  <span className="text-sm">{Math.round(storageInfo.thresholdsSize / 1024).toFixed(1)} KB</span>
+                </div>
+                <Progress 
+                  value={(storageInfo.thresholdsSize / storageInfo.totalSize) * 100} 
+                  className="h-1.5 bg-muted"
+                />
+              </div>
+              
+              <div className="bg-muted/30 p-4 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium">Appearance</span>
+                  <span className="text-sm">{Math.round(storageInfo.appearanceSize / 1024).toFixed(1)} KB</span>
+                </div>
+                <Progress 
+                  value={(storageInfo.appearanceSize / storageInfo.totalSize) * 100} 
+                  className="h-1.5 bg-muted"
+                />
+              </div>
+            </div>
+            
+            {storageInfo.percentUsed > 80 && (
+              <div className="flex items-center space-x-2 text-amber-600 dark:text-amber-400 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800">
+                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                <p className="text-sm">Storage usage is high. Consider exporting and clearing old evaluations.</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
       
       <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tight">Recent Evaluations</h2>
       {projects.length > 0 ? (
