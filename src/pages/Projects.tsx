@@ -7,17 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -32,9 +21,10 @@ import { cn } from "@/lib/utils";
 import { metricsData } from "@/data/metricsData";
 import { getTierDisplayName } from "@/utils/storage";
 import { ProjectEvaluation } from "@/types/metrics";
+import DeleteProjectDialog from "@/components/ui/DeleteProjectDialog";
 
 const Projects = () => {
-  const { projects, deleteProject, setCurrentProject } = useEvaluation();
+  const { projects, setCurrentProject } = useEvaluation();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTier, setFilterTier] = useState<string | null>(null);
@@ -172,27 +162,14 @@ const Projects = () => {
                             Edit
                           </Button>
                           
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
+                          <DeleteProjectDialog
+                            project={project}
+                            trigger={
                               <Button variant="outline" size="icon" className="rounded-full">
                                 <Trash2 className="h-4 w-4 text-muted-foreground" />
                               </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Delete project evaluation?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This will permanently delete the evaluation for {project.name}. This action cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => deleteProject(project.id)} className="bg-red-600">
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                            }
+                          />
                         </div>
                       </div>
                     </CardHeader>
