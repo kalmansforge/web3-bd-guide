@@ -1,10 +1,8 @@
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { 
   Gauge, 
   BarChart2, 
-  BookOpen, 
   LineChart, 
   Database, 
   GitBranch, 
@@ -32,7 +30,6 @@ import { Button } from "@/components/ui/button";
 
 // Simplified navigation data without nested children
 const navItems = [
-  { title: "Guide", icon: BookOpen, path: "/guide" },
   { 
     title: "Dashboard", 
     icon: Gauge, 

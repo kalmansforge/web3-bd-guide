@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "sonner";
@@ -10,7 +9,6 @@ import { getAppearanceFromStorage } from '@/utils/storage';
 // Pages
 import Index from './pages/Index';
 import Dashboard from './pages/Dashboard';
-import Guide from './pages/Guide';
 import MetricsGuide from './pages/MetricsGuide';
 import NewEvaluation from './pages/NewEvaluation';
 import Projects from './pages/Projects';
@@ -79,7 +77,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/guide" element={<Guide />} />
             <Route path="/metrics-guide" element={<MetricsGuide />} />
             <Route path="/new-evaluation" element={<NewEvaluation />} />
             <Route path="/projects" element={<Projects />} />
