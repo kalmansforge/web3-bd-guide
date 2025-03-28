@@ -15,14 +15,20 @@ import { useIsMobile } from "@/hooks/use-mobile";
 interface ProjectCardProps {
   project: ProjectEvaluation;
   totalMetrics: number;
+  templateName: string;
   onEdit: (project: ProjectEvaluation) => void;
 }
 
-const ProjectCard = ({ project, totalMetrics, onEdit }: ProjectCardProps) => {
+const ProjectCard = ({ project, totalMetrics, templateName, onEdit }: ProjectCardProps) => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const projectMetricsCount = Object.keys(project.metrics).length;
-  const completionPercentage = Math.round((projectMetricsCount / totalMetrics) * 100);
+  
+  // Calculate completion with safeguards against division by zero
+  const completionPercentage = totalMetrics > 0 
+    ? Math.round((projectMetricsCount / totalMetrics) * 100) 
+    : 0;
+  
   const displayTierName = project.overallTier ? getTierDisplayName(project.overallTier) : null;
   
   return (
@@ -45,6 +51,9 @@ const ProjectCard = ({ project, totalMetrics, onEdit }: ProjectCardProps) => {
             </div>
             <div className="text-sm text-muted-foreground">
               Evaluated on {new Date(project.date).toLocaleDateString()}
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              Template: <span className="font-medium">{templateName}</span>
             </div>
           </div>
           

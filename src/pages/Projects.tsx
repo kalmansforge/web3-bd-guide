@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { useEvaluation } from "@/contexts/EvaluationContext";
-import { metricsData } from "@/data/metricsData";
-import { ProjectEvaluation } from "@/types/metrics";
 import { toast } from "sonner";
 import { importData } from "@/utils/storage";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTemplates } from "@/contexts/TemplateContext";
 
 // Import our components
 import ProjectFilters from "@/components/projects/ProjectFilters";
@@ -19,6 +18,7 @@ import ProjectList from "@/components/projects/ProjectList";
 
 const Projects = () => {
   const { projects, setCurrentProject, refreshData } = useEvaluation();
+  const { templates, activeTemplate } = useTemplates();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTier, setFilterTier] = useState<string | null>(null);
@@ -26,14 +26,12 @@ const Projects = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
   
-  const totalMetrics = metricsData.reduce((acc, category) => acc + category.metrics.length, 0);
-  
   const handleNewEvaluation = () => {
     setCurrentProject(null);
     navigate('/new-evaluation');
   };
 
-  const handleEditProject = (project: ProjectEvaluation) => {
+  const handleEditProject = (project) => {
     navigate(`/new-evaluation`, { state: { project } });
   };
 
@@ -148,7 +146,8 @@ const Projects = () => {
           
           <ProjectList 
             filteredProjects={filteredProjects}
-            totalMetrics={totalMetrics}
+            templates={templates}
+            activeTemplate={activeTemplate}
             onEditProject={handleEditProject}
           />
         </>
