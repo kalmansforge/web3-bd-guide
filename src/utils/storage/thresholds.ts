@@ -1,5 +1,5 @@
 
-import { ThresholdConfig } from "@/contexts/ThresholdContext";
+import { ThresholdConfig } from "@/types/metrics";
 import { saveToStorage, getFromStorage, THRESHOLDS_KEY } from "./core";
 
 /**

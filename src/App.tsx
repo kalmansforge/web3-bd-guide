@@ -13,7 +13,7 @@ import MetricsGuide from "@/pages/MetricsGuide";
 import NotFound from "@/pages/NotFound";
 import TemplateEditor from "@/pages/TemplateEditor";
 
-import { ThresholdProvider } from "@/contexts/ThresholdContext";
+import { ThresholdProvider } from "@/contexts/thresholds";
 import { EvaluationProvider } from "@/contexts/EvaluationContext";
 import { TemplateProvider } from "@/contexts/templates";
 

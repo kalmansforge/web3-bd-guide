@@ -35,3 +35,11 @@ export interface MetricEvaluation {
   tier: TierType;
   notes?: string;
 }
+
+export interface ThresholdConfig {
+  id: string;
+  metricId: string;
+  categoryId: string;
+  thresholds: Record<string, string>;
+  updatedAt: string;
+}
