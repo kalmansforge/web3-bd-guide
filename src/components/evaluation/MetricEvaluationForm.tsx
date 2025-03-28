@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getAllTierNames } from '@/utils/storage';
+import { getAllTierNames, getTierDisplayName } from '@/utils/storage';
 import { MetricEvaluation, Metric } from '@/types/metrics';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -89,9 +89,9 @@ const MetricEvaluationForm: React.FC<MetricEvaluationFormProps> = ({
           <div className="pt-2">
             <div className="text-sm font-medium mb-1">Classification Thresholds:</div>
             <div className="space-y-1 text-sm text-muted-foreground">
-              {Object.entries(metric.thresholds).map(([tier, description]) => (
-                <div key={tier} className="flex items-start gap-2">
-                  <div className="font-medium">{tier}:</div>
+              {Object.entries(metric.thresholds).map(([tierKey, description]) => (
+                <div key={tierKey} className="flex items-start gap-2">
+                  <div className="font-medium">{getTierDisplayName(tierKey)}:</div>
                   <div>{description}</div>
                 </div>
               ))}

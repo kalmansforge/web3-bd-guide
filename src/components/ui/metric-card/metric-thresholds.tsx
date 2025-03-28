@@ -14,8 +14,8 @@ const MetricThresholds: React.FC<MetricThresholdsProps> = ({ thresholds, tierNam
   const firstTierName = tierNames && tierNames.length > 0 ? tierNames[0].internalName : 'T0';
   const secondTierName = tierNames && tierNames.length > 1 ? tierNames[1].internalName : 'T1';
   
-  const firstTierDisplay = tierNames && tierNames.length > 0 ? tierNames[0].displayName : 'T0';
-  const secondTierDisplay = tierNames && tierNames.length > 1 ? tierNames[1].displayName : 'T1';
+  const firstTierDisplay = getTierDisplayName(firstTierName);
+  const secondTierDisplay = getTierDisplayName(secondTierName);
   
   return (
     <div className="space-y-2 text-sm">
