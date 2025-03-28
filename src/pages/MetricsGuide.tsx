@@ -27,35 +27,50 @@ const MetricsGuide = () => {
     }
   }, [location, navigate]);
   
-  const category = metricsData.find(c => c.id === activeTab);
-  if (!category) {
-    setActiveTab("foundational");
-    return null;
-  }
+  // Find the active category or default to the first one
+  const category = metricsData.find(c => c.id === activeTab) || metricsData[0];
   
-  const filteredMetrics = searchQuery
+  // Filter metrics based on search query
+  const filteredMetrics = searchQuery && category
     ? category.metrics.filter(m => 
         m.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
         m.description.toLowerCase().includes(searchQuery.toLowerCase()))
-    : category.metrics;
+    : category?.metrics || [];
 
-  const getThresholdValue = (metricId: string, tier: "T0" | "T1") => {
-    if (loading || thresholds.length === 0) {
-      const metric = category.metrics.find(m => m.id === metricId);
-      return metric ? metric.thresholds[tier] : "";
+  const getThresholdValue = (metricId: string, tier: string) => {
+    if (loading || !thresholds.length) {
+      // Use default threshold from metricsData when thresholds are loading or empty
+      const metric = category?.metrics.find(m => m.id === metricId);
+      return metric?.thresholds[tier] || "No threshold defined";
     }
     
+    // Find custom threshold from user settings
     const threshold = thresholds.find(
-      t => t.metricId === metricId && t.categoryId === category.id
+      t => t.metricId === metricId && t.categoryId === category?.id
     );
     
-    if (threshold) {
+    if (threshold && threshold.thresholds && threshold.thresholds[tier] !== undefined) {
       return threshold.thresholds[tier];
     }
     
-    const metric = category.metrics.find(m => m.id === metricId);
-    return metric ? metric.thresholds[tier] : "";
+    // Fall back to default threshold
+    const metric = category?.metrics.find(m => m.id === metricId);
+    return metric?.thresholds[tier] || "No threshold defined";
   };
+
+  if (!category) {
+    return (
+      <AppLayout>
+        <div className="py-10 text-center">
+          <h2 className="text-2xl font-bold">Category not found</h2>
+          <p className="mt-2 text-muted-foreground">The requested category does not exist.</p>
+          <Button onClick={() => navigate("/")} className="mt-4">
+            Return to Dashboard
+          </Button>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
