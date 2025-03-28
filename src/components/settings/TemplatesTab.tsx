@@ -1,18 +1,15 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Plus, Upload, Download, Copy, Trash, Settings, Edit, Lock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { Plus, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTemplates } from "@/contexts/TemplateContext";
 import { useThresholds } from "@/contexts/ThresholdContext";
-import { EvaluationTemplate } from "@/types/templates";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import TemplatesList from "@/components/templates/list/TemplatesList";
+import EmptyTemplatesList from "@/components/templates/list/EmptyTemplatesList";
+import TemplateActionsConfirmDialog from "@/components/templates/list/TemplateActionsConfirmDialog";
 
 const TemplatesTab = () => {
   const navigate = useNavigate();
@@ -28,7 +25,7 @@ const TemplatesTab = () => {
     refreshData
   } = useTemplates();
   
-  const { thresholds, refreshData: refreshThresholds, applyTemplateThresholds } = useThresholds();
+  const { refreshData: refreshThresholds, applyTemplateThresholds } = useThresholds();
   
   const [searchTerm, setSearchTerm] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -217,183 +214,30 @@ const TemplatesTab = () => {
         />
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredTemplates.map(template => (
-          <Card key={template.id} className={`relative ${template.id === activeTemplate.id ? 'border-primary' : ''}`}>
-            {template.id === activeTemplate.id && (
-              <div className="absolute -top-2 -right-2">
-                <Badge className="bg-primary">Active</Badge>
-              </div>
-            )}
-            
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg">{template.name}</CardTitle>
-                    {template.isLocked && (
-                      <Lock className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </div>
-                  <CardDescription className="mt-1">
-                    {template.isBuiltIn && <Badge variant="outline" className="mr-2">Built-in</Badge>}
-                    By {template.author}
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-2">{template.description}</p>
-              <div className="text-sm space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Categories:</span>
-                  <span className="font-medium">{template.categories.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Metrics:</span>
-                  <span className="font-medium">
-                    {template.categories.reduce((sum, cat) => sum + cat.metrics.length, 0)}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Last Updated:</span>
-                  <span className="font-medium">
-                    {new Date(template.updatedAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-            
-            <Separator />
-            
-            <CardFooter className="pt-4 pb-4 flex flex-wrap gap-2">
-              {template.id !== activeTemplate.id && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => handleSetActive(template.id)}
-                >
-                  <Settings className="mr-1 h-3 w-3" />
-                  Set Active
-                </Button>
-              )}
-              
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => handleEdit(template.id, template.isLocked || false)}
-              >
-                {template.isLocked ? (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1 h-3 w-3">
-                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                    View
-                  </>
-                ) : (
-                  <>
-                    <Edit className="mr-1 h-3 w-3" />
-                    Edit
-                  </>
-                )}
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => handleDuplicate(template.id)}
-              >
-                <Copy className="mr-1 h-3 w-3" />
-                Duplicate
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => handleExport(template.id)}
-              >
-                <Download className="mr-1 h-3 w-3" />
-                Export
-              </Button>
-              
-              {!template.isLocked && template.id !== activeTemplate.id && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
-                    >
-                      <Trash className="mr-1 h-3 w-3" />
-                      Delete
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete Template</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Are you sure you want to delete this template? This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => handleDelete(template.id)}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      >
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-      
-      {filteredTemplates.length === 0 && (
-        <Card className="p-6 text-center">
-          <h3 className="text-lg font-medium mb-2">No templates found</h3>
-          <p className="text-muted-foreground mb-4">
-            {searchTerm ? 
-              `No templates match your search for "${searchTerm}"` : 
-              "You don't have any templates yet. Create a new template or import one to get started."}
-          </p>
-          <div className="flex gap-2 justify-center">
-            <Button onClick={handleCreateTemplate}>
-              <Plus className="mr-2 h-4 w-4" />
-              Create Template
-            </Button>
-            <Button variant="outline" onClick={handleImportClick}>
-              <Upload className="mr-2 h-4 w-4" />
-              Import Template
-            </Button>
-          </div>
-        </Card>
+      {filteredTemplates.length > 0 ? (
+        <TemplatesList
+          templates={filteredTemplates}
+          activeTemplateId={activeTemplate.id}
+          onSetActive={handleSetActive}
+          onDuplicate={handleDuplicate}
+          onEdit={handleEdit}
+          onExport={handleExport}
+          onDelete={handleDelete}
+        />
+      ) : (
+        <EmptyTemplatesList
+          searchTerm={searchTerm}
+          onCreateTemplate={handleCreateTemplate}
+          onImportClick={handleImportClick}
+        />
       )}
       
-      {/* Template activation confirmation dialog */}
-      <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Apply Template</DialogTitle>
-            <DialogDescription>
-              Would you like to update the thresholds based on this template? This will replace your current threshold configurations.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => confirmSetActive(false)}>
-              Keep Current Thresholds
-            </Button>
-            <Button onClick={() => confirmSetActive(true)}>
-              Update Thresholds
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <TemplateActionsConfirmDialog
+        open={confirmDialogOpen}
+        onOpenChange={setConfirmDialogOpen}
+        onConfirmWithThresholds={() => confirmSetActive(true)}
+        onConfirmWithoutThresholds={() => confirmSetActive(false)}
+      />
     </div>
   );
 };
