@@ -10,6 +10,13 @@ import ClearLocalDataDialog from "@/components/ui/ClearLocalDataDialog";
 import DataImportExport from "@/components/ui/DataImportExport";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
+import { 
+  getEvaluationsFromStorage, 
+  getThresholdsFromStorage, 
+  getAppearanceFromStorage,
+  getAllTemplatesFromStorage 
+} from "@/utils/storage";
+import { Progress } from "@/components/ui/progress";
 
 interface DataManagementTabProps {
   projects: ProjectEvaluation[];
@@ -25,6 +32,16 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
   const handleExportData = () => {
     exportAllData();
   };
+
+  // Get counts for each data type
+  const evaluationsCount = getEvaluationsFromStorage().length;
+  const thresholdsCount = getThresholdsFromStorage().length;
+  const appearanceCount = 1; // Appearance is a single object
+  const templatesCount = getAllTemplatesFromStorage().length;
+  
+  // Calculate percentage of 5MB used
+  const maxStorage = 5 * 1024 * 1024; // 5MB in bytes
+  const percentUsed = (storageInfo.totalSize / maxStorage) * 100;
 
   return (
     <div className="space-y-8">
@@ -48,19 +65,39 @@ const DataManagementTab: React.FC<DataManagementTabProps> = ({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between font-medium text-base">
-                <span>Total storage used:</span>
-                <span className="text-primary">{formatBytes(storageInfo.totalSize)}</span>
+            <div className="space-y-4">
+              <div className="flex flex-col space-y-1">
+                <div className="flex items-center justify-between font-medium text-base">
+                  <span>Total storage used:</span>
+                  <span className="text-primary">{formatBytes(storageInfo.totalSize)} of 5MB</span>
+                </div>
+                <Progress value={percentUsed} className="h-2" />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {percentUsed.toFixed(1)}% of available local storage
+                </p>
               </div>
               <Separator className="my-2" />
               <div className="text-sm space-y-2">
-                {Object.entries(storageInfo.breakdown).map(([key, size]) => (
-                  <div key={key} className="flex justify-between items-center py-1">
-                    <span className="text-muted-foreground">{key}:</span>
-                    <span className="font-mono">{formatBytes(size)}</span>
-                  </div>
-                ))}
+                {Object.entries(storageInfo.breakdown).map(([key, size]) => {
+                  let count = 0;
+                  
+                  if (key === 'Evaluations') count = evaluationsCount;
+                  else if (key === 'Thresholds') count = thresholdsCount;
+                  else if (key === 'Appearance') count = appearanceCount;
+                  else if (key === 'Templates') count = templatesCount;
+                  
+                  return (
+                    <div key={key} className="flex justify-between items-center py-1">
+                      <span className="text-muted-foreground">{key}:</span>
+                      <span className="font-mono">
+                        {formatBytes(size)}
+                        <span className="ml-2 text-xs text-muted-foreground">
+                          ({count} {count === 1 ? 'item' : 'items'})
+                        </span>
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </CardContent>
