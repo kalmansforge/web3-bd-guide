@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Settings, Save, ArrowLeft, PlusCircle, Trash, MoveDiagonal, Copy } from "lucide-react";
+import { Settings, Save, ArrowLeft, PlusCircle, Trash, MoveDiagonal, Copy, Lock } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -424,20 +425,18 @@ const TemplateEditor = () => {
                       onChange={(e) =>
                         handleCategoryChange(categoryIndex, "name", e.target.value)
                       }
-                      className="font-medium text-lg bg-transparent border-transparent focus:bg-background"
                       placeholder="Category Name"
                       readOnly={isLocked}
-                      className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+                      className={`font-medium text-lg bg-transparent border-transparent focus:bg-background ${isLocked ? "bg-muted cursor-not-allowed" : ""}`}
                     />
                     <Textarea
                       value={category.description}
                       onChange={(e) =>
                         handleCategoryChange(categoryIndex, "description", e.target.value)
                       }
-                      className="bg-transparent border-transparent resize-none focus:bg-background text-muted-foreground"
                       placeholder="Category Description"
                       readOnly={isLocked}
-                      className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+                      className={`bg-transparent border-transparent resize-none focus:bg-background text-muted-foreground ${isLocked ? "bg-muted cursor-not-allowed" : ""}`}
                     />
                   </div>
                   <div className="flex gap-1">
@@ -446,6 +445,7 @@ const TemplateEditor = () => {
                       size="icon"
                       className="h-8 w-8 text-destructive"
                       onClick={() => handleDeleteCategory(categoryIndex)}
+                      disabled={isLocked}
                     >
                       <Trash className="h-4 w-4" />
                     </Button>
@@ -464,6 +464,7 @@ const TemplateEditor = () => {
                     size="sm"
                     variant="outline"
                     className="flex items-center gap-1"
+                    disabled={isLocked}
                   >
                     <PlusCircle className="h-3 w-3" />
                     Add Metric
@@ -485,10 +486,9 @@ const TemplateEditor = () => {
                                 e.target.value
                               )
                             }
-                            className="font-medium bg-transparent border-transparent focus:bg-background"
                             placeholder="Metric Name"
                             readOnly={isLocked}
-                            className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+                            className={`font-medium bg-transparent border-transparent focus:bg-background ${isLocked ? "bg-muted cursor-not-allowed" : ""}`}
                           />
                           <Textarea
                             value={metric.description}
@@ -500,11 +500,10 @@ const TemplateEditor = () => {
                                 e.target.value
                               )
                             }
-                            className="bg-transparent border-transparent resize-none focus:bg-background text-muted-foreground"
                             placeholder="Metric Description"
                             rows={2}
                             readOnly={isLocked}
-                            className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+                            className={`bg-transparent border-transparent resize-none focus:bg-background text-muted-foreground ${isLocked ? "bg-muted cursor-not-allowed" : ""}`}
                           />
                         </div>
                         <Button
@@ -512,6 +511,7 @@ const TemplateEditor = () => {
                           size="icon"
                           className="h-8 w-8 text-destructive"
                           onClick={() => handleDeleteMetric(categoryIndex, metricIndex)}
+                          disabled={isLocked}
                         >
                           <Trash className="h-4 w-4" />
                         </Button>
@@ -531,9 +531,8 @@ const TemplateEditor = () => {
                               )
                             }
                             placeholder="e.g., High, Medium, Low"
-                            className="text-sm"
                             readOnly={isLocked}
-                            className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+                            className={`text-sm ${isLocked ? "bg-muted cursor-not-allowed" : ""}`}
                           />
                         </div>
                       </div>
@@ -561,9 +560,8 @@ const TemplateEditor = () => {
                                 )
                               }
                               placeholder="Enter T0 threshold criteria"
-                              className="min-h-[80px] text-sm"
                               readOnly={isLocked}
-                              className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+                              className={`min-h-[80px] text-sm ${isLocked ? "bg-muted cursor-not-allowed" : ""}`}
                             />
                           </div>
                           <div className="space-y-2">
@@ -584,9 +582,8 @@ const TemplateEditor = () => {
                                 )
                               }
                               placeholder="Enter T1 threshold criteria"
-                              className="min-h-[80px] text-sm"
                               readOnly={isLocked}
-                              className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+                              className={`min-h-[80px] text-sm ${isLocked ? "bg-muted cursor-not-allowed" : ""}`}
                             />
                           </div>
                         </div>
@@ -606,10 +603,9 @@ const TemplateEditor = () => {
                             )
                           }
                           placeholder="Enter tools, one per line"
-                          className="min-h-[80px] text-sm"
                           rows={4}
                           readOnly={isLocked}
-                          className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+                          className={`min-h-[80px] text-sm ${isLocked ? "bg-muted cursor-not-allowed" : ""}`}
                         />
                       </div>
                     </div>
@@ -623,6 +619,7 @@ const TemplateEditor = () => {
                         size="sm"
                         variant="outline"
                         className="flex items-center gap-1"
+                        disabled={isLocked}
                       >
                         <PlusCircle className="h-3 w-3" />
                         Add First Metric
@@ -640,6 +637,7 @@ const TemplateEditor = () => {
               <Button
                 onClick={handleAddCategory}
                 className="flex items-center gap-1"
+                disabled={isLocked}
               >
                 <PlusCircle className="h-4 w-4" />
                 Add First Category
