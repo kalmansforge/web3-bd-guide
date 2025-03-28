@@ -24,6 +24,16 @@ const TierNamesTab: React.FC<TierNamesTabProps> = ({
   saveChanges,
   resetChanges
 }) => {
+  // Ensure tierNames exists with default values if not present
+  const tierNames = appearanceSettings?.tierNames || { t0: 'T0', t1: 'T1' };
+  
+  const handleTierNameChange = (tier: 't0' | 't1', value: string) => {
+    updateAppearanceSetting('tierNames', {
+      ...tierNames,
+      [tier]: value
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
@@ -81,13 +91,8 @@ const TierNamesTab: React.FC<TierNamesTabProps> = ({
               <Input
                 id="t0-name"
                 placeholder="e.g., T0, P0, Strategic, etc."
-                value={appearanceSettings.tierNames.t0}
-                onChange={(e) => {
-                  updateAppearanceSetting('tierNames', {
-                    ...appearanceSettings.tierNames,
-                    t0: e.target.value
-                  });
-                }}
+                value={tierNames.t0}
+                onChange={(e) => handleTierNameChange('t0', e.target.value)}
               />
             </div>
             
@@ -99,13 +104,8 @@ const TierNamesTab: React.FC<TierNamesTabProps> = ({
               <Input
                 id="t1-name"
                 placeholder="e.g., T1, P1, Core, etc."
-                value={appearanceSettings.tierNames.t1}
-                onChange={(e) => {
-                  updateAppearanceSetting('tierNames', {
-                    ...appearanceSettings.tierNames,
-                    t1: e.target.value
-                  });
-                }}
+                value={tierNames.t1}
+                onChange={(e) => handleTierNameChange('t1', e.target.value)}
               />
             </div>
           </div>
@@ -114,10 +114,10 @@ const TierNamesTab: React.FC<TierNamesTabProps> = ({
             <h3 className="text-sm font-medium mb-2">Preview:</h3>
             <div className="flex items-center gap-3">
               <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                {appearanceSettings.tierNames.t0}
+                {tierNames.t0}
               </Badge>
               <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                {appearanceSettings.tierNames.t1}
+                {tierNames.t1}
               </Badge>
             </div>
           </div>
