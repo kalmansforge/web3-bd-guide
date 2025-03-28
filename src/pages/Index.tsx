@@ -1,5 +1,4 @@
 
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Shield, Lock, Server, FileJson } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,13 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Index = () => {
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    // Redirect to guide page only if the URL path is exactly "/"
-    if (window.location.pathname === "/") {
-      navigate("/guide");
-    }
-  }, [navigate]);
   
   const handleGetStarted = () => {
     navigate("/guide");
