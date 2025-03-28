@@ -15,9 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-const GuideSection = ({ title, description, icon: Icon }: { 
+const GuideSection = ({ title, description, teaser, icon: Icon }: { 
   title: string; 
   description: string;
+  teaser: string;
   icon: React.ElementType;
 }) => {
   return (
@@ -31,7 +32,7 @@ const GuideSection = ({ title, description, icon: Icon }: {
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          Learn how to evaluate {title.toLowerCase()} aspects of Web3 projects.
+          {teaser}
         </p>
       </CardContent>
     </Card>
@@ -147,31 +148,37 @@ const Guide = () => {
               <GuideSection 
                 title="Foundational Metrics" 
                 description="Baseline indicators of project strength" 
+                teaser="Uncover the core DNA of a project: its team, funding, and fundamental capabilities that signal long-term potential."
                 icon={Database}
               />
               <GuideSection 
                 title="Product Metrics" 
                 description="Measures of product quality and adoption" 
+                teaser="Evaluate real-world product performance, user engagement, and the critical indicators of market fit and growth potential."
                 icon={BarChart2}
               />
               <GuideSection 
                 title="Financial Metrics" 
                 description="Economic sustainability indicators" 
+                teaser="Analyze the economic engine behind the project: tokenomics, treasury health, and financial sustainability."
                 icon={LineChart}
               />
               <GuideSection 
                 title="Strategic Alignment" 
                 description="Positioning within industry verticals" 
+                teaser="Understand how the project stands out in its ecosystem, its competitive advantages, and market positioning."
                 icon={ArrowRight}
               />
               <GuideSection 
                 title="Ecosystem & Community" 
                 description="Health of project community" 
+                teaser="Gauge the project's network effects, community engagement, and potential for collaborative growth and adoption."
                 icon={Users}
               />
               <GuideSection 
                 title="Risk Metrics" 
                 description="Potential issues and red flags" 
+                teaser="Identify potential regulatory, liquidity, and financial risks that could impact the project's long-term viability."
                 icon={Shield}
               />
             </div>
@@ -205,12 +212,6 @@ const Guide = () => {
           </div>
         </section>
       </main>
-      
-      <footer className="py-8 border-t">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>Web3 BD Field Guide v1.0 — A comprehensive evaluation framework for blockchain projects</p>
-        </div>
-      </footer>
     </div>
   );
 };
