@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +17,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import DataImportExport from "@/components/ui/DataImportExport";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
+import { Progress } from "@/components/ui/progress";
 import { toast } from "@/hooks/use-toast";
 import { 
   calculateStorageSize, 
@@ -43,6 +42,9 @@ const Settings = () => {
     
     // Update storage information
     setStorageInfo(calculateStorageSize());
+    
+    // Apply appearance settings when loaded or changed
+    applyAppearanceSettings(settings);
   }, []);
   
   const handleThresholdChange = (
@@ -92,6 +94,7 @@ const Settings = () => {
     // Reload appearance settings
     const settings = getAppearanceFromStorage();
     setAppearanceSettings(settings);
+    applyAppearanceSettings(settings);
   };
   
   const updateAppearanceSetting = <K extends keyof AppearanceSettings>(
@@ -110,6 +113,9 @@ const Settings = () => {
     const success = saveAppearanceToStorage(appearanceSettings);
     if (success) {
       setUnsavedAppearanceChanges(false);
+      // Apply the settings after saving
+      applyAppearanceSettings(appearanceSettings);
+      
       toast({
         title: "Appearance settings saved",
         description: "Your appearance preferences have been saved successfully"
@@ -129,10 +135,48 @@ const Settings = () => {
     const settings = getAppearanceFromStorage();
     setAppearanceSettings(settings);
     setUnsavedAppearanceChanges(false);
+    // Apply the original settings after reset
+    applyAppearanceSettings(settings);
+    
     toast({
       title: "Changes discarded",
       description: "Appearance settings have been reset to their previous state"
     });
+  };
+  
+  // Function to apply appearance settings to the DOM
+  const applyAppearanceSettings = (settings: AppearanceSettings) => {
+    const htmlElement = document.documentElement;
+    
+    // Apply theme
+    if (settings.theme === 'dark') {
+      htmlElement.classList.add('dark');
+    } else if (settings.theme === 'light') {
+      htmlElement.classList.remove('dark');
+    } else {
+      // System preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        htmlElement.classList.add('dark');
+      } else {
+        htmlElement.classList.remove('dark');
+      }
+    }
+    
+    // Apply color scheme
+    htmlElement.setAttribute('data-color-scheme', settings.colorScheme);
+    
+    // Apply font size
+    htmlElement.setAttribute('data-font-size', settings.fontSize);
+    
+    // Apply border radius
+    htmlElement.setAttribute('data-border-radius', settings.borderRadius);
+    
+    // Apply animation setting
+    if (settings.animation) {
+      htmlElement.classList.remove('reduce-motion');
+    } else {
+      htmlElement.classList.add('reduce-motion');
+    }
   };
 
   return (
@@ -143,9 +187,8 @@ const Settings = () => {
       />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 mb-4">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 mb-4">
           <TabsTrigger value="config">Threshold Configuration</TabsTrigger>
-          <TabsTrigger value="data">Data Management</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
         </TabsList>
         
@@ -187,6 +230,49 @@ const Settings = () => {
               </AlertDescription>
             </Alert>
           )}
+          
+          <Card className="mb-6">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center">
+                <Database className="h-5 w-5 mr-2" />
+                Data Summary
+              </CardTitle>
+              <CardDescription>
+                Overview of your locally stored data
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-muted/50 rounded-lg">
+                  <div className="text-sm text-muted-foreground mb-1">Project Evaluations</div>
+                  <div className="text-2xl font-bold">{projects.length}</div>
+                </div>
+                <div className="p-4 bg-muted/50 rounded-lg">
+                  <div className="text-sm text-muted-foreground mb-1">Threshold Configurations</div>
+                  <div className="text-2xl font-bold">{thresholds.length}</div>
+                </div>
+              </div>
+              
+              <div>
+                <div className="flex justify-between mb-1">
+                  <h3 className="text-sm font-medium">Total Storage Used</h3>
+                  <span className="text-sm font-medium text-primary">
+                    {storageInfo.totalSizeFormatted} ({storageInfo.percentUsed.toFixed(1)}% of 5MB)
+                  </span>
+                </div>
+                <Progress 
+                  value={storageInfo.percentUsed} 
+                  className={`h-2 ${storageInfo.percentUsed > 80 ? 'bg-destructive/20' : 'bg-muted'}`}
+                />
+              </div>
+              
+              <div className="flex justify-between items-center pt-2">
+                <div className="text-sm text-muted-foreground">
+                  <DataImportExport onDataImported={handleDataImported} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           
           <Separator className="my-6" />
           
@@ -273,131 +359,6 @@ const Settings = () => {
               ))}
             </Accordion>
           )}
-        </TabsContent>
-        
-        <TabsContent value="data" className="space-y-4">
-          <div>
-            <h2 className="text-2xl font-semibold mb-2">Data Management</h2>
-            <p className="text-muted-foreground">Export and import your evaluation data and configurations</p>
-          </div>
-          
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
-              <DataImportExport onDataImported={handleDataImported} />
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Local Storage</CardTitle>
-                  <CardDescription>
-                    Information about your locally stored data
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-sm font-medium mb-1">Data Privacy</h3>
-                      <p className="text-sm text-muted-foreground">
-                        All your evaluation data and threshold configurations are stored locally in your browser.
-                        No sensitive data is sent to our servers.
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-sm font-medium mb-1">Data Security</h3>
-                      <p className="text-sm text-muted-foreground">
-                        To ensure your data is not lost, regularly export it and keep a backup.
-                        Clearing your browser cache or history will remove locally stored data.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center">
-                  <HardDrive className="h-5 w-5 mr-2" />
-                  Storage Usage
-                </CardTitle>
-                <CardDescription>
-                  Overview of your local storage usage
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <h3 className="text-sm font-medium">Project Evaluations</h3>
-                    <span className="text-sm text-muted-foreground">
-                      {projects.length} items ({(storageInfo.evaluationsSize / 1024).toFixed(1)} KB)
-                    </span>
-                  </div>
-                  <div className="h-2 bg-muted rounded overflow-hidden">
-                    <div 
-                      className="h-full bg-primary" 
-                      style={{ width: `${Math.min(100, (storageInfo.evaluationsSize / storageInfo.totalSize * 100) || 0)}%` }} 
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <h3 className="text-sm font-medium">Threshold Configurations</h3>
-                    <span className="text-sm text-muted-foreground">
-                      {thresholds.length} items ({(storageInfo.thresholdsSize / 1024).toFixed(1)} KB)
-                    </span>
-                  </div>
-                  <div className="h-2 bg-muted rounded overflow-hidden">
-                    <div 
-                      className="h-full bg-primary" 
-                      style={{ width: `${Math.min(100, (storageInfo.thresholdsSize / storageInfo.totalSize * 100) || 0)}%` }} 
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <h3 className="text-sm font-medium">Appearance Settings</h3>
-                    <span className="text-sm text-muted-foreground">
-                      ({(storageInfo.appearanceSize / 1024).toFixed(1)} KB)
-                    </span>
-                  </div>
-                  <div className="h-2 bg-muted rounded overflow-hidden">
-                    <div 
-                      className="h-full bg-primary" 
-                      style={{ width: `${Math.min(100, (storageInfo.appearanceSize / storageInfo.totalSize * 100) || 0)}%` }} 
-                    />
-                  </div>
-                </div>
-                
-                <Separator className="my-2" />
-                
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <h3 className="text-sm font-medium">Total Storage Used</h3>
-                    <span className="text-sm font-medium text-primary">
-                      {storageInfo.totalSizeFormatted} ({storageInfo.percentUsed.toFixed(1)}% of 5MB)
-                    </span>
-                  </div>
-                  <div className="h-3 bg-muted rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full ${storageInfo.percentUsed > 80 ? 'bg-destructive' : 'bg-primary'}`}
-                      style={{ width: `${storageInfo.percentUsed}%` }} 
-                    />
-                  </div>
-                </div>
-                
-                <Alert className="mt-4 bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800">
-                  <Database className="h-4 w-4" />
-                  <AlertTitle>Browser Storage Limits</AlertTitle>
-                  <AlertDescription className="text-xs">
-                    Most browsers limit local storage to 5MB per domain. If you're approaching this limit,
-                    consider exporting and then clearing some old evaluations.
-                  </AlertDescription>
-                </Alert>
-              </CardContent>
-            </Card>
-          </div>
         </TabsContent>
         
         <TabsContent value="appearance">

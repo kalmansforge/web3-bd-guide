@@ -1,59 +1,98 @@
 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { EvaluationProvider } from "@/contexts/EvaluationContext";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { ThresholdProvider } from "@/contexts/ThresholdContext";
-import AuthGuard from "@/components/layout/AuthGuard";
-import Dashboard from "./pages/Dashboard";
-import NewEvaluation from "./pages/NewEvaluation";
-import Projects from "./pages/Projects";
-import ProjectDetail from "./pages/ProjectDetail";
-import MetricsGuide from "./pages/MetricsGuide";
-import Guide from "./pages/Guide";
-import Settings from "./pages/Settings";
-import NotFound from "./pages/NotFound";
-import Auth from "./pages/Auth";
-import Teams from "./pages/Teams";
-import RiskAssessment from "./pages/RiskAssessment";
-import { useState } from "react";
+import { SonnerToaster } from "@/components/ui/sonner";
+import { ThresholdProvider } from '@/contexts/ThresholdContext';
+import { EvaluationProvider } from '@/contexts/EvaluationContext';
+import { useEffect } from 'react';
+import { getAppearanceFromStorage } from '@/utils/localStorageUtils';
+
+// Pages
+import Index from './pages/Index';
+import Dashboard from './pages/Dashboard';
+import Guide from './pages/Guide';
+import MetricsGuide from './pages/MetricsGuide';
+import NewEvaluation from './pages/NewEvaluation';
+import Projects from './pages/Projects';
+import ProjectDetail from './pages/ProjectDetail';
+import RiskAssessment from './pages/RiskAssessment';
+import Settings from './pages/Settings';
+import NotFound from './pages/NotFound';
 
 function App() {
-  // Create a new instance of QueryClient inside the component
-  const [queryClient] = useState(() => new QueryClient());
+  // Initialize appearance settings on app load
+  useEffect(() => {
+    const applyAppearanceSettings = () => {
+      const settings = getAppearanceFromStorage();
+      const htmlElement = document.documentElement;
+      
+      // Apply theme
+      if (settings.theme === 'dark') {
+        htmlElement.classList.add('dark');
+      } else if (settings.theme === 'light') {
+        htmlElement.classList.remove('dark');
+      } else {
+        // System preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          htmlElement.classList.add('dark');
+        } else {
+          htmlElement.classList.remove('dark');
+        }
+      }
+      
+      // Apply color scheme
+      htmlElement.setAttribute('data-color-scheme', settings.colorScheme);
+      
+      // Apply font size
+      htmlElement.setAttribute('data-font-size', settings.fontSize);
+      
+      // Apply border radius
+      htmlElement.setAttribute('data-border-radius', settings.borderRadius);
+      
+      // Apply animation setting
+      if (settings.animation) {
+        htmlElement.classList.remove('reduce-motion');
+      } else {
+        htmlElement.classList.add('reduce-motion');
+      }
+    };
+    
+    applyAppearanceSettings();
+    
+    // Listen for system theme changes if using system setting
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => {
+      const settings = getAppearanceFromStorage();
+      if (settings.theme === 'system') {
+        applyAppearanceSettings();
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BrowserRouter>
-          <AuthProvider>
-            <ThresholdProvider>
-              <EvaluationProvider>
-                <Toaster />
-                <Sonner position="top-right" />
-                <Routes>
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/" element={<AuthGuard><Dashboard /></AuthGuard>} />
-                  <Route path="/projects" element={<AuthGuard><Projects /></AuthGuard>} />
-                  <Route path="/projects/:projectId" element={<AuthGuard><ProjectDetail /></AuthGuard>} />
-                  <Route path="/evaluation/new" element={<AuthGuard><NewEvaluation /></AuthGuard>} />
-                  <Route path="/metrics/:categoryId" element={<AuthGuard><MetricsGuide /></AuthGuard>} />
-                  <Route path="/metrics" element={<AuthGuard><MetricsGuide /></AuthGuard>} />
-                  <Route path="/guide" element={<AuthGuard><Guide /></AuthGuard>} />
-                  <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
-                  <Route path="/teams" element={<AuthGuard><Teams /></AuthGuard>} />
-                  <Route path="/risks" element={<AuthGuard><RiskAssessment /></AuthGuard>} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </EvaluationProvider>
-            </ThresholdProvider>
-          </AuthProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThresholdProvider>
+      <EvaluationProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/guide" element={<Guide />} />
+            <Route path="/metrics-guide" element={<MetricsGuide />} />
+            <Route path="/new-evaluation" element={<NewEvaluation />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/risk-assessment" element={<RiskAssessment />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster />
+          <SonnerToaster />
+        </Router>
+      </EvaluationProvider>
+    </ThresholdProvider>
   );
 }
 
