@@ -1,12 +1,120 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, BarChart2, Shield, Database, Users, LineChart, BookOpen, ArrowRightCircle } from "lucide-react";
+import { 
+  ArrowRight, 
+  BarChart2, 
+  Shield, 
+  Database, 
+  Users, 
+  LineChart, 
+  BookOpen, 
+  ArrowRightCircle,
+  ExternalLink 
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogHeader, 
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
+import { metricsData } from "@/data/metricsData";
+
+// MetricsDialog component to display metrics information
+const MetricsDialog = ({ category, isOpen, setIsOpen }) => {
+  const metrics = metricsData.find(c => c.id === category)?.metrics || [];
+  
+  if (metrics.length === 0) {
+    return null;
+  }
+  
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl">
+            {metricsData.find(c => c.id === category)?.name || "Metrics"}
+          </DialogTitle>
+          <DialogDescription>
+            {metricsData.find(c => c.id === category)?.description || ""}
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-6 py-4">
+          {metrics.map((metric) => (
+            <div key={metric.id} className="border rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-2">{metric.name}</h3>
+              <p className="text-muted-foreground mb-4">{metric.description}</p>
+              
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-sm font-medium mb-1">Importance</h4>
+                  <p className="text-sm">{metric.importance}</p>
+                </div>
+                
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Threshold Classifications</h4>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1 border p-3 rounded-md">
+                      <div className="flex items-center">
+                        <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 mr-2">
+                          T0
+                        </Badge>
+                        <span className="text-sm font-medium">Strategic Tier</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{metric.thresholds.T0}</p>
+                    </div>
+                    
+                    <div className="space-y-1 border p-3 rounded-md">
+                      <div className="flex items-center">
+                        <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 mr-2">
+                          T1
+                        </Badge>
+                        <span className="text-sm font-medium">Secondary Tier</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{metric.thresholds.T1}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {metric.tools && metric.tools.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-1">Recommended Tools</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                      {metric.tools.map((tool) => (
+                        <div key={tool} className="flex items-center">
+                          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground mr-2" />
+                          <span className="text-sm">{tool}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <DialogFooter>
+          <Button onClick={() => setIsOpen(false)} variant="outline">Close</Button>
+          <Button onClick={() => window.location.href = "/metrics-guide"} className="gap-2">
+            Go to Full Metrics Guide
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const GuideSection = ({ title, description, icon: Icon, link, linkText }: { 
   title: string; 
@@ -15,7 +123,7 @@ const GuideSection = ({ title, description, icon: Icon, link, linkText }: {
   link: string;
   linkText: string;
 }) => {
-  const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   return (
     <Card className="overflow-hidden hover:shadow-md transition-all">
@@ -32,11 +140,21 @@ const GuideSection = ({ title, description, icon: Icon, link, linkText }: {
         </p>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" className="w-full" onClick={() => navigate(link)}>
+        <Button 
+          variant="outline" 
+          className="w-full" 
+          onClick={() => setIsDialogOpen(true)}
+        >
           {linkText}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </CardFooter>
+      
+      <MetricsDialog 
+        category={link.split('/').pop() || ""} 
+        isOpen={isDialogOpen} 
+        setIsOpen={setIsDialogOpen} 
+      />
     </Card>
   );
 };
@@ -151,42 +269,42 @@ const Guide = () => {
                 title="Foundational Metrics" 
                 description="Baseline indicators of project strength" 
                 icon={Database}
-                link="/metrics/foundational"
+                link="foundational"
                 linkText="View Foundational Metrics"
               />
               <GuideSection 
                 title="Product Metrics" 
                 description="Measures of product quality and adoption" 
                 icon={BarChart2}
-                link="/metrics/product"
+                link="product"
                 linkText="View Product Metrics"
               />
               <GuideSection 
                 title="Financial Metrics" 
                 description="Economic sustainability indicators" 
                 icon={LineChart}
-                link="/metrics/financial"
+                link="financial"
                 linkText="View Financial Metrics"
               />
               <GuideSection 
                 title="Strategic Alignment" 
                 description="Positioning within industry verticals" 
                 icon={ArrowRight}
-                link="/metrics/strategic"
+                link="strategic"
                 linkText="View Strategic Metrics"
               />
               <GuideSection 
                 title="Ecosystem & Community" 
                 description="Health of project community" 
                 icon={Users}
-                link="/metrics/ecosystem"
+                link="ecosystem"
                 linkText="View Ecosystem Metrics"
               />
               <GuideSection 
                 title="Risk Metrics" 
                 description="Potential issues and red flags" 
                 icon={Shield}
-                link="/metrics/risk"
+                link="risk"
                 linkText="View Risk Metrics"
               />
             </div>
