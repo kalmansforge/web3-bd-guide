@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Download, AlertTriangle } from "lucide-react";
 import { ProjectEvaluation } from "@/types/metrics";
 import { useEvaluation } from "@/contexts/EvaluationContext";
@@ -30,12 +30,14 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
   onDeleted
 }) => {
   const { deleteProject } = useEvaluation();
+  const [hasExported, setHasExported] = useState(false);
   
   const handleExportBeforeDelete = () => {
     if (exportSingleEvaluation(project.id)) {
       toast.success("Project exported", {
         description: "Your evaluation has been exported as a JSON file"
       });
+      setHasExported(true);
     } else {
       toast.error("Export failed", {
         description: "There was a problem exporting your evaluation"
@@ -76,17 +78,25 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
               variant="outline" 
               className="w-full sm:w-auto"
               onClick={handleExportBeforeDelete}
+              disabled={hasExported}
             >
               <Download className="mr-2 h-4 w-4" />
-              Export First
+              {hasExported ? "Exported" : "Export First"}
             </Button>
             <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
           </div>
           <AlertDialogAction 
             onClick={handleDelete} 
-            className="bg-red-600 hover:bg-red-700 focus:ring-red-500 w-full"
+            disabled={!hasExported}
+            className={`
+              w-full 
+              ${!hasExported 
+                ? "bg-red-300 cursor-not-allowed" 
+                : "bg-red-600 hover:bg-red-700 focus:ring-red-500"
+              }
+            `}
           >
-            Delete Without Exporting
+            {hasExported ? "Delete Evaluation" : "Export First to Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
