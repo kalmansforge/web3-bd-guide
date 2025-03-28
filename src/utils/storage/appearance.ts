@@ -1,4 +1,5 @@
 
+// Update imports for appearance.ts
 import { saveToStorage, getFromStorage, APPEARANCE_KEY } from "./core";
 
 /**

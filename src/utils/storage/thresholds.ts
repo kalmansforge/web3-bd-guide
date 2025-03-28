@@ -1,5 +1,6 @@
 
-import { ThresholdConfig } from "@/types/metrics";
+// Update imports for thresholds.ts
+import { ThresholdConfig } from "@/contexts/ThresholdContext";
 import { saveToStorage, getFromStorage, THRESHOLDS_KEY } from "./core";
 
 /**

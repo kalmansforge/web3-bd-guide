@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,12 +6,12 @@ import PageHeader from "@/components/ui/PageHeader";
 import { useEvaluation } from "@/contexts/EvaluationContext";
 import { useTemplates } from "@/contexts/templates";
 import { 
-  calculateStorageSize, 
   getAppearanceFromStorage, 
   saveAppearanceToStorage,
   AppearanceSettings,
   defaultAppearanceSettings 
 } from "@/utils/storage";
+import { calculateStorageSize } from "@/utils/storage/core";
 import { toast } from "@/hooks/use-toast";
 import AppearanceTab from "@/components/settings/AppearanceTab";
 import TierNamesTab from "@/components/settings/TierNamesTab";
@@ -25,7 +24,6 @@ const Settings = () => {
   const { projects, refreshData: refreshEvaluations } = useEvaluation();
   const { templates, refreshData: refreshTemplates } = useTemplates();
   
-  // Parse the tab from the URL search params
   const searchParams = new URLSearchParams(location.search);
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState(tabParam || "appearance");
@@ -41,15 +39,12 @@ const Settings = () => {
     applyAppearanceSettings(settings);
   }, []);
 
-  // Update URL when tab changes
   useEffect(() => {
-    // Update the URL with the active tab
     if (activeTab !== tabParam) {
       navigate(`/settings?tab=${activeTab}`, { replace: true });
     }
   }, [activeTab, navigate, tabParam]);
 
-  // Handle tab change from URL
   useEffect(() => {
     if (tabParam && ['appearance', 'tier-names', 'data-management', 'templates'].includes(tabParam)) {
       setActiveTab(tabParam);

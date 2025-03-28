@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/ui/PageHeader";
 import AppLayout from "@/components/layout/AppLayout";
 import { useEvaluation } from "@/contexts/EvaluationContext";
-import { calculateStorageSize } from "@/utils/storage";
+import { calculateStorageSize } from "@/utils/storage/core";
 import StatsOverview from "@/components/dashboard/StatsOverview";
 import StorageUsageCard from "@/components/dashboard/StorageUsageCard";
 import RecentEvaluations from "@/components/dashboard/RecentEvaluations";

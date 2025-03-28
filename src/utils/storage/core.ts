@@ -7,6 +7,7 @@
 export const EVALUATIONS_KEY = 'web3_evaluations';
 export const THRESHOLDS_KEY = 'web3_thresholds';
 export const APPEARANCE_KEY = 'web3_appearance';
+export const TEMPLATES_KEY = 'web3_templates';
 
 /**
  * Generic function to save data to local storage
@@ -54,6 +55,7 @@ export const calculateStorageSize = (): {
   evaluationsSize: number; 
   thresholdsSize: number;
   appearanceSize: number;
+  templatesSize: number;
   totalSize: number;
   totalSizeFormatted: string;
   percentUsed: number;
@@ -63,17 +65,21 @@ export const calculateStorageSize = (): {
     const evaluations = localStorage.getItem(EVALUATIONS_KEY) || '';
     const thresholds = localStorage.getItem(THRESHOLDS_KEY) || '';
     const appearance = localStorage.getItem(APPEARANCE_KEY) || '';
+    const templates = localStorage.getItem(TEMPLATES_KEY) || '';
     
     const evaluationsSize = new Blob([evaluations]).size;
     const thresholdsSize = new Blob([thresholds]).size;
     const appearanceSize = new Blob([appearance]).size;
-    const totalSize = evaluationsSize + thresholdsSize + appearanceSize;
+    const templatesSize = new Blob([templates]).size;
+    
+    const totalSize = evaluationsSize + thresholdsSize + appearanceSize + templatesSize;
     
     // Create breakdown object
     const breakdown: Record<string, number> = {
       'Evaluations': evaluationsSize,
       'Thresholds': thresholdsSize,
-      'Appearance': appearanceSize
+      'Appearance': appearanceSize,
+      'Templates': templatesSize
     };
     
     // Format total size for display
@@ -93,6 +99,7 @@ export const calculateStorageSize = (): {
       evaluationsSize,
       thresholdsSize,
       appearanceSize,
+      templatesSize,
       totalSize,
       totalSizeFormatted,
       percentUsed: Math.min(percentUsed, 100), // Cap at 100%
@@ -104,6 +111,7 @@ export const calculateStorageSize = (): {
       evaluationsSize: 0,
       thresholdsSize: 0,
       appearanceSize: 0,
+      templatesSize: 0,
       totalSize: 0,
       totalSizeFormatted: '0 B',
       percentUsed: 0,
