@@ -29,7 +29,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
   return (
     <div 
       className={cn(
-        "h-14 md:hidden flex items-center justify-between px-4 border-b bg-background sticky top-0 z-10",
+        "h-14 md:hidden flex items-center justify-between px-4 border-b bg-background sticky top-0 z-10 shadow-sm",
         className
       )}
     >

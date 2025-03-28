@@ -74,7 +74,7 @@ const AppSidebar = () => {
 
   return (
     <Sidebar collapsible={isMobile ? "offcanvas" : "icon"}>
-      <SidebarHeader className="h-14 flex items-center justify-between px-4">
+      <SidebarHeader className="h-14 flex items-center justify-between px-4 bg-background">
         <div className={cn("flex items-center gap-2", isExpanded ? "ml-2" : "justify-center w-full")}>
           <GitBranch className="h-5 w-5 text-primary" />
           <span className={cn("font-semibold text-base transition-opacity", 
