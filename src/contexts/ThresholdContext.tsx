@@ -2,21 +2,24 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "@/hooks/use-toast";
 import { metricsData } from "@/data/metricsData";
-import { saveThresholdsToStorage, getThresholdsFromStorage } from "@/utils/localStorageUtils";
+import { 
+  saveThresholdsToStorage, 
+  getThresholdsFromStorage, 
+  getAllTierNames 
+} from "@/utils/localStorageUtils";
 
 export type ThresholdConfig = {
   id: string;
   metricId: string;
   categoryId: string;
-  t0Threshold: string;
-  t1Threshold: string;
+  thresholds: Record<string, string>;
   updatedAt: string;
 };
 
 type ThresholdContextType = {
   thresholds: ThresholdConfig[];
   loading: boolean;
-  updateThreshold: (metricId: string, categoryId: string, t0Threshold: string, t1Threshold: string) => Promise<void>;
+  updateThreshold: (metricId: string, categoryId: string, thresholds: Record<string, string>) => Promise<void>;
   saveChanges: () => Promise<void>;
   resetChanges: () => void;
   unsavedChanges: boolean;
@@ -60,8 +63,7 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
               id: `${category.id}-${metric.id}`,
               metricId: metric.id,
               categoryId: category.id,
-              t0Threshold: metric.thresholds.T0,
-              t1Threshold: metric.thresholds.T1,
+              thresholds: metric.thresholds,
               updatedAt: new Date().toISOString()
             });
           });
@@ -98,15 +100,13 @@ export const ThresholdProvider = ({ children }: { children: ReactNode }) => {
   const updateThreshold = async (
     metricId: string, 
     categoryId: string, 
-    t0Threshold: string, 
-    t1Threshold: string
+    thresholds: Record<string, string>
   ) => {
     const updatedThresholds = thresholds.map(threshold => {
       if (threshold.metricId === metricId && threshold.categoryId === categoryId) {
         return {
           ...threshold,
-          t0Threshold,
-          t1Threshold,
+          thresholds,
           updatedAt: new Date().toISOString()
         };
       }

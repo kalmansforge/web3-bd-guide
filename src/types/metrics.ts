@@ -1,5 +1,5 @@
 
-export type TierType = 'T0' | 'T1' | null;
+export type TierType = string | null;
 
 export interface MetricCategory {
   id: string;
@@ -13,10 +13,7 @@ export interface Metric {
   name: string;
   description: string;
   importance: string;
-  thresholds: {
-    T0: string;
-    T1: string;
-  };
+  thresholds: Record<string, string>;
   tools: string[];
   value?: number | string;
   tier?: TierType;
