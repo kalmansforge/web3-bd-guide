@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit, FileText, DownloadIcon } from "lucide-react";
@@ -111,18 +112,19 @@ const ProjectDetail = () => {
           <CardTitle className="text-lg">Jump to Category</CardTitle>
         </CardHeader>
         <CardContent>
-          <TabsList className="w-full flex overflow-x-auto no-scrollbar">
-            {metricsData.map((category, index) => (
-              <TabsTrigger 
-                key={category.id} 
-                value={category.id} 
-                onClick={() => setActiveCategory(category.id)}
-                className={activeCategory === category.id ? "text-primary font-medium" : ""}
-              >
-                {index + 1}. {category.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+            <TabsList className="w-full flex overflow-x-auto no-scrollbar">
+              {metricsData.map((category, index) => (
+                <TabsTrigger 
+                  key={category.id} 
+                  value={category.id}
+                  className={activeCategory === category.id ? "text-primary font-medium" : ""}
+                >
+                  {index + 1}. {category.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         </CardContent>
       </Card>
 
