@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Download, AlertTriangle } from "lucide-react";
 import { ProjectEvaluation } from "@/types/metrics";
 import { useEvaluation } from "@/contexts/EvaluationContext";
@@ -31,14 +31,6 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
 }) => {
   const { deleteProject } = useEvaluation();
   const [hasExported, setHasExported] = useState(false);
-  const [open, setOpen] = useState(false);
-  
-  // Reset state when dialog closes
-  useEffect(() => {
-    if (!open) {
-      setHasExported(false);
-    }
-  }, [open]);
   
   const handleExportBeforeDelete = () => {
     if (exportSingleEvaluation(project.id)) {
@@ -55,14 +47,13 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
   
   const handleDelete = async () => {
     await deleteProject(project.id);
-    setOpen(false);
     if (onDeleted) {
       onDeleted();
     }
   };
   
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog>
       <AlertDialogTrigger asChild>
         {trigger}
       </AlertDialogTrigger>
