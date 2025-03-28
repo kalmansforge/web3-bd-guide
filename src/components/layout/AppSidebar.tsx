@@ -1,3 +1,4 @@
+
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { 
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Simplified navigation data without nested children
 const navItems = [
@@ -60,10 +62,11 @@ const navItems = [
 
 const AppSidebar = () => {
   const { state, toggleSidebar } = useSidebar();
+  const isMobile = useIsMobile();
   const isExpanded = state === "expanded";
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible={isMobile ? "offcanvas" : "icon"}>
       <SidebarHeader className="h-14 flex items-center justify-between px-4">
         <div className={cn("flex items-center gap-2", isExpanded ? "ml-2" : "justify-center w-full")}>
           <GitBranch className="h-5 w-5 text-primary" />
@@ -73,7 +76,7 @@ const AppSidebar = () => {
             Web3 BD Guide
           </span>
         </div>
-        {isExpanded && (
+        {isExpanded && !isMobile && (
           <Button 
             variant="ghost" 
             size="icon"
@@ -106,7 +109,7 @@ const AppSidebar = () => {
                     >
                       <item.icon className="h-5 w-5" />
                       {isExpanded && (
-                        <span className="transition-opacity">
+                        <span className="transition-opacity truncate">
                           {item.title}
                         </span>
                       )}

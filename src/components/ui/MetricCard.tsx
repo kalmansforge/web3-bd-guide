@@ -53,23 +53,29 @@ const MetricCard: React.FC<MetricCardProps> = ({
 
   return (
     <Card className={cn(
-      "transition-all duration-200",
+      "transition-all duration-200 overflow-hidden",
       expanded ? "shadow-md" : "shadow-sm",
       isPreview ? "opacity-80" : ""
     )}>
-      <CardHeader className={cn("pb-4", isMobile ? "px-3 py-3" : "")}>
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <CardTitle className={cn("font-semibold", isMobile ? "text-sm" : "text-base")}>
+      <CardHeader className={cn("pb-2 sm:pb-4", isMobile ? "px-3 py-3" : "")}>
+        <div className="flex justify-between items-start gap-2">
+          <div className="space-y-1 flex-1 min-w-0">
+            <CardTitle className={cn(
+              "font-semibold break-words", 
+              isMobile ? "text-sm" : "text-base"
+            )}>
               {metric.name}
             </CardTitle>
-            <CardDescription className={cn("line-clamp-2", isMobile ? "text-xs" : "")}>
+            <CardDescription className={cn(
+              "line-clamp-2 break-words", 
+              isMobile ? "text-xs" : ""
+            )}>
               {metric.description}
             </CardDescription>
           </div>
           
           {!isPreview && !readOnly && (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 flex-shrink-0">
               <TierBadge tier={evalTier} tierDisplay={evalTierDisplay} />
               
               <Button
@@ -88,7 +94,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
           )}
           
           {readOnly && evalTier && (
-            <div className="flex items-center">
+            <div className="flex items-center flex-shrink-0">
               <TierBadge tier={evalTier} tierDisplay={evalTierDisplay} />
             </div>
           )}
@@ -117,7 +123,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
               variant="outline"
               className="w-full"
               onClick={handleViewDetail}
-              size="sm"
+              size={isMobile ? "sm" : "default"}
             >
               {evalTier ? "Edit Evaluation" : "Evaluate Metric"}
             </Button>

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, Filter, MessageSquare } from "lucide-react";
@@ -15,9 +16,11 @@ import CategoryNotFound from "@/components/metrics-guide/CategoryNotFound";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const MetricsGuide = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [searchQuery, setSearchQuery] = useState("");
   const [notesFilter, setNotesFilter] = useState<string>("all");
   const { thresholds, loading: thresholdsLoading } = useThresholds();
@@ -99,24 +102,24 @@ const MetricsGuide = () => {
         title={`Metrics Guide: ${activeTemplate.name}`}
         description={activeTemplate.description}
         actions={
-          <div className="flex gap-2 flex-wrap">
-            <Button onClick={() => navigate("/templates")} variant="outline" className="flex items-center gap-2">
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            <Button onClick={() => navigate("/templates")} variant="outline" size={isMobile ? "sm" : "default"} className="flex items-center gap-2">
               <Filter className="h-4 w-4" />
-              Manage Templates
+              <span className="truncate">Manage Templates</span>
             </Button>
-            <Button onClick={() => navigate("/settings")} variant="outline" className="flex items-center gap-2">
+            <Button onClick={() => navigate("/settings")} variant="outline" size={isMobile ? "sm" : "default"} className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
-              Configure Thresholds
+              <span className="truncate">Configure Thresholds</span>
             </Button>
           </div>
         }
       />
       
-      <div className="space-y-4 mb-6">
+      <div className="space-y-4 mb-4 sm:mb-6">
         <MetricsSearch 
           value={searchQuery} 
           onChange={setSearchQuery}
-          placeholder="Search metrics by name, description or notes..." 
+          placeholder="Search metrics..." 
         />
         
         <div className="flex flex-col md:flex-row gap-4">
@@ -125,7 +128,7 @@ const MetricsGuide = () => {
               Jump to Category
             </Label>
             <Select value={activeTab} onValueChange={setActiveTab}>
-              <SelectTrigger id="category-select">
+              <SelectTrigger id="category-select" className="w-full">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
@@ -149,7 +152,7 @@ const MetricsGuide = () => {
                   type="single" 
                   value={notesFilter} 
                   onValueChange={(value) => value && setNotesFilter(value)}
-                  className="justify-start"
+                  className="justify-start flex-wrap"
                 >
                   <ToggleGroupItem value="all" aria-label="Show all metrics">All</ToggleGroupItem>
                   <ToggleGroupItem value="with-notes" aria-label="Show metrics with notes">With Notes</ToggleGroupItem>
@@ -161,11 +164,13 @@ const MetricsGuide = () => {
         </div>
       </div>
       
-      <MetricsCategoryTabs 
-        categories={activeTemplate.categories} 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab} 
-      />
+      <div className="overflow-x-auto -mx-2 px-2">
+        <MetricsCategoryTabs 
+          categories={activeTemplate.categories} 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab} 
+        />
+      </div>
       
       <CategoryDescription name={category.name} description={category.description} />
       

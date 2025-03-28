@@ -33,7 +33,7 @@ const MetricsList: React.FC<MetricsListProps> = ({
   }
 
   return (
-    <div className="space-y-8 animate-fade-in mb-6">
+    <div className="space-y-6 animate-fade-in mb-6">
       {metrics.map(metric => (
         <MetricItem 
           key={metric.id}
