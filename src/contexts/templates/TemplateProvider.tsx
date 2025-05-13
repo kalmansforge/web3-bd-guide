@@ -1,4 +1,3 @@
-
 import React, { createContext, useEffect, useState } from "react";
 import { TemplateContextType } from "./types";
 import { useTemplateOperations } from "./useTemplateOperations";
@@ -7,9 +6,9 @@ import { EvaluationTemplate } from "@/types/templates";
 // Create the context with a default undefined value
 export const TemplateContext = createContext<TemplateContextType | undefined>(undefined);
 
-export interface TemplateProviderProps {
+type TemplateProviderProps = {
   children: React.ReactNode;
-}
+};
 
 export const TemplateProvider: React.FC<TemplateProviderProps> = ({ children }) => {
   const templateOperations = useTemplateOperations();
@@ -23,7 +22,16 @@ export const TemplateProvider: React.FC<TemplateProviderProps> = ({ children }) 
     };
     
     initialize();
-  }, []);
+    
+    // Set up a refresh interval to check for new templates
+    const intervalId = setInterval(() => {
+      if (isInitialized) {
+        templateOperations.refreshData();
+      }
+    }, 60000); // Check every minute
+    
+    return () => clearInterval(intervalId);
+  }, [isInitialized]);
 
   // Show loading state while initializing
   if (!isInitialized || !templateOperations.activeTemplate) {

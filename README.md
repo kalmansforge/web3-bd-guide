@@ -12,10 +12,6 @@ This application provides a robust platform for:
 - Customizable evaluation templates
 - Business development metrics guide
 
-## Project info
-
-**URL**: <https://lovable.dev/projects/eef6af8d-23e4-432d-894d-8263397b18cd>
-
 ## Features
 
 - **Project Management**: Create and manage multiple projects with detailed tracking
@@ -24,54 +20,32 @@ This application provides a robust platform for:
 - **Template Editor**: Create and customize evaluation templates
 - **Settings Management**: Configure application settings and preferences
 - **Metrics Guide**: Access comprehensive guides for business development metrics
+- **Data Storage**: All data is stored locally in browser localStorage (no server-side database required)
 
-## How can I edit this code?
+## Running the Project with Docker
 
-There are several ways of editing your application.
+You can run this project locally using Docker. This setup provides a reproducible environment for the web application.
 
-**Use Lovable**
+### Quick Start
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/eef6af8d-23e4-432d-894d-8263397b18cd) and start prompting.
+1. **Build and start the application:**
 
-Changes made via Lovable will be committed automatically to this repo.
+   ```sh
+   docker compose up --build
+   ```
 
-**Use your preferred IDE**
+2. **Access the application:**
+   - The web app will be available at [http://localhost:4173](http://localhost:4173)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+For detailed Docker configuration and troubleshooting, see the [Docker Implementation Guide](DOCKER.md).
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Templates
 
-Follow these steps:
+The application uses evaluation templates to standardize the project assessment process. Templates are automatically discovered and loaded from the `src/templates` directory.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+For more details about templates and available examples, see the [Templates Guide](src/templates/README.md).
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Technologies
 
 This project is built with modern web technologies:
 
@@ -82,16 +56,34 @@ This project is built with modern web technologies:
 - **State Management**: React Context API
 - **Routing**: React Router
 - **Form Handling**: React Hook Form with Zod validation
-- **Database**: Supabase
-- **Data Fetching**: TanStack Query
 - **UI Enhancements**: Radix UI primitives
 - **Charts**: Recharts
 - **Notifications**: Sonner
 
-## How can I deploy this project?
+## Development
 
-Simply open [Lovable](https://lovable.dev/projects/eef6af8d-23e4-432d-894d-8263397b18cd) and click on Share -> Publish.
+You can work with this codebase in the following ways:
 
-## I want to use a custom domain - is that possible?
+### Local Development
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+1. Clone the repository:
+   ```sh
+   git clone <repository-url>
+   cd web3-bd-guide
+   ```
+
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+
+3. Start the development server:
+   ```sh
+   npm run dev
+   ```
+
+### Using Docker
+
+For containerized development, use the Docker setup as described in the "Running the Project with Docker" section above.
+
+---

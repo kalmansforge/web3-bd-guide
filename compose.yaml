@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  typescript-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web3-bd-app
+    ports:
+      - "4173:4173"
+    restart: unless-stopped
+    # If you need to use environment variables, uncomment the following:
+    # env_file:
+    #   - .env
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:4173"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s 

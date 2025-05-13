@@ -1,0 +1,33 @@
+{
+  "id": "example-new-template",
+  "name": "Dynamic Loading Example",
+  "description": "This template demonstrates the dynamic template loading capability.",
+  "author": "System",
+  "createdAt": "2025-05-13T14:30:00.000Z",
+  "updatedAt": "2025-05-13T14:30:00.000Z",
+  "categories": [
+    {
+      "id": "dynamic-loading",
+      "name": "Dynamic Loading",
+      "description": "Tests the dynamic template loading capability",
+      "metrics": [
+        {
+          "id": "auto-discovery",
+          "name": "Auto Discovery",
+          "description": "Ability to automatically discover new templates",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "refresh-detection",
+          "name": "Refresh Detection",
+          "description": "Ability to detect changes during application runtime",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

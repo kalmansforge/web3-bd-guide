@@ -1,7 +1,14 @@
+/**
+ * Core utility functions for working with local storage
+ */
+
+// Storage keys
+export const TEMPLATES_KEY = 'web3_templates';
 
 import { TemplateStorage } from "@/types/templates";
 import { saveToStorage, getFromStorage } from "../core";
-import { TEMPLATES_KEY, initialStorage } from "./constants";
+import { BASIC_TEMPLATE, initialStorage } from "./constants";
+import { initializePreloadedTemplates } from "./preloaded";
 
 /**
  * Save templates to local storage
@@ -20,7 +27,9 @@ export const initializeTemplates = (): TemplateStorage => {
   // If no templates exist, create initial setup with basic template
   if (!existingStorage) {
     saveTemplatesToStorage(initialStorage);
-    return initialStorage;
+    // After setting up initial storage, load preloaded templates
+    initializePreloadedTemplates();
+    return getFromStorage<TemplateStorage>(TEMPLATES_KEY, initialStorage);
   }
   
   return existingStorage;

@@ -1,0 +1,73 @@
+# Node.js / TypeScript
+node_modules/
+npm-debug.log
+yarn-debug.log
+pnpm-debug.log
+
+# Build outputs
+dist/
+build/
+out/
+
+# Test and debug artifacts
+test/
+tests/
+debug/
+*.log
+
+# IDE/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Version control
+.git/
+.gitignore
+.svn/
+.hg/
+
+# Environment and secrets
+.env*
+*.env
+*.pem
+*.key
+*.crt
+config.local.*
+*.local.yml
+
+# Documentation and markdown
+README*
+*.md
+docs/
+
+# Docker and Compose files
+Dockerfile*
+docker-compose*
+compose.yaml
+
+# Temporary and local files
+tmp/
+temp/
+*.tmp
+.local/
+local/
+
+# macOS system files
+.DS_Store
+
+# Project-specific
+public/
+
+# Miscellaneous
+*.bak
+
+# Exclude lock files from being ignored (they should be included)
+!*.lock
+!*.lockb
+
+# Exclude .mvnw, .gradlew, .mvn, .gradle (should not be ignored)
+!.mvnw
+!.gradlew
+!.mvn/
+!.gradle/
