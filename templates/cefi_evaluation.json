@@ -1,0 +1,134 @@
+{
+  "id": "cefi-evaluation",
+  "name": "CeFi Evaluation",
+  "description": "Evaluation template for Centralized Finance platforms, focusing on trading, risk management, and compliance",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "trading-systems",
+      "name": "Trading Systems",
+      "description": "Evaluation of trading system capabilities",
+      "metrics": [
+        {
+          "id": "order-matching",
+          "name": "Order Matching",
+          "description": "Quality of order matching engine",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "execution-quality",
+          "name": "Execution Quality",
+          "description": "Quality of trade execution",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "trading-features",
+          "name": "Trading Features",
+          "description": "Completeness of trading features",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "risk-control",
+      "name": "Risk Control",
+      "description": "Evaluation of risk control systems",
+      "metrics": [
+        {
+          "id": "position-monitoring",
+          "name": "Position Monitoring",
+          "description": "Quality of position monitoring systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "margin-systems",
+          "name": "Margin Systems",
+          "description": "Effectiveness of margin management",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "risk-limits",
+          "name": "Risk Limits",
+          "description": "Quality of risk limit implementation",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "compliance-systems",
+      "name": "Compliance Systems",
+      "description": "Evaluation of compliance and regulatory systems",
+      "metrics": [
+        {
+          "id": "kyc-aml",
+          "name": "KYC/AML",
+          "description": "Quality of KYC/AML processes",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "transaction-monitoring",
+          "name": "Transaction Monitoring",
+          "description": "Effectiveness of transaction monitoring",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "regulatory-reporting",
+          "name": "Regulatory Reporting",
+          "description": "Quality of regulatory reporting",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "customer-service",
+      "name": "Customer Service",
+      "description": "Evaluation of customer service and support",
+      "metrics": [
+        {
+          "id": "support-channels",
+          "name": "Support Channels",
+          "description": "Quality and availability of support channels",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "response-time",
+          "name": "Response Time",
+          "description": "Speed of customer support response",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "issue-resolution",
+          "name": "Issue Resolution",
+          "description": "Effectiveness in resolving customer issues",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

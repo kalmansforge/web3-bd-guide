@@ -1,0 +1,134 @@
+{
+  "id": "ai-nft-evaluation",
+  "name": "AI-Powered NFT & Digital Asset Management",
+  "description": "Evaluation template for AI applications in NFT creation, curation, and digital asset management",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "ai-generation",
+      "name": "AI Generation Capabilities",
+      "description": "Evaluation of AI's ability to generate and modify digital assets",
+      "metrics": [
+        {
+          "id": "generation-quality",
+          "name": "Generation Quality",
+          "description": "Quality of AI-generated content",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "style-consistency",
+          "name": "Style Consistency",
+          "description": "Consistency in style and quality across generations",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "customization",
+          "name": "Customization Options",
+          "description": "Level of control and customization available",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "asset-management",
+      "name": "Asset Management",
+      "description": "Evaluation of digital asset management capabilities",
+      "metrics": [
+        {
+          "id": "metadata-handling",
+          "name": "Metadata Handling",
+          "description": "Quality of metadata management and organization",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "version-control",
+          "name": "Version Control",
+          "description": "Ability to track and manage asset versions",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "storage-efficiency",
+          "name": "Storage Efficiency",
+          "description": "Efficiency of storage and retrieval systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "marketplace-integration",
+      "name": "Marketplace Integration",
+      "description": "Evaluation of marketplace and trading capabilities",
+      "metrics": [
+        {
+          "id": "marketplace-support",
+          "name": "Marketplace Support",
+          "description": "Number and quality of supported marketplaces",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "pricing-ai",
+          "name": "AI Pricing",
+          "description": "Quality of AI-driven pricing suggestions",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "trading-automation",
+          "name": "Trading Automation",
+          "description": "Level of trading automation available",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "community-features",
+      "name": "Community Features",
+      "description": "Evaluation of community engagement and collaboration features",
+      "metrics": [
+        {
+          "id": "collaboration-tools",
+          "name": "Collaboration Tools",
+          "description": "Quality of collaboration features",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "community-feedback",
+          "name": "Community Feedback",
+          "description": "Integration of community feedback mechanisms",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "governance",
+          "name": "Governance Features",
+          "description": "Quality of governance and decision-making tools",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

@@ -1,0 +1,134 @@
+{
+  "id": "rwa-evaluation",
+  "name": "RWA Management",
+  "description": "Evaluation template for Real World Assets tokenization and management in Web3",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "asset-tokenization",
+      "name": "Asset Tokenization",
+      "description": "Evaluation of asset tokenization process",
+      "metrics": [
+        {
+          "id": "valuation-methodology",
+          "name": "Valuation Methodology",
+          "description": "Robustness of asset valuation methodology",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "tokenization-process",
+          "name": "Tokenization Process",
+          "description": "Efficiency of tokenization process",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "asset-verification",
+          "name": "Asset Verification",
+          "description": "Quality of asset verification process",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "market-liquidity",
+      "name": "Market Liquidity",
+      "description": "Evaluation of RWA market liquidity management",
+      "metrics": [
+        {
+          "id": "liquidity-pools",
+          "name": "Liquidity Pools",
+          "description": "Quality of liquidity pool implementation",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "market-making",
+          "name": "Market Making",
+          "description": "Effectiveness of market making strategies",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "price-stability",
+          "name": "Price Stability",
+          "description": "Effectiveness of price stability mechanisms",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "compliance-monitoring",
+      "name": "Compliance Monitoring",
+      "description": "Evaluation of RWA compliance and monitoring",
+      "metrics": [
+        {
+          "id": "regulatory-framework",
+          "name": "Regulatory Framework",
+          "description": "Completeness of regulatory framework",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "asset-tracking",
+          "name": "Asset Tracking",
+          "description": "Quality of asset tracking systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "reporting-systems",
+          "name": "Reporting Systems",
+          "description": "Quality of reporting systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "risk-assessment",
+      "name": "Risk Assessment",
+      "description": "Evaluation of RWA risk assessment",
+      "metrics": [
+        {
+          "id": "credit-risk",
+          "name": "Credit Risk",
+          "description": "Quality of credit risk assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "market-risk",
+          "name": "Market Risk",
+          "description": "Effectiveness of market risk assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "operational-risk",
+          "name": "Operational Risk",
+          "description": "Quality of operational risk assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

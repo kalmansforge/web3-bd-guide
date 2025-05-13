@@ -1,0 +1,133 @@
+{
+  "id": "ai-defi-evaluation",
+  "name": "AI-Powered DeFi Evaluation",
+  "description": "Comprehensive evaluation template for AI-powered DeFi applications, focusing on trading strategies, risk management, and market analysis capabilities",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "ai-capabilities",
+      "name": "AI Capabilities",
+      "description": "Evaluation of AI model capabilities and implementation",
+      "metrics": [
+        {
+          "id": "model-type",
+          "name": "AI Model Type",
+          "description": "Type of AI model used (ML, Deep Learning, etc.)",
+          "type": "select",
+          "options": ["Machine Learning", "Deep Learning", "Reinforcement Learning", "Hybrid Approach", "Other"]
+        },
+        {
+          "id": "training-data",
+          "name": "Training Data Quality",
+          "description": "Quality and relevance of training data",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "model-performance",
+          "name": "Model Performance",
+          "description": "Performance metrics and accuracy",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "defi-integration",
+      "name": "DeFi Integration",
+      "description": "Evaluation of DeFi protocol integration and functionality",
+      "metrics": [
+        {
+          "id": "protocol-support",
+          "name": "Protocol Support",
+          "description": "Number and quality of supported DeFi protocols",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "liquidity-access",
+          "name": "Liquidity Access",
+          "description": "Ability to access and utilize liquidity pools",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "transaction-efficiency",
+          "name": "Transaction Efficiency",
+          "description": "Efficiency of AI-driven transactions",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "risk-management",
+      "name": "Risk Management",
+      "description": "Evaluation of risk management capabilities",
+      "metrics": [
+        {
+          "id": "risk-assessment",
+          "name": "Risk Assessment",
+          "description": "Quality of AI-driven risk assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "safeguards",
+          "name": "Safety Measures",
+          "description": "Implementation of safety measures and circuit breakers",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "compliance",
+          "name": "Regulatory Compliance",
+          "description": "Compliance with financial regulations",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "market-analysis",
+      "name": "Market Analysis",
+      "description": "Evaluation of market analysis capabilities",
+      "metrics": [
+        {
+          "id": "data-sources",
+          "name": "Data Sources",
+          "description": "Quality and diversity of market data sources",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "prediction-accuracy",
+          "name": "Prediction Accuracy",
+          "description": "Accuracy of market predictions",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "analysis-depth",
+          "name": "Analysis Depth",
+          "description": "Depth and sophistication of market analysis",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

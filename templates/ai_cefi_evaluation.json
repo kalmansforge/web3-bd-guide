@@ -1,0 +1,134 @@
+{
+  "id": "ai-cefi-evaluation",
+  "name": "AI-Powered CeFi Evaluation",
+  "description": "Evaluation template for AI applications in Centralized Finance platforms, focusing on trading, risk management, and compliance",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "trading-systems",
+      "name": "Trading Systems",
+      "description": "Evaluation of AI in trading system capabilities",
+      "metrics": [
+        {
+          "id": "order-matching",
+          "name": "Order Matching",
+          "description": "Quality of AI-driven order matching",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "execution-quality",
+          "name": "Execution Quality",
+          "description": "Quality of trade execution",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "algorithmic-trading",
+          "name": "Algorithmic Trading",
+          "description": "Sophistication of algorithmic trading strategies",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "risk-control",
+      "name": "Risk Control",
+      "description": "Evaluation of AI in risk control systems",
+      "metrics": [
+        {
+          "id": "position-monitoring",
+          "name": "Position Monitoring",
+          "description": "Quality of position monitoring and risk assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "margin-management",
+          "name": "Margin Management",
+          "description": "Effectiveness of margin management systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "liquidity-risk",
+          "name": "Liquidity Risk",
+          "description": "Quality of liquidity risk management",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "compliance-systems",
+      "name": "Compliance Systems",
+      "description": "Evaluation of AI in compliance and regulatory systems",
+      "metrics": [
+        {
+          "id": "kyc-aml",
+          "name": "KYC/AML",
+          "description": "Quality of KYC/AML automation",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "transaction-monitoring",
+          "name": "Transaction Monitoring",
+          "description": "Effectiveness of transaction monitoring",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "regulatory-reporting",
+          "name": "Regulatory Reporting",
+          "description": "Quality of automated regulatory reporting",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "customer-service",
+      "name": "Customer Service",
+      "description": "Evaluation of AI in customer service and support",
+      "metrics": [
+        {
+          "id": "chatbot-quality",
+          "name": "Chatbot Quality",
+          "description": "Quality of AI-powered customer support",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "issue-resolution",
+          "name": "Issue Resolution",
+          "description": "Effectiveness in resolving customer issues",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "personalization",
+          "name": "Service Personalization",
+          "description": "Quality of personalized service",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

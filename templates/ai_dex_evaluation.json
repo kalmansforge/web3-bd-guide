@@ -1,0 +1,134 @@
+{
+  "id": "ai-dex-evaluation",
+  "name": "AI-Powered DEX Evaluation",
+  "description": "Evaluation template for AI applications in Decentralized Exchanges, focusing on trading, liquidity, and market making",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "trading-optimization",
+      "name": "Trading Optimization",
+      "description": "Evaluation of AI in optimizing trading strategies",
+      "metrics": [
+        {
+          "id": "route-optimization",
+          "name": "Route Optimization",
+          "description": "Quality of trading route optimization",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "slippage-reduction",
+          "name": "Slippage Reduction",
+          "description": "Effectiveness in reducing slippage",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "execution-speed",
+          "name": "Execution Speed",
+          "description": "Speed and efficiency of trade execution",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "liquidity-management",
+      "name": "Liquidity Management",
+      "description": "Evaluation of AI in managing DEX liquidity",
+      "metrics": [
+        {
+          "id": "pool-optimization",
+          "name": "Pool Optimization",
+          "description": "Quality of liquidity pool optimization",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "liquidity-provision",
+          "name": "Liquidity Provision",
+          "description": "Effectiveness of liquidity provision strategies",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "impermanent-loss",
+          "name": "Impermanent Loss",
+          "description": "Effectiveness in managing impermanent loss",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "market-making",
+      "name": "Market Making",
+      "description": "Evaluation of AI in market making strategies",
+      "metrics": [
+        {
+          "id": "price-discovery",
+          "name": "Price Discovery",
+          "description": "Quality of price discovery mechanisms",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "spread-management",
+          "name": "Spread Management",
+          "description": "Effectiveness in managing bid-ask spreads",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "volatility-management",
+          "name": "Volatility Management",
+          "description": "Quality of volatility management",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "security-monitoring",
+      "name": "Security Monitoring",
+      "description": "Evaluation of AI in DEX security monitoring",
+      "metrics": [
+        {
+          "id": "anomaly-detection",
+          "name": "Anomaly Detection",
+          "description": "Quality of trading anomaly detection",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "front-running",
+          "name": "Front-running Prevention",
+          "description": "Effectiveness in preventing front-running",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "smart-contract",
+          "name": "Smart Contract Security",
+          "description": "Quality of smart contract security monitoring",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

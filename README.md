@@ -1,8 +1,29 @@
-# Welcome to your Lovable project
+# Web3 Business Development Guide
+
+A comprehensive web application for managing project evaluations, metrics tracking, and business development in the Web3 space.
+
+## Project Overview
+
+This application provides a robust platform for:
+- Project evaluation and tracking
+- Metrics management and analysis
+- Template-based evaluation workflows
+- Dashboard for project insights
+- Customizable evaluation templates
+- Business development metrics guide
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/eef6af8d-23e4-432d-894d-8263397b18cd
+**URL**: <https://lovable.dev/projects/eef6af8d-23e4-432d-894d-8263397b18cd>
+
+## Features
+
+- **Project Management**: Create and manage multiple projects with detailed tracking
+- **Evaluation System**: Conduct structured evaluations with customizable templates
+- **Metrics Dashboard**: Visualize and analyze project metrics and performance
+- **Template Editor**: Create and customize evaluation templates
+- **Settings Management**: Configure application settings and preferences
+- **Metrics Guide**: Access comprehensive guides for business development metrics
 
 ## How can I edit this code?
 
@@ -52,13 +73,20 @@ npm run dev
 
 ## What technologies are used for this project?
 
-This project is built with .
+This project is built with modern web technologies:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Frontend Framework**: React with TypeScript
+- **Build Tool**: Vite
+- **UI Components**: shadcn-ui
+- **Styling**: Tailwind CSS
+- **State Management**: React Context API
+- **Routing**: React Router
+- **Form Handling**: React Hook Form with Zod validation
+- **Database**: Supabase
+- **Data Fetching**: TanStack Query
+- **UI Enhancements**: Radix UI primitives
+- **Charts**: Recharts
+- **Notifications**: Sonner
 
 ## How can I deploy this project?
 

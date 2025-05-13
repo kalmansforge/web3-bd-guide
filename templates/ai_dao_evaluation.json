@@ -1,0 +1,134 @@
+{
+  "id": "ai-dao-evaluation",
+  "name": "AI-Powered DAO & Governance",
+  "description": "Evaluation template for AI applications in DAO operations, governance, and decision-making",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "governance-ai",
+      "name": "AI Governance Capabilities",
+      "description": "Evaluation of AI's role in governance and decision-making",
+      "metrics": [
+        {
+          "id": "proposal-analysis",
+          "name": "Proposal Analysis",
+          "description": "Quality of AI-driven proposal analysis",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "voting-assistance",
+          "name": "Voting Assistance",
+          "description": "Quality of AI assistance in voting decisions",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "consensus-building",
+          "name": "Consensus Building",
+          "description": "Effectiveness in building consensus",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "resource-management",
+      "name": "Resource Management",
+      "description": "Evaluation of AI in managing DAO resources",
+      "metrics": [
+        {
+          "id": "treasury-management",
+          "name": "Treasury Management",
+          "description": "Quality of AI-driven treasury management",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "budget-allocation",
+          "name": "Budget Allocation",
+          "description": "Effectiveness of budget allocation suggestions",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "resource-optimization",
+          "name": "Resource Optimization",
+          "description": "Efficiency in resource utilization",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "member-engagement",
+      "name": "Member Engagement",
+      "description": "Evaluation of AI in managing member engagement",
+      "metrics": [
+        {
+          "id": "contribution-tracking",
+          "name": "Contribution Tracking",
+          "description": "Quality of contribution tracking and rewards",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "member-matching",
+          "name": "Member Matching",
+          "description": "Effectiveness in matching members to tasks",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "engagement-optimization",
+          "name": "Engagement Optimization",
+          "description": "Quality of engagement optimization",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "risk-compliance",
+      "name": "Risk & Compliance",
+      "description": "Evaluation of AI in risk management and compliance",
+      "metrics": [
+        {
+          "id": "risk-detection",
+          "name": "Risk Detection",
+          "description": "Quality of risk detection and assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "compliance-monitoring",
+          "name": "Compliance Monitoring",
+          "description": "Effectiveness of compliance monitoring",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "fraud-prevention",
+          "name": "Fraud Prevention",
+          "description": "Quality of fraud prevention measures",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

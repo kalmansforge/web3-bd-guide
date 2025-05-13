@@ -1,0 +1,134 @@
+{
+  "id": "dex-evaluation",
+  "name": "DEX Evaluation",
+  "description": "Evaluation template for Decentralized Exchanges, focusing on trading, liquidity, and market making",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "trading-mechanics",
+      "name": "Trading Mechanics",
+      "description": "Evaluation of trading mechanics and execution",
+      "metrics": [
+        {
+          "id": "order-types",
+          "name": "Order Types",
+          "description": "Variety and functionality of order types",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "execution-speed",
+          "name": "Execution Speed",
+          "description": "Speed and efficiency of trade execution",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "price-impact",
+          "name": "Price Impact",
+          "description": "Effectiveness in minimizing price impact",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "liquidity-management",
+      "name": "Liquidity Management",
+      "description": "Evaluation of DEX liquidity management",
+      "metrics": [
+        {
+          "id": "pool-design",
+          "name": "Pool Design",
+          "description": "Quality of liquidity pool design",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "liquidity-incentives",
+          "name": "Liquidity Incentives",
+          "description": "Effectiveness of liquidity incentives",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "impermanent-loss",
+          "name": "Impermanent Loss",
+          "description": "Effectiveness in managing impermanent loss",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "market-making",
+      "name": "Market Making",
+      "description": "Evaluation of market making mechanisms",
+      "metrics": [
+        {
+          "id": "price-oracle",
+          "name": "Price Oracle",
+          "description": "Quality of price oracle implementation",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "spread-mechanism",
+          "name": "Spread Mechanism",
+          "description": "Effectiveness of spread management",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "volatility-controls",
+          "name": "Volatility Controls",
+          "description": "Quality of volatility control mechanisms",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "security-measures",
+      "name": "Security Measures",
+      "description": "Evaluation of DEX security measures",
+      "metrics": [
+        {
+          "id": "smart-contract",
+          "name": "Smart Contract Security",
+          "description": "Quality of smart contract security",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "front-running",
+          "name": "Front-running Protection",
+          "description": "Effectiveness of front-running protection",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "emergency-measures",
+          "name": "Emergency Measures",
+          "description": "Quality of emergency response mechanisms",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

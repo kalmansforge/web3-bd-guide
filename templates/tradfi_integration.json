@@ -1,0 +1,134 @@
+{
+  "id": "tradfi-integration",
+  "name": "TradFi Integration",
+  "description": "Evaluation template for traditional finance integration and bridging solutions in Web3",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "institution-integration",
+      "name": "Institutional Integration",
+      "description": "Evaluation of institutional integration capabilities",
+      "metrics": [
+        {
+          "id": "compliance-framework",
+          "name": "Compliance Framework",
+          "description": "Robustness of compliance framework",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "reporting-systems",
+          "name": "Reporting Systems",
+          "description": "Quality of reporting systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "audit-systems",
+          "name": "Audit Systems",
+          "description": "Completeness of audit systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "market-bridging",
+      "name": "Market Bridging",
+      "description": "Evaluation of traditional and crypto market bridging",
+      "metrics": [
+        {
+          "id": "price-oracle",
+          "name": "Price Oracle",
+          "description": "Quality of price oracle implementation",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "liquidity-bridges",
+          "name": "Liquidity Bridges",
+          "description": "Effectiveness of liquidity bridges",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "settlement-systems",
+          "name": "Settlement Systems",
+          "description": "Efficiency of settlement systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "risk-management",
+      "name": "Risk Management",
+      "description": "Evaluation of risk management systems",
+      "metrics": [
+        {
+          "id": "counterparty-protection",
+          "name": "Counterparty Protection",
+          "description": "Quality of counterparty protection mechanisms",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "market-risk-controls",
+          "name": "Market Risk Controls",
+          "description": "Effectiveness of market risk controls",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "regulatory-compliance",
+          "name": "Regulatory Compliance",
+          "description": "Completeness of regulatory compliance",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "integration-tools",
+      "name": "Integration Tools",
+      "description": "Evaluation of integration tools and APIs",
+      "metrics": [
+        {
+          "id": "api-design",
+          "name": "API Design",
+          "description": "Quality of API design and documentation",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "data-consistency",
+          "name": "Data Consistency",
+          "description": "Quality of data consistency mechanisms",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "integration-flexibility",
+          "name": "Integration Flexibility",
+          "description": "Flexibility of integration options",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 

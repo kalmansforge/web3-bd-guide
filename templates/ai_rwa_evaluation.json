@@ -1,0 +1,134 @@
+{
+  "id": "ai-rwa-evaluation",
+  "name": "AI-Powered RWA Management",
+  "description": "Evaluation template for AI applications in Real World Assets tokenization, valuation, and management",
+  "author": "Web3 BD Team",
+  "createdAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "asset-tokenization",
+      "name": "Asset Tokenization",
+      "description": "Evaluation of AI in asset tokenization process",
+      "metrics": [
+        {
+          "id": "valuation-accuracy",
+          "name": "Valuation Accuracy",
+          "description": "Accuracy of AI-driven asset valuation",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "tokenization-efficiency",
+          "name": "Tokenization Efficiency",
+          "description": "Efficiency of tokenization process",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "asset-verification",
+          "name": "Asset Verification",
+          "description": "Quality of asset verification process",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "market-liquidity",
+      "name": "Market Liquidity",
+      "description": "Evaluation of AI in managing RWA market liquidity",
+      "metrics": [
+        {
+          "id": "liquidity-prediction",
+          "name": "Liquidity Prediction",
+          "description": "Accuracy of liquidity predictions",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "market-making",
+          "name": "Market Making",
+          "description": "Effectiveness of AI market making",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "price-stability",
+          "name": "Price Stability",
+          "description": "Effectiveness in maintaining price stability",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "compliance-monitoring",
+      "name": "Compliance Monitoring",
+      "description": "Evaluation of AI in RWA compliance and monitoring",
+      "metrics": [
+        {
+          "id": "regulatory-compliance",
+          "name": "Regulatory Compliance",
+          "description": "Quality of regulatory compliance monitoring",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "asset-tracking",
+          "name": "Asset Tracking",
+          "description": "Effectiveness of asset tracking systems",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "reporting-automation",
+          "name": "Reporting Automation",
+          "description": "Quality of automated reporting",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    {
+      "id": "risk-assessment",
+      "name": "Risk Assessment",
+      "description": "Evaluation of AI in RWA risk assessment",
+      "metrics": [
+        {
+          "id": "credit-risk",
+          "name": "Credit Risk",
+          "description": "Quality of credit risk assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "market-risk",
+          "name": "Market Risk",
+          "description": "Effectiveness of market risk assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "operational-risk",
+          "name": "Operational Risk",
+          "description": "Quality of operational risk assessment",
+          "type": "scale",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    }
+  ]
+} 
