@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, Filter, MessageSquare } from "lucide-react";
@@ -81,7 +80,9 @@ const MetricsGuide = () => {
     
     if (thresholdsLoading || !thresholds.length) {
       const metric = category.metrics.find(m => m.id === metricId);
-      return metric?.thresholds[tier] || "No threshold defined";
+      return (metric?.thresholds && metric.thresholds[tier] !== undefined)
+        ? metric.thresholds[tier]
+        : "No threshold defined";
     }
     
     const threshold = thresholds.find(
@@ -93,7 +94,9 @@ const MetricsGuide = () => {
     }
     
     const metric = category.metrics.find(m => m.id === metricId);
-    return metric?.thresholds[tier] || "No threshold defined";
+    return (metric?.thresholds && metric.thresholds[tier] !== undefined)
+      ? metric.thresholds[tier]
+      : "No threshold defined";
   };
 
   return (

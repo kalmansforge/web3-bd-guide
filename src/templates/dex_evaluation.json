@@ -1,132 +1,343 @@
 {
   "id": "dex-evaluation",
   "name": "DEX Evaluation",
-  "description": "Evaluation template for Decentralized Exchanges, focusing on trading, liquidity, and market making",
-  "author": "Web3 BD Team",
+  "description": "Comprehensive evaluation template for Decentralized Exchanges, focusing on trading mechanics, liquidity management, and security measures",
+  "author": "Shai Perednik",
   "createdAt": "2024-03-20T00:00:00.000Z",
-  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [
     {
       "id": "trading-mechanics",
       "name": "Trading Mechanics",
-      "description": "Evaluation of trading mechanics and execution",
+      "description": "Evaluation of trading mechanics, execution efficiency, and user experience",
       "metrics": [
         {
           "id": "order-types",
           "name": "Order Types",
-          "description": "Variety and functionality of order types",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Variety and functionality of order types (market, limit, stop-loss, etc.)",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Supports advanced order types beyond basic swaps, including limit orders, stop-loss, trailing orders, and batch execution with low failure rates",
+            "T1": "Supports basic market swaps and at least one advanced order type like limit orders"
+          },
+          "tools": [
+            "Order Type Analysis",
+            "User Flow Testing",
+            "Transaction Success Rate Monitoring"
+          ]
         },
         {
           "id": "execution-speed",
           "name": "Execution Speed",
-          "description": "Speed and efficiency of trade execution",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Speed and efficiency of trade execution with minimal slippage",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Transaction finality under 5 seconds with optimized gas usage and MEV protection; maintains execution quality under high load",
+            "T1": "Transaction finality under 30 seconds with reasonable gas efficiency and basic MEV protection"
+          },
+          "tools": [
+            "Transaction Time Analysis",
+            "Gas Optimization Testing",
+            "Slippage Measurement"
+          ]
         },
         {
           "id": "price-impact",
           "name": "Price Impact",
-          "description": "Effectiveness in minimizing price impact",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Effectiveness in minimizing price impact and slippage for trades",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Less than 0.5% slippage on $10K trades for major pairs; implements dynamic slippage protection and accurate price oracles",
+            "T1": "Less than 1% slippage on $10K trades for major pairs; implements basic slippage protection"
+          },
+          "tools": [
+            "Slippage Analysis",
+            "Trade Size Impact Testing",
+            "Price Comparison Across Venues"
+          ]
+        },
+        {
+          "id": "user-experience",
+          "name": "User Experience",
+          "description": "Quality of interface, information display, and overall user journey",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Intuitive interface with advanced features like transaction preview, gas estimates, price charts, and wallet integration; supports mobile and desktop",
+            "T1": "Clear interface with basic swap functionality and transaction information; reasonable loading times"
+          },
+          "tools": [
+            "UI/UX Testing",
+            "User Feedback Analysis",
+            "Usability Scoring"
+          ]
         }
       ]
     },
     {
       "id": "liquidity-management",
       "name": "Liquidity Management",
-      "description": "Evaluation of DEX liquidity management",
+      "description": "Evaluation of DEX liquidity depth, efficiency and incentive mechanisms",
       "metrics": [
         {
           "id": "pool-design",
           "name": "Pool Design",
-          "description": "Quality of liquidity pool design",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality and efficiency of liquidity pool architecture and capital efficiency",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Implements concentrated liquidity positions or other capital-efficient designs; supports multiple pool types with optimized price curves for different asset classes",
+            "T1": "Basic AMM design with reasonable capital efficiency; single pool type with standard price curves"
+          },
+          "tools": [
+            "Capital Efficiency Calculation",
+            "Pool Parameter Analysis",
+            "Liquidity Utilization Metrics"
+          ]
         },
         {
           "id": "liquidity-incentives",
           "name": "Liquidity Incentives",
-          "description": "Effectiveness of liquidity incentives",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Effectiveness and sustainability of liquidity provider incentives",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Sophisticated incentive mechanisms with sustainable tokenomics; LP profitability even without external rewards; dynamic fee tiers based on volatility",
+            "T1": "Basic incentive system with LP fee sharing; moderate reliance on external incentives for liquidity"
+          },
+          "tools": [
+            "LP Profitability Analysis",
+            "Incentive Sustainability Assessment",
+            "Fee Comparison Framework"
+          ]
         },
         {
           "id": "impermanent-loss",
-          "name": "Impermanent Loss",
-          "description": "Effectiveness in managing impermanent loss",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "IL Protection",
+          "description": "Effectiveness in managing impermanent loss and loss vs. rebalancing (LVR)",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Implements oracle-based pricing or other advanced IL mitigation; provides tools for active liquidity management; minimal LVR for LPs",
+            "T1": "Basic IL exposure with some mitigation tools; reasonable LVR compared to industry standards"
+          },
+          "tools": [
+            "IL Simulation",
+            "Historical LP Returns Analysis",
+            "LVR Calculation Methodology"
+          ]
+        },
+        {
+          "id": "liquidity-depth",
+          "name": "Liquidity Depth",
+          "description": "Depth and breadth of liquidity across different trading pairs",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Deep liquidity for major pairs (>$10M) and reasonable depth for mid/long-tail assets; effective routing across liquidity sources",
+            "T1": "Sufficient liquidity for major pairs (>$1M) with some support for mid-tier assets"
+          },
+          "tools": [
+            "Liquidity Depth Metrics",
+            "Asset Coverage Analysis",
+            "Cross-DEX Comparison"
+          ]
         }
       ]
     },
     {
       "id": "market-making",
-      "name": "Market Making",
-      "description": "Evaluation of market making mechanisms",
+      "name": "Market Making & Price Discovery",
+      "description": "Evaluation of market making mechanisms and price discovery efficiency",
       "metrics": [
         {
           "id": "price-oracle",
-          "name": "Price Oracle",
-          "description": "Quality of price oracle implementation",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Price Oracle Integration",
+          "description": "Quality and reliability of price oracle implementation",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Implements multiple high-quality oracles with fallback mechanisms; price feeds update frequently with minimal lag; oracle manipulation protection",
+            "T1": "Uses at least one reliable oracle source; reasonable price update frequency; basic manipulation resistance"
+          },
+          "tools": [
+            "Oracle Reliability Testing",
+            "Price Feed Latency Analysis",
+            "Oracle Manipulation Resistance Assessment"
+          ]
         },
         {
           "id": "spread-mechanism",
-          "name": "Spread Mechanism",
-          "description": "Effectiveness of spread management",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Spread & Fee Mechanism",
+          "description": "Effectiveness of spread management and fee structure",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Dynamic fee tiers based on volatility and liquidity; competitive spreads compared to CEXs; efficient fee distribution model",
+            "T1": "Multiple fee tiers for different asset categories; reasonable spreads for major pairs"
+          },
+          "tools": [
+            "Spread Analysis Tools",
+            "Fee Comparison Framework",
+            "Volatility-Based Fee Assessment"
+          ]
         },
         {
           "id": "volatility-controls",
           "name": "Volatility Controls",
-          "description": "Quality of volatility control mechanisms",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality of mechanisms to handle market volatility",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Implements circuit breakers or other volatility protection; batch auctions or other price smoothing mechanisms; effective during extreme market conditions",
+            "T1": "Basic volatility handling with slippage protection; reasonable performance during moderate market fluctuations"
+          },
+          "tools": [
+            "Volatility Response Testing",
+            "Historical Event Analysis",
+            "Flash Crash Simulation"
+          ]
+        },
+        {
+          "id": "arbitrage-efficiency",
+          "name": "Arbitrage Efficiency",
+          "description": "How effectively arbitrage opportunities are captured to maintain price alignment",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Price closely tracks broader market with minimal deviations; efficient arbitrage mechanisms that benefit the protocol/LPs rather than extracting value",
+            "T1": "Reasonable price alignment with other venues; standard arbitrage mechanisms without excessive extraction"
+          },
+          "tools": [
+            "Cross-Exchange Price Deviation Analysis",
+            "Arbitrage Opportunity Tracking",
+            "Value Retention Metrics"
+          ]
         }
       ]
     },
     {
       "id": "security-measures",
-      "name": "Security Measures",
-      "description": "Evaluation of DEX security measures",
+      "name": "Security & Risk Management",
+      "description": "Evaluation of DEX security measures and risk management",
       "metrics": [
         {
           "id": "smart-contract",
           "name": "Smart Contract Security",
-          "description": "Quality of smart contract security",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality of smart contract development and security practices",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Multiple professional audits with remediated findings; formal verification where applicable; bug bounty program with significant rewards; clean security track record",
+            "T1": "At least one professional audit with addressed critical findings; modest bug bounty program; reasonable security history"
+          },
+          "tools": [
+            "Audit Report Analysis",
+            "Code Quality Assessment",
+            "Security History Evaluation"
+          ]
         },
         {
           "id": "front-running",
-          "name": "Front-running Protection",
-          "description": "Effectiveness of front-running protection",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "MEV Protection",
+          "description": "Effectiveness of measures against front-running and other MEV attacks",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Implements multiple MEV protection layers (private RPC, batch auctions, etc.); minimal value extraction measured; user-facing transparency about MEV protection",
+            "T1": "Basic MEV protection measures; reasonable levels of value extraction compared to industry standards"
+          },
+          "tools": [
+            "MEV Measurement Framework",
+            "Transaction Privacy Assessment",
+            "Sandwich Attack Testing"
+          ]
         },
         {
           "id": "emergency-measures",
-          "name": "Emergency Measures",
+          "name": "Emergency Response",
           "description": "Quality of emergency response mechanisms",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "importance": "High",
+          "thresholds": {
+            "T0": "Comprehensive emergency protocols with multiple safeguards; emergency pause functionality with decentralized governance; demonstrated effective incident response",
+            "T1": "Basic emergency procedures; ability to respond to critical incidents; some governance involvement in emergencies"
+          },
+          "tools": [
+            "Incident Response Plan Review",
+            "Emergency Simulation Testing",
+            "Governance Structure Analysis"
+          ]
+        },
+        {
+          "id": "regulatory-compliance",
+          "name": "Regulatory Approach",
+          "description": "Approach to regulatory compliance and risk management",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Proactive compliance strategy considering multiple jurisdictions; transparent AML/KYC approach where needed; active monitoring of regulatory developments",
+            "T1": "Basic awareness of regulatory risks; some measures to mitigate regulatory exposure; transparency about compliance approach"
+          },
+          "tools": [
+            "Regulatory Framework Assessment",
+            "Compliance Documentation Review",
+            "Legal Risk Analysis"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "innovation-scalability",
+      "name": "Innovation & Scalability",
+      "description": "Evaluation of technical innovation and scalability",
+      "metrics": [
+        {
+          "id": "cross-chain",
+          "name": "Cross-Chain Functionality",
+          "description": "Quality of cross-chain trading and liquidity support",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Seamless cross-chain trading with minimal friction; integrated bridge functionality; unified liquidity across chains; competitive cross-chain fees",
+            "T1": "Basic cross-chain support for major networks; reasonable bridge integration; separate liquidity pools across chains"
+          },
+          "tools": [
+            "Cross-Chain UX Assessment",
+            "Bridge Security Evaluation",
+            "Multi-Chain Transaction Analysis"
+          ]
+        },
+        {
+          "id": "protocol-efficiency",
+          "name": "Protocol Efficiency",
+          "description": "Gas efficiency and overall protocol performance",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Highly optimized gas usage; layer 2 or other scaling solution implementation; efficient batching mechanisms; minimal costs for users",
+            "T1": "Reasonable gas optimization; some scaling solutions; moderate transaction costs compared to competitors"
+          },
+          "tools": [
+            "Gas Cost Analysis",
+            "Protocol Benchmarking",
+            "Scaling Solution Assessment"
+          ]
+        },
+        {
+          "id": "innovation-score",
+          "name": "Innovation Score",
+          "description": "Level of technical innovation and novel mechanisms",
+          "importance": "Low",
+          "thresholds": {
+            "T0": "Pioneering new DEX mechanisms with significant improvements over existing solutions; research-backed innovations with clear benefits",
+            "T1": "Incremental improvements on existing DEX designs; some novel features that enhance user experience"
+          },
+          "tools": [
+            "Innovation Assessment Framework",
+            "Technical Differentiation Analysis",
+            "Market Impact Evaluation"
+          ]
+        },
+        {
+          "id": "composability",
+          "name": "Composability",
+          "description": "How well the DEX integrates with other DeFi protocols",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Extensive integration with major DeFi protocols; well-documented APIs; active developer ecosystem building on top of the protocol",
+            "T1": "Basic integrations with some DeFi protocols; sufficient documentation; some third-party development"
+          },
+          "tools": [
+            "Integration Ecosystem Mapping",
+            "API Documentation Review",
+            "Developer Activity Assessment"
+          ]
         }
       ]
     }

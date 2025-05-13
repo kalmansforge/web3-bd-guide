@@ -1,132 +1,276 @@
 {
   "id": "tradfi-integration",
   "name": "TradFi Integration",
-  "description": "Evaluation template for traditional finance integration and bridging solutions in Web3",
-  "author": "Web3 BD Team",
+  "description": "Comprehensive evaluation template for traditional finance integration and bridging solutions in Web3",
+  "author": "Shai Perednik",
   "createdAt": "2024-03-20T00:00:00.000Z",
-  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [
     {
       "id": "institution-integration",
       "name": "Institutional Integration",
-      "description": "Evaluation of institutional integration capabilities",
+      "description": "Evaluation of institutional integration capabilities and compliance frameworks",
       "metrics": [
         {
           "id": "compliance-framework",
           "name": "Compliance Framework",
-          "description": "Robustness of compliance framework",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Robustness of compliance framework for institutional requirements",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Comprehensive compliance system with automated KYC/AML, sanctions screening, transaction monitoring; jurisdiction-specific rule enforcement; audit trails for all activities; integration with major compliance vendors; attestation from recognized authorities",
+            "T1": "Basic compliance framework with standard KYC/AML processes; manual monitoring of high-risk transactions; essential record-keeping; some regulatory recognition"
+          },
+          "tools": [
+            "Compliance Feature Assessment",
+            "Regulatory Coverage Analysis",
+            "Audit Trail Verification"
+          ]
         },
         {
           "id": "reporting-systems",
           "name": "Reporting Systems",
-          "description": "Quality of reporting systems",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality and comprehensiveness of financial reporting systems for institutions",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Real-time reporting with customizable dashboards; automated generation of regulatory reports (FINRA, SEC, etc.); tax reporting integration; reconciliation with traditional accounting systems; data exportable in multiple formats",
+            "T1": "Basic periodic reporting; manual export of transaction data; standard financial statements; minimal integration with accounting systems"
+          },
+          "tools": [
+            "Reporting Functionality Testing",
+            "Regulatory Report Compliance Check",
+            "Data Format Compatibility Analysis"
+          ]
         },
         {
           "id": "audit-systems",
           "name": "Audit Systems",
-          "description": "Completeness of audit systems",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Completeness and transparency of audit systems for institutional requirements",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Immutable audit logs for all activities; cryptographic proof of transaction history; third-party validator access; automated anomaly detection; SOC 2 Type II certification or equivalent; support for big four auditor requirements",
+            "T1": "Basic transaction logging; verifiable history of major activities; manual audit processes; some external validator support"
+          },
+          "tools": [
+            "Audit Log Integrity Testing",
+            "Certification Verification",
+            "External Auditor Compatibility Assessment"
+          ]
+        },
+        {
+          "id": "custody-solutions",
+          "name": "Institutional Custody",
+          "description": "Quality of custody solutions for institutional asset management",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Multi-signature and/or MPC wallet infrastructure; hardware security module integration; insurance coverage; segregated accounts; cold storage options with governance controls; key recovery mechanisms; 24/7 monitoring",
+            "T1": "Basic secure custody with multi-signature support; some insurance coverage; standardized key management protocols; regular security audits"
+          },
+          "tools": [
+            "Custody Security Assessment",
+            "Insurance Coverage Analysis",
+            "Key Management Protocol Evaluation"
+          ]
         }
       ]
     },
     {
       "id": "market-bridging",
       "name": "Market Bridging",
-      "description": "Evaluation of traditional and crypto market bridging",
+      "description": "Evaluation of traditional and crypto market bridging technologies and mechanisms",
       "metrics": [
         {
           "id": "price-oracle",
-          "name": "Price Oracle",
-          "description": "Quality of price oracle implementation",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Price Oracle Integration",
+          "description": "Quality of price oracle implementation for cross-market price discovery",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Integration with multiple institutional-grade price feeds (Bloomberg, Reuters, etc.); decentralized oracle redundancy; outlier detection; manipulative resistance; sub-second price updates; 99.9%+ uptime; historical price archive",
+            "T1": "Integration with at least one reliable price feed; basic oracle implementation; reasonable price update frequency; anomaly detection mechanisms"
+          },
+          "tools": [
+            "Price Feed Accuracy Testing",
+            "Data Source Reliability Assessment",
+            "Oracle Manipulation Resistance Testing"
+          ]
         },
         {
           "id": "liquidity-bridges",
           "name": "Liquidity Bridges",
-          "description": "Effectiveness of liquidity bridges",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Effectiveness of liquidity bridges between traditional and crypto markets",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Seamless liquidity routing across traditional and crypto venues; integration with tier 1 banks; multiple fiat on/off ramps; automated liquidity management; deep reserve pools; cross-chain bridging; <15 min settlement",
+            "T1": "Basic liquidity connections with some banking partners; standard fiat on/off ramp capabilities; manual liquidity management; single-chain focus; reasonable settlement times"
+          },
+          "tools": [
+            "Liquidity Depth Analysis",
+            "Settlement Time Measurement",
+            "Banking Integration Assessment"
+          ]
         },
         {
           "id": "settlement-systems",
           "name": "Settlement Systems",
-          "description": "Efficiency of settlement systems",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Efficiency and reliability of cross-market settlement systems",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Atomic settlement or escrow-based guarantees; integration with traditional clearing houses; DVP (delivery versus payment) mechanisms; automated reconciliation; T+0 settlement capabilities; settlement finality guarantees",
+            "T1": "Basic settlement mechanisms with reasonable security; manual reconciliation processes; standard settlement timeframes; clear settlement documentation"
+          },
+          "tools": [
+            "Settlement Reliability Testing",
+            "Reconciliation Process Analysis",
+            "Integration Assessment with Traditional Systems"
+          ]
+        },
+        {
+          "id": "market-data-integration",
+          "name": "Market Data Integration",
+          "description": "Comprehensiveness of market data integration across traditional and crypto markets",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Consolidated data feeds combining traditional market data (equities, bonds, forex) with crypto markets; real-time correlation analysis; comprehensive historical data archive; advanced visualization tools; API access for algorithmic strategies",
+            "T1": "Basic market data from major markets; some cross-market data analysis capabilities; essential historical data; standard visualization options"
+          },
+          "tools": [
+            "Data Coverage Assessment",
+            "Cross-Market Analysis Capabilities",
+            "API Functionality Testing"
+          ]
         }
       ]
     },
     {
       "id": "risk-management",
       "name": "Risk Management",
-      "description": "Evaluation of risk management systems",
+      "description": "Evaluation of risk management systems for cross-market operations",
       "metrics": [
         {
           "id": "counterparty-protection",
-          "name": "Counterparty Protection",
-          "description": "Quality of counterparty protection mechanisms",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Counterparty Risk Protection",
+          "description": "Quality of counterparty protection mechanisms across traditional and crypto markets",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Comprehensive counterparty risk scoring system; real-time monitoring of exposure limits; automated risk mitigation actions; escrow mechanisms; credit risk modeling; insurance backstops; stress testing framework",
+            "T1": "Basic counterparty risk assessment; manual exposure monitoring; standard risk mitigation protocols; some insurance coverage"
+          },
+          "tools": [
+            "Risk Model Evaluation",
+            "Exposure Monitoring Assessment",
+            "Mitigation Protocol Testing"
+          ]
         },
         {
           "id": "market-risk-controls",
           "name": "Market Risk Controls",
-          "description": "Effectiveness of market risk controls",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Effectiveness of market risk controls for cross-market positions",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Real-time risk monitoring across all markets; VaR (Value at Risk) calculations; stress testing under extreme scenarios; automated circuit breakers; position limits enforcement; correlation risk monitoring; scenario analysis tools",
+            "T1": "Basic risk monitoring capabilities; standard position limits; manual circuit breakers; essential risk metrics tracking"
+          },
+          "tools": [
+            "Risk Control Mechanism Testing",
+            "Stress Test Scenario Analysis",
+            "Circuit Breaker Effectiveness Assessment"
+          ]
         },
         {
           "id": "regulatory-compliance",
-          "name": "Regulatory Compliance",
-          "description": "Completeness of regulatory compliance",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Cross-Border Regulatory Compliance",
+          "description": "Completeness of regulatory compliance across multiple jurisdictions",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Multi-jurisdictional compliance framework covering US, EU, UK, Singapore, etc.; automated regulatory updates; jurisdiction-specific reporting; legal opinions for major markets; proactive regulatory engagement",
+            "T1": "Compliance with regulations in primary operating jurisdictions; manual regulatory updates; basic cross-border consideration; standard legal documentation"
+          },
+          "tools": [
+            "Jurisdictional Coverage Assessment",
+            "Regulatory Update Process Evaluation",
+            "Legal Documentation Review"
+          ]
+        },
+        {
+          "id": "operational-resilience",
+          "name": "Operational Resilience",
+          "description": "Robustness of operational infrastructure across traditional and crypto systems",
+          "importance": "High",
+          "thresholds": {
+            "T0": "99.99%+ uptime; geographically distributed redundant systems; real-time failover capabilities; comprehensive BCP/DR plans; regular simulation testing; independent security audits; incident response team",
+            "T1": "Reasonable uptime (>99.5%); basic redundancy systems; documented recovery procedures; periodic security reviews; designated incident handlers"
+          },
+          "tools": [
+            "System Reliability Metrics Analysis",
+            "Disaster Recovery Testing",
+            "Security Audit Review"
+          ]
         }
       ]
     },
     {
       "id": "integration-tools",
       "name": "Integration Tools",
-      "description": "Evaluation of integration tools and APIs",
+      "description": "Evaluation of integration tools, APIs and developer resources",
       "metrics": [
         {
           "id": "api-design",
-          "name": "API Design",
-          "description": "Quality of API design and documentation",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "API Design & Documentation",
+          "description": "Quality of API design and documentation for institutional integration",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Comprehensive REST and GraphQL APIs; financial industry standard endpoints (FIX protocol support); websocket for real-time data; extensive SDKs for multiple languages; detailed documentation with examples; sandbox environment",
+            "T1": "Basic REST API coverage; adequate documentation; support for at least two programming languages; testing environment available"
+          },
+          "tools": [
+            "API Functionality Testing",
+            "Documentation Completeness Review",
+            "Developer Experience Assessment"
+          ]
         },
         {
           "id": "data-consistency",
           "name": "Data Consistency",
-          "description": "Quality of data consistency mechanisms",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality of data consistency mechanisms between traditional and blockchain systems",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Atomic consistency guarantees; cryptographic proof of data integrity; real-time reconciliation systems; comprehensive audit trails; data versioning; ACID transaction properties where applicable",
+            "T1": "Basic data consistency checks; periodic reconciliation processes; transaction logs; reasonable data integrity measures"
+          },
+          "tools": [
+            "Data Integrity Testing",
+            "Reconciliation System Evaluation",
+            "Transaction Consistency Analysis"
+          ]
         },
         {
           "id": "integration-flexibility",
           "name": "Integration Flexibility",
-          "description": "Flexibility of integration options",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Flexibility of integration options for varied institutional needs",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Multiple integration pathways (API, SDK, white-label, embedded); customization options for UI/UX; brand white-labeling capabilities; role-based access control; enterprise SSO support; modular feature selection",
+            "T1": "Standard API integration path; some customization options; basic access control; reasonable adaptation to institutional requirements"
+          },
+          "tools": [
+            "Integration Pathway Analysis",
+            "Customization Options Assessment",
+            "Enterprise Feature Evaluation"
+          ]
+        },
+        {
+          "id": "enterprise-support",
+          "name": "Enterprise Support & SLAs",
+          "description": "Quality of enterprise support and service level agreements",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "24/7 dedicated support with <1 hour response time; comprehensive SLAs with financial penalties; dedicated account managers; on-site implementation support options; regular system health reports",
+            "T1": "Business hours support with reasonable response times; basic SLAs; designated support contacts; implementation documentation and assistance"
+          },
+          "tools": [
+            "Support Response Time Testing",
+            "SLA Terms Analysis",
+            "Client Satisfaction Assessment"
+          ]
         }
       ]
     }

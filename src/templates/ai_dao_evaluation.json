@@ -1,20 +1,30 @@
 {
   "id": "ai-dao-evaluation",
   "name": "AI-Powered DAO & Governance",
-  "description": "Evaluation template for AI applications in DAO operations, governance, and decision-making",
-  "author": "Web3 BD Team",
+  "description": "Comprehensive evaluation template for AI applications in DAO operations, governance, and decision-making processes",
+  "author": "Shai Perednik",
   "createdAt": "2024-03-20T00:00:00.000Z",
-  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [
     {
       "id": "governance-ai",
       "name": "AI Governance Capabilities",
-      "description": "Evaluation of AI's role in governance and decision-making",
+      "description": "Evaluation of AI's role in governance and decision-making processes",
       "metrics": [
         {
           "id": "proposal-analysis",
           "name": "Proposal Analysis",
-          "description": "Quality of AI-driven proposal analysis",
+          "description": "Quality of AI-driven proposal analysis and impact assessment",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Advanced NLP-driven proposal analysis with multi-dimensional impact assessment; simulation of proposal outcomes under various conditions; detection of conflicts with existing governance; automatic identification of governance attack vectors; historical precedent analysis; visualization of expected outcomes",
+            "T1": "Basic AI-enhanced proposal analysis; simple impact assessment; identification of obvious conflicts with existing governance; minimal simulation capabilities"
+          },
+          "tools": [
+            "Proposal Simulation Framework",
+            "NLP Analysis Accuracy Testing",
+            "Impact Assessment Evaluation"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -22,7 +32,17 @@
         {
           "id": "voting-assistance",
           "name": "Voting Assistance",
-          "description": "Quality of AI assistance in voting decisions",
+          "description": "Quality of AI assistance in voting decisions and delegation",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Sophisticated AI voting recommendation system considering user values, historical preferences, and stake; personalized explanation of voting logic; automatic detection of vote manipulation; intelligent delegation suggestions based on alignment scores; real-time adaptation to changing governance landscape",
+            "T1": "Basic AI voting suggestions based on simple preference matching; standard explanation of voting options; basic delegation recommendations; reasonable adaptation to governance changes"
+          },
+          "tools": [
+            "Recommendation Accuracy Assessment",
+            "Preference Alignment Testing",
+            "Delegation Matching Analysis"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -30,7 +50,17 @@
         {
           "id": "consensus-building",
           "name": "Consensus Building",
-          "description": "Effectiveness in building consensus",
+          "description": "Effectiveness of AI in facilitating consensus and resolving governance conflicts",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Advanced AI-driven consensus mechanisms identifying minimal viable agreements; automated conflict resolution suggestions; identification of preference clusters among stakeholders; generation of compromise proposals; sentiment analysis during discussions; transparent facilitation of multi-stakeholder negotiations",
+            "T1": "Basic AI tools for identifying areas of agreement; simple conflict resolution suggestions; standard sentiment analysis; reasonable facilitation of discussions"
+          },
+          "tools": [
+            "Consensus Formation Metrics",
+            "Stakeholder Satisfaction Analysis",
+            "Conflict Resolution Effectiveness"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -40,12 +70,22 @@
     {
       "id": "resource-management",
       "name": "Resource Management",
-      "description": "Evaluation of AI in managing DAO resources",
+      "description": "Evaluation of AI in managing DAO resources and treasury operations",
       "metrics": [
         {
           "id": "treasury-management",
           "name": "Treasury Management",
-          "description": "Quality of AI-driven treasury management",
+          "description": "Quality of AI-driven treasury management and financial optimization",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "AI-powered dynamic treasury management with multi-scenario risk modeling; automated diversification strategies; real-time treasury optimization based on market conditions; on-chain and off-chain asset integration; predictive cash flow management; transparent reporting with anomaly detection",
+            "T1": "Basic AI treasury management tools; standard diversification approaches; periodic treasury optimization; conventional reporting mechanisms; reasonable risk assessment"
+          },
+          "tools": [
+            "Portfolio Optimization Testing",
+            "Risk Management Assessment",
+            "Treasury Performance Analysis"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -53,7 +93,17 @@
         {
           "id": "budget-allocation",
           "name": "Budget Allocation",
-          "description": "Effectiveness of budget allocation suggestions",
+          "description": "Effectiveness of AI-guided budget allocation and funding prioritization",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Advanced AI budget allocation system with impact prediction models; objective ROI assessment for proposals; quadratic funding optimization; automated detection of capital inefficiencies; dynamic reallocation based on milestone achievements; multi-factor scoring of funding requests",
+            "T1": "Basic AI-assisted budget allocation; standard ROI estimation; simple prioritization mechanisms; reasonable milestone tracking; conventional scoring of funding requests"
+          },
+          "tools": [
+            "Allocation Efficiency Analysis",
+            "Impact Prediction Testing",
+            "Prioritization Logic Assessment"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -61,7 +111,17 @@
         {
           "id": "resource-optimization",
           "name": "Resource Optimization",
-          "description": "Efficiency in resource utilization",
+          "description": "Efficiency of AI in optimizing non-financial DAO resources",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Comprehensive AI resource management across talent, time, and technical infrastructure; skill-to-task matching algorithms; predictive resource scaling; automated bottleneck identification; network-wide resource sharing protocols; efficient coordination of distributed teams",
+            "T1": "Basic AI resource management tools; standard skill matching; manual resource scaling with AI assistance; conventional coordination mechanisms"
+          },
+          "tools": [
+            "Resource Utilization Metrics",
+            "Bottleneck Detection Testing",
+            "Coordination Efficiency Evaluation"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -71,12 +131,22 @@
     {
       "id": "member-engagement",
       "name": "Member Engagement",
-      "description": "Evaluation of AI in managing member engagement",
+      "description": "Evaluation of AI in managing member engagement and contribution systems",
       "metrics": [
         {
           "id": "contribution-tracking",
           "name": "Contribution Tracking",
-          "description": "Quality of contribution tracking and rewards",
+          "description": "Quality of AI-driven contribution tracking and reward systems",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Advanced AI contribution tracking across on-chain and off-chain activities; sophisticated value attribution models; sybil-resistant reputation systems; proof-of-contribution verification; granular skill and expertise tracking; multi-dimensional contribution metrics; transparent reward distribution algorithms",
+            "T1": "Basic AI-enhanced contribution tracking; standard reputation systems; reasonable value attribution; conventional reward mechanisms; simple skill tracking"
+          },
+          "tools": [
+            "Attribution Accuracy Testing",
+            "Sybil Resistance Assessment",
+            "Reward Distribution Analysis"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -84,7 +154,17 @@
         {
           "id": "member-matching",
           "name": "Member Matching",
-          "description": "Effectiveness in matching members to tasks",
+          "description": "Effectiveness of AI in matching members to tasks and collaborative opportunities",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Sophisticated AI matching algorithms considering skills, interests, availability, and past collaborations; predictive team formation for optimal outcomes; cross-DAO talent discovery; intelligent task decomposition; proactive identification of collaboration opportunities; continuous learning from successful matches",
+            "T1": "Basic AI matching capabilities based on self-reported skills; standard team formation tools; manual task assignment with AI assistance; reactive identification of collaboration opportunities"
+          },
+          "tools": [
+            "Match Quality Assessment",
+            "Team Performance Analysis",
+            "Collaboration Efficiency Metrics"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -92,7 +172,17 @@
         {
           "id": "engagement-optimization",
           "name": "Engagement Optimization",
-          "description": "Quality of engagement optimization",
+          "description": "Quality of AI tools for optimizing member engagement and retention",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Advanced AI engagement systems with personalized interaction recommendations; churn prediction with preventative interventions; community health analytics; automated community-building initiatives; behavioral analysis for engagement optimization; multi-channel coordination; sentiment-aware communication",
+            "T1": "Basic AI engagement tools; standard churn prediction; simple community health metrics; conventional engagement initiatives; reasonable sentiment analysis"
+          },
+          "tools": [
+            "Engagement Metrics Analysis",
+            "Retention Rate Assessment",
+            "Community Health Evaluation"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -102,12 +192,22 @@
     {
       "id": "risk-compliance",
       "name": "Risk & Compliance",
-      "description": "Evaluation of AI in risk management and compliance",
+      "description": "Evaluation of AI in risk management and compliance for DAOs",
       "metrics": [
         {
           "id": "risk-detection",
           "name": "Risk Detection",
-          "description": "Quality of risk detection and assessment",
+          "description": "Quality of AI risk detection and assessment systems",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Advanced AI risk monitoring covering operational, financial, governance, and technical domains; real-time detection of attack vectors; sophisticated simulation of adverse scenarios; multi-agent system stress testing; governance exploit prediction; smart contract vulnerability detection; early warning system for ecosystem risks",
+            "T1": "Basic AI risk detection for major categories; standard simulation of common scenarios; conventional vulnerability assessments; reasonable warning systems for obvious risks"
+          },
+          "tools": [
+            "Risk Detection Accuracy Testing",
+            "Simulation Sophistication Analysis",
+            "Early Warning System Evaluation"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -115,7 +215,17 @@
         {
           "id": "compliance-monitoring",
           "name": "Compliance Monitoring",
-          "description": "Effectiveness of compliance monitoring",
+          "description": "Effectiveness of AI compliance monitoring and regulatory adaptation",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Comprehensive AI regulatory monitoring across global jurisdictions; automated compliance assessment for proposals; real-time regulatory change alerts with impact analysis; predictive compliance for emerging regulations; multi-jurisdictional legal entity optimization; compliance-aware proposal generation",
+            "T1": "Basic AI regulatory monitoring in main jurisdictions; standard compliance checks; manual regulatory change tracking with AI assistance; conventional compliance assessments"
+          },
+          "tools": [
+            "Regulatory Coverage Assessment",
+            "Compliance Accuracy Testing",
+            "Regulatory Change Response Analysis"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -123,7 +233,17 @@
         {
           "id": "fraud-prevention",
           "name": "Fraud Prevention",
-          "description": "Quality of fraud prevention measures",
+          "description": "Quality of AI-powered fraud prevention and security measures",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Advanced AI fraud detection with behavior-based analytics; coordinated attack identification; sophisticated anomaly detection for transaction patterns; governance manipulation protection; multi-signature workflow optimization; real-time alerting with automated intervention options; continuous adaptation to new attack vectors",
+            "T1": "Basic AI fraud detection; standard anomaly detection; reasonable protection against common attacks; conventional multi-signature processes; manual intervention with AI alerts"
+          },
+          "tools": [
+            "Attack Detection Rate Analysis",
+            "False Positive Measurement",
+            "Security Response Time Testing"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5

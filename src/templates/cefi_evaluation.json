@@ -1,132 +1,276 @@
 {
   "id": "cefi-evaluation",
   "name": "CeFi Evaluation",
-  "description": "Evaluation template for Centralized Finance platforms, focusing on trading, risk management, and compliance",
-  "author": "Web3 BD Team",
+  "description": "Comprehensive evaluation template for Centralized Finance platforms, focusing on trading infrastructure, risk management, compliance, and user experience",
+  "author": "Shai Perednik",
   "createdAt": "2024-03-20T00:00:00.000Z",
-  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [
     {
       "id": "trading-systems",
       "name": "Trading Systems",
-      "description": "Evaluation of trading system capabilities",
+      "description": "Evaluation of trading system capabilities, performance, and feature set",
       "metrics": [
         {
           "id": "order-matching",
-          "name": "Order Matching",
-          "description": "Quality of order matching engine",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Order Matching Engine",
+          "description": "Quality and performance of the order matching engine",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "High-performance matching engine with sub-millisecond latency; capable of handling >100,000 orders per second; robust during market volatility; microservice architecture with redundancy; zero downtime upgrades",
+            "T1": "Standard matching engine with reasonable latency (<10ms); capable of handling >10,000 orders per second; stable under normal market conditions; planned maintenance windows with minimal disruption"
+          },
+          "tools": [
+            "Performance Benchmarking",
+            "Load Testing",
+            "Latency Analysis"
+          ]
         },
         {
           "id": "execution-quality",
           "name": "Execution Quality",
-          "description": "Quality of trade execution",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality and reliability of trade execution",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Minimal slippage on market orders; tight spreads for major trading pairs; smart order routing for best execution; transparent fee structure; order execution logs accessible to users; verified time-stamping of orders",
+            "T1": "Reasonable slippage levels; competitive spreads for major pairs; standard fee structure; basic order history available to users"
+          },
+          "tools": [
+            "Slippage Measurement",
+            "Execution Speed Analysis",
+            "Spread Monitoring"
+          ]
         },
         {
           "id": "trading-features",
-          "name": "Trading Features",
-          "description": "Completeness of trading features",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Trading Features & Order Types",
+          "description": "Comprehensiveness of trading features and order types",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Comprehensive suite of order types (market, limit, stop, OCO, trailing stop, etc.); advanced charting with multiple timeframes and indicators; trading bots and API access; conditional orders; algorithmic trading capabilities; mobile trading app with full feature parity",
+            "T1": "Standard order types (market, limit, stop); basic charting functionality; REST API access; mobile trading application with core features"
+          },
+          "tools": [
+            "Feature Comparison Analysis",
+            "API Capability Testing",
+            "Mobile App Evaluation"
+          ]
+        },
+        {
+          "id": "market-coverage",
+          "name": "Market Coverage & Liquidity",
+          "description": "Breadth of market coverage and liquidity depth",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Wide range of trading pairs covering major cryptocurrencies, altcoins, and fiat currencies; deep liquidity across all major pairs; professional market makers; minimal spread even for large orders; institutional-grade liquidity pools",
+            "T1": "Coverage of major cryptocurrencies and some altcoins; reasonable liquidity for major pairs; manageable spreads for standard order sizes"
+          },
+          "tools": [
+            "Liquidity Depth Analysis",
+            "Trading Pair Coverage Assessment",
+            "Order Book Thickness Evaluation"
+          ]
         }
       ]
     },
     {
       "id": "risk-control",
-      "name": "Risk Control",
-      "description": "Evaluation of risk control systems",
+      "name": "Risk Management",
+      "description": "Evaluation of risk control systems and practices for position and market risk",
       "metrics": [
         {
           "id": "position-monitoring",
-          "name": "Position Monitoring",
-          "description": "Quality of position monitoring systems",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Position & Exposure Monitoring",
+          "description": "Quality of position monitoring and exposure management systems",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Real-time position monitoring across all accounts; automated risk alerts; comprehensive dashboards for risk team; stress testing capabilities; what-if scenario analysis; customer position limits enforced automatically; cross-collateral visibility",
+            "T1": "Near real-time position tracking; basic risk alerts; standard position reporting; customer position limits in place"
+          },
+          "tools": [
+            "Position Tracking Lag Analysis",
+            "Risk Alert System Testing",
+            "Stress Test Capability Assessment"
+          ]
         },
         {
           "id": "margin-systems",
-          "name": "Margin Systems",
-          "description": "Effectiveness of margin management",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Margin & Collateral Management",
+          "description": "Effectiveness of margin management and liquidation processes",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Sophisticated cross-asset margin system; real-time margin calculation; tiered liquidation process with notifications; auto-deleveraging during extreme volatility; insurance fund for socialized losses; multiple collateral options; dynamic margin requirements based on market conditions",
+            "T1": "Standard isolated and cross-margin options; timely margin calculations; basic liquidation process with some user notifications; reasonable collateral options"
+          },
+          "tools": [
+            "Margin Calculation Accuracy",
+            "Liquidation Process Testing",
+            "Collateral Management Assessment"
+          ]
         },
         {
           "id": "risk-limits",
-          "name": "Risk Limits",
-          "description": "Quality of risk limit implementation",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Risk Limits & Controls",
+          "description": "Quality of risk limit implementation and controls",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Comprehensive risk limits at user, account, and platform levels; circuit breakers during extreme volatility; position and order size limits; rate limiting for API users; advanced fraud detection; multi-tier approval for large transactions; tailored limits based on user verification level",
+            "T1": "Basic risk limits in place; standard circuit breakers; order size limits; basic fraud monitoring; approval process for large withdrawals"
+          },
+          "tools": [
+            "Risk Control Framework Assessment",
+            "Limit Effectiveness Testing",
+            "Circuit Breaker Analysis"
+          ]
+        },
+        {
+          "id": "asset-security",
+          "name": "Asset Security & Cold Storage",
+          "description": "Quality of asset security measures and cold storage implementation",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": ">95% of assets in cold storage; multi-signature requirements for hot wallet transactions; hardware security modules (HSMs); geographically distributed key shards; comprehensive insurance coverage; regular third-party security audits; penetration testing; air-gapped signing devices",
+            "T1": ">80% of assets in cold storage; multi-signature wallets; basic insurance coverage; periodic security audits"
+          },
+          "tools": [
+            "Cold Storage Ratio Assessment",
+            "Security Protocol Evaluation",
+            "Insurance Coverage Analysis"
+          ]
         }
       ]
     },
     {
       "id": "compliance-systems",
-      "name": "Compliance Systems",
-      "description": "Evaluation of compliance and regulatory systems",
+      "name": "Compliance & Regulatory",
+      "description": "Evaluation of compliance systems, regulatory adherence, and governance",
       "metrics": [
         {
           "id": "kyc-aml",
-          "name": "KYC/AML",
-          "description": "Quality of KYC/AML processes",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "KYC/AML Framework",
+          "description": "Quality and effectiveness of KYC/AML processes",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Multi-tier KYC system with AI-enhanced verification; automated AML screening; transaction monitoring with machine learning for anomaly detection; integration with global sanctions lists; risk-based approach to customer due diligence; SAR filing automation; ongoing monitoring of existing customers",
+            "T1": "Standard KYC process with identity verification; basic AML screening; transaction monitoring for suspicious activities; manual review processes; compliance with major regulations"
+          },
+          "tools": [
+            "KYC Process Assessment",
+            "AML Framework Evaluation",
+            "Regulatory Compliance Audit"
+          ]
         },
         {
           "id": "transaction-monitoring",
-          "name": "Transaction Monitoring",
-          "description": "Effectiveness of transaction monitoring",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Transaction Monitoring & Surveillance",
+          "description": "Effectiveness of transaction monitoring and market surveillance",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Real-time transaction monitoring with behavioral analytics; market surveillance for wash trading and market manipulation; chain analysis integration; automated flagging of suspicious patterns; whitelisting capabilities; granular transaction controls; source of funds verification",
+            "T1": "Standard transaction monitoring; basic market surveillance; manual review of flagged transactions; transaction limits based on verification level"
+          },
+          "tools": [
+            "Monitoring System Evaluation",
+            "False Positive Rate Analysis",
+            "Detection Time Assessment"
+          ]
         },
         {
           "id": "regulatory-reporting",
-          "name": "Regulatory Reporting",
-          "description": "Quality of regulatory reporting",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Regulatory Reporting & Compliance",
+          "description": "Quality of regulatory reporting and overall compliance posture",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Automated regulatory reporting across multiple jurisdictions; dedicated compliance team with regulatory expertise; proactive engagement with regulators; regular compliance training for all staff; multiple licenses in key jurisdictions; comprehensive compliance policies; annual third-party compliance audits",
+            "T1": "Standard regulatory reporting capabilities; compliance team in place; basic staff training; required licenses obtained; documented compliance policies"
+          },
+          "tools": [
+            "Reporting Accuracy Assessment",
+            "Compliance Framework Evaluation",
+            "Regulatory License Review"
+          ]
+        },
+        {
+          "id": "governance-framework",
+          "name": "Governance & Operational Controls",
+          "description": "Quality of governance framework and operational controls",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Comprehensive governance structure with independent board oversight; clear separation of duties; multiple approval levels for critical operations; detailed audit trails for all sensitive actions; regular internal audits; strong whistleblower protections; transparent corporate structure",
+            "T1": "Basic governance framework; defined roles and responsibilities; audit trails for key actions; periodic internal reviews"
+          },
+          "tools": [
+            "Governance Assessment",
+            "Control Effectiveness Testing",
+            "Audit Trail Evaluation"
+          ]
         }
       ]
     },
     {
-      "id": "customer-service",
-      "name": "Customer Service",
-      "description": "Evaluation of customer service and support",
+      "id": "customer-experience",
+      "name": "Customer Experience",
+      "description": "Evaluation of customer service, platform usability, and educational resources",
       "metrics": [
         {
           "id": "support-channels",
-          "name": "Support Channels",
-          "description": "Quality and availability of support channels",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Support Channels & Availability",
+          "description": "Quality and availability of customer support channels",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "24/7 multi-channel support (live chat, email, phone); multiple language support; dedicated account managers for VIP clients; rapid response SLAs; AI-powered chat support for common issues; detailed knowledge base; tiered support system based on issue severity",
+            "T1": "Standard support hours with reasonable availability; email and ticket-based support; basic knowledge base; acceptable response times"
+          },
+          "tools": [
+            "Support Channel Assessment",
+            "Response Time Measurement",
+            "Language Support Evaluation"
+          ]
         },
         {
           "id": "response-time",
-          "name": "Response Time",
-          "description": "Speed of customer support response",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Response Time & Resolution Efficiency",
+          "description": "Speed and efficiency of customer support response and issue resolution",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "First response within minutes for critical issues; most issues resolved within 24 hours; escalation paths for complex issues; follow-up procedures; satisfaction surveys after resolution; performance metrics for support team; continuous improvement process",
+            "T1": "Reasonable first response times (within hours); most issues resolved within days; basic escalation process; standard performance tracking"
+          },
+          "tools": [
+            "Response Time Analysis",
+            "Resolution Time Measurement",
+            "Customer Satisfaction Tracking"
+          ]
         },
         {
-          "id": "issue-resolution",
-          "name": "Issue Resolution",
-          "description": "Effectiveness in resolving customer issues",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "platform-usability",
+          "name": "Platform Usability & Interface",
+          "description": "Quality of user interface and overall platform usability",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Intuitive interface for both beginners and advanced users; customizable workspace; mobile-responsive design; dark mode; accessibility features; minimal loading times; real-time data updates; intuitive navigation; comprehensive onboarding for new users",
+            "T1": "Clean interface with reasonable usability; standard mobile support; acceptable loading times; basic onboarding for new users"
+          },
+          "tools": [
+            "UI/UX Assessment",
+            "Mobile Responsiveness Testing",
+            "Loading Time Measurement"
+          ]
+        },
+        {
+          "id": "educational-resources",
+          "name": "Educational Resources & Transparency",
+          "description": "Quality and completeness of educational resources and transparency in operations",
+          "importance": "Low",
+          "thresholds": {
+            "T0": "Comprehensive educational content for all experience levels; trading guides and tutorials; webinars and live events; transparent fee structure; clear terms of service; proof of reserves; detailed documentation on platform operations; trading simulator for practice",
+            "T1": "Basic educational resources; standard documentation; reasonable transparency regarding fees and terms"
+          },
+          "tools": [
+            "Educational Content Assessment",
+            "Transparency Evaluation",
+            "Documentation Completeness Review"
+          ]
         }
       ]
     }

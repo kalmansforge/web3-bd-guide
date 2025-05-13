@@ -1,20 +1,30 @@
 {
   "id": "example-new-template",
   "name": "Dynamic Loading Example",
-  "description": "This template demonstrates the dynamic template loading capability.",
+  "description": "This template demonstrates the dynamic template loading capability and proper threshold format.",
   "author": "System",
   "createdAt": "2025-05-13T14:30:00.000Z",
-  "updatedAt": "2025-05-13T14:30:00.000Z",
+  "updatedAt": "2024-07-01T14:30:00.000Z",
   "categories": [
     {
       "id": "dynamic-loading",
       "name": "Dynamic Loading",
-      "description": "Tests the dynamic template loading capability",
+      "description": "Tests the dynamic template loading capability and proper threshold implementation",
       "metrics": [
         {
           "id": "auto-discovery",
           "name": "Auto Discovery",
-          "description": "Ability to automatically discover new templates",
+          "description": "Ability to automatically discover new templates and integrate them into the system",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Advanced auto-discovery with real-time detection of new templates; seamless integration without system restart; intelligent categorization of discovered templates; automatic validation against schema; notification system for new templates; version control for template updates",
+            "T1": "Basic auto-discovery mechanism; periodic scanning for new templates; standard integration requiring restart; manual categorization with some assistance; simple validation checks"
+          },
+          "tools": [
+            "Discovery Speed Testing",
+            "Integration Verification",
+            "Validation Accuracy Assessment"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -22,7 +32,17 @@
         {
           "id": "refresh-detection",
           "name": "Refresh Detection",
-          "description": "Ability to detect changes during application runtime",
+          "description": "Ability to detect changes during application runtime and update templates accordingly",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Sophisticated change detection with millisecond response time; differential update mechanism; automatic conflict resolution; graceful state management during updates; backward compatibility handling; multi-user synchronization; audit logging of all template changes",
+            "T1": "Standard change detection with reasonable response time; basic update mechanism; manual conflict resolution; stable state management; single-user focus; simple change logging"
+          },
+          "tools": [
+            "Detection Time Measurement",
+            "Update Efficiency Testing",
+            "Conflict Resolution Assessment"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5

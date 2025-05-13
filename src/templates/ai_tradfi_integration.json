@@ -1,132 +1,128 @@
 {
   "id": "ai-tradfi-integration",
   "name": "AI-Powered TradFi Integration",
-  "description": "Evaluation template for AI applications in traditional finance integration and bridging solutions",
-  "author": "Web3 BD Team",
+  "description": "Comprehensive evaluation template for AI applications in traditional finance integration with blockchain, focusing on risk assessment, fraud detection, automation, and market analysis",
+  "author": "Shai Perednik",
   "createdAt": "2024-03-20T00:00:00.000Z",
-  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [
     {
-      "id": "institution-integration",
-      "name": "Institutional Integration",
-      "description": "Evaluation of AI capabilities in institutional integration",
+      "id": "risk-assessment",
+      "name": "Risk Assessment & Management",
+      "description": "Evaluation of AI risk assessment models for traditional finance integration",
       "metrics": [
         {
-          "id": "compliance-automation",
-          "name": "Compliance Automation",
-          "description": "Level of AI-driven compliance automation",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "credit-risk-modeling",
+          "name": "Credit Risk Modeling",
+          "description": "Quality of AI credit risk assessment models and integration with blockchain-based validation",
+          "importance": "high",
+          "tools": ["Model validation tools", "Credit scoring APIs", "Historical data analysis"],
+          "thresholds": {
+            "T0": "Basic statistical models with limited integration to on-chain data; accuracy below 85%; no real-time updates",
+            "T1": "Advanced ML models with deep on-chain data integration; accuracy exceeding 90%; real-time risk reassessment capabilities"
+          }
         },
         {
-          "id": "reporting-automation",
-          "name": "Reporting Automation",
-          "description": "Quality of automated reporting systems",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "fraud-detection",
+          "name": "Fraud Detection Systems",
+          "description": "Effectiveness of AI fraud detection models across TradFi and blockchain environments",
+          "importance": "critical",
+          "tools": ["Anomaly detection tools", "Behavioral analytics", "Pattern recognition systems"],
+          "thresholds": {
+            "T0": "Rule-based detection with basic ML enhancement; 75-85% detection rate; high false positive rate (>10%)",
+            "T1": "Advanced deep learning models with cross-chain monitoring; >95% detection rate; low false positive rate (<5%)"
+          }
         },
         {
-          "id": "audit-trail",
-          "name": "Audit Trail",
-          "description": "Completeness and accuracy of audit trails",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "portfolio-optimization",
+          "name": "Portfolio Optimization",
+          "description": "Sophistication of AI portfolio management tools bridging traditional and digital assets",
+          "importance": "medium",
+          "tools": ["Portfolio analytics", "Market simulation tools", "Asset correlation analysis"],
+          "thresholds": {
+            "T0": "Basic mean-variance optimization; limited consideration of crypto-specific factors; manual rebalancing",
+            "T1": "Advanced multi-factor models with crypto-native risk factors; dynamic rebalancing; cross-asset correlation analysis"
+          }
         }
       ]
     },
     {
-      "id": "market-bridging",
-      "name": "Market Bridging",
-      "description": "Evaluation of AI in bridging traditional and crypto markets",
+      "id": "process-automation",
+      "name": "Process Automation",
+      "description": "Evaluation of AI automation capabilities for cross-platform financial processes",
       "metrics": [
         {
-          "id": "price-discovery",
-          "name": "Price Discovery",
-          "description": "Effectiveness of cross-market price discovery",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "kyc-aml-automation",
+          "name": "KYC/AML Automation",
+          "description": "Level of automation in KYC/AML processes spanning traditional and blockchain domains",
+          "importance": "high",
+          "tools": ["Identity verification APIs", "Compliance monitoring tools", "Document processing systems"],
+          "thresholds": {
+            "T0": "Semi-automated KYC with manual verification steps; basic blockchain address screening; 24-48 hour processing",
+            "T1": "Fully automated KYC with biometric verification; advanced blockchain analytics integration; <1 hour processing"
+          }
         },
         {
-          "id": "arbitrage-detection",
-          "name": "Arbitrage Detection",
-          "description": "Quality of arbitrage opportunity detection",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "document-processing",
+          "name": "Document & Contract Processing",
+          "description": "Quality of AI document processing and smart contract integration",
+          "importance": "medium",
+          "tools": ["OCR tools", "NLP analysis", "Smart contract interfaces"],
+          "thresholds": {
+            "T0": "Basic document OCR with template matching; limited smart contract parameter extraction; manual verification needed",
+            "T1": "Advanced NLP with semantic understanding; automated translation to smart contract parameters; minimal human oversight"
+          }
         },
         {
-          "id": "liquidity-matching",
-          "name": "Liquidity Matching",
-          "description": "Effectiveness in matching liquidity across markets",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "regulatory-reporting",
+          "name": "Regulatory Reporting",
+          "description": "Comprehensiveness of automated regulatory reporting across traditional and blockchain operations",
+          "importance": "high",
+          "tools": ["Regulatory compliance tools", "Reporting APIs", "Audit trail systems"],
+          "thresholds": {
+            "T0": "Basic report generation with manual oversight; limited blockchain transaction reporting; monthly update cycles",
+            "T1": "Fully automated multi-jurisdiction reporting; comprehensive on-chain transaction analysis; real-time compliance monitoring"
+          }
         }
       ]
     },
     {
-      "id": "risk-management",
-      "name": "Risk Management",
-      "description": "Evaluation of AI in managing cross-market risks",
+      "id": "market-analysis",
+      "name": "Market Analysis & Prediction",
+      "description": "Evaluation of AI market analysis capabilities across traditional and crypto markets",
       "metrics": [
         {
-          "id": "counterparty-risk",
-          "name": "Counterparty Risk",
-          "description": "Quality of counterparty risk assessment",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "cross-market-correlation",
+          "name": "Cross-Market Correlation Analysis",
+          "description": "Sophistication of AI models tracking correlations between traditional and crypto markets",
+          "importance": "high",
+          "tools": ["Statistical analysis tools", "Market data APIs", "Correlation models"],
+          "thresholds": {
+            "T0": "Basic linear correlation models; limited dataset; delayed analysis (daily/weekly); no regime change detection",
+            "T1": "Advanced non-linear models with machine learning; comprehensive multi-asset coverage; real-time analysis; regime change alerts"
+          }
         },
         {
-          "id": "market-risk",
-          "name": "Market Risk",
-          "description": "Effectiveness of market risk monitoring",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "sentiment-analysis",
+          "name": "Multi-Source Sentiment Analysis",
+          "description": "Quality of sentiment analysis from both traditional financial news and crypto-specific sources",
+          "importance": "medium",
+          "tools": ["NLP tools", "Social media APIs", "News aggregation services"],
+          "thresholds": {
+            "T0": "Basic keyword-based sentiment scoring; limited sources (<10); no cross-validation; daily updates",
+            "T1": "Advanced contextual NLP with entity recognition; diverse sources (50+); cross-validation mechanisms; real-time updates"
+          }
         },
         {
-          "id": "regulatory-risk",
-          "name": "Regulatory Risk",
-          "description": "Quality of regulatory risk assessment",
-          "type": "scale",
-          "min": 1,
-          "max": 5
-        }
-      ]
-    },
-    {
-      "id": "integration-tools",
-      "name": "Integration Tools",
-      "description": "Evaluation of AI-powered integration tools and APIs",
-      "metrics": [
-        {
-          "id": "api-automation",
-          "name": "API Automation",
-          "description": "Level of API integration automation",
-          "type": "scale",
-          "min": 1,
-          "max": 5
-        },
-        {
-          "id": "data-synchronization",
-          "name": "Data Synchronization",
-          "description": "Quality of cross-platform data sync",
-          "type": "scale",
-          "min": 1,
-          "max": 5
-        },
-        {
-          "id": "workflow-automation",
-          "name": "Workflow Automation",
-          "description": "Level of workflow automation",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "id": "arbitrage-identification",
+          "name": "Cross-Platform Arbitrage Identification",
+          "description": "Ability to identify and execute arbitrage opportunities between traditional and crypto markets",
+          "importance": "medium",
+          "tools": ["Arbitrage detection algorithms", "High-frequency trading tools", "Multi-exchange APIs"],
+          "thresholds": {
+            "T0": "Basic price comparison across major platforms; >1 second latency; limited to major assets; no execution capabilities",
+            "T1": "Advanced arbitrage modeling across diverse platforms; <100ms latency; coverage of long-tail assets; automated execution"
+          }
         }
       ]
     }

@@ -1,132 +1,343 @@
 {
   "id": "ai-dex-evaluation",
   "name": "AI-Powered DEX Evaluation",
-  "description": "Evaluation template for AI applications in Decentralized Exchanges, focusing on trading, liquidity, and market making",
-  "author": "Web3 BD Team",
+  "description": "Comprehensive evaluation template for AI applications in Decentralized Exchanges, focusing on trading optimization, liquidity management, market making, and security monitoring",
+  "author": "Shai Perednik",
   "createdAt": "2024-03-20T00:00:00.000Z",
-  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [
     {
       "id": "trading-optimization",
       "name": "Trading Optimization",
-      "description": "Evaluation of AI in optimizing trading strategies",
+      "description": "Evaluation of AI in optimizing trading routes, reducing slippage, and improving execution efficiency",
       "metrics": [
         {
           "id": "route-optimization",
           "name": "Route Optimization",
-          "description": "Quality of trading route optimization",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality of AI-driven trading route optimization across multiple liquidity sources",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Advanced multi-path routing across 10+ liquidity sources with dynamic rebalancing; predictive routing based on historical patterns; auto-adjusts for gas optimization; achieves <0.1% price improvement over standard routes",
+            "T1": "Basic intelligent routing across 3-5 liquidity sources; some gas optimization; achieves measurable price improvement over single-source routes"
+          },
+          "tools": [
+            "Route Comparison Analysis",
+            "Gas Optimization Measurement",
+            "Cross-DEX Price Improvement Testing"
+          ]
         },
         {
           "id": "slippage-reduction",
-          "name": "Slippage Reduction",
-          "description": "Effectiveness in reducing slippage",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Slippage Prediction & Reduction",
+          "description": "Effectiveness of AI in predicting and minimizing slippage during trades",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Predictive slippage modeling with >90% accuracy; dynamic slippage tolerance adjustment; splits orders intelligently to minimize impact; performs 30-50% better than static models in high volatility scenarios",
+            "T1": "Basic slippage prediction with >70% accuracy; static order splitting; performs measurably better than fixed slippage tolerance models"
+          },
+          "tools": [
+            "Slippage Prediction Accuracy Testing",
+            "High Volume Transaction Analysis",
+            "Volatility Response Measurement"
+          ]
         },
         {
           "id": "execution-speed",
-          "name": "Execution Speed",
-          "description": "Speed and efficiency of trade execution",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Execution Timing & Efficiency",
+          "description": "Speed, accuracy and efficiency of AI-driven trade execution decisions",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Advanced market timing based on volatility patterns; identifies optimal execution windows; sub-second decision making; proprietary execution algorithms that adapt to market conditions in real-time",
+            "T1": "Basic market timing based on recent price action; reasonable execution algorithms; adapts to obvious market conditions"
+          },
+          "tools": [
+            "Execution Timing Analysis",
+            "Market Condition Adaptation Testing",
+            "Time-to-Execution Measurement"
+          ]
+        },
+        {
+          "id": "mev-protection",
+          "name": "MEV Protection",
+          "description": "Effectiveness of AI systems in preventing MEV attacks (frontrunning, sandwiching, etc.)",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Multi-layered MEV protection with >95% effectiveness; predictive analysis of potential sandwich attacks; private transaction paths; transaction simulation before execution; batch auction mechanisms",
+            "T1": "Basic MEV protection strategies with >75% effectiveness; reasonable protection against common MEV vectors"
+          },
+          "tools": [
+            "MEV Vulnerability Assessment",
+            "Frontrunning Prevention Testing",
+            "Protection Effectiveness Measurement"
+          ]
         }
       ]
     },
     {
       "id": "liquidity-management",
       "name": "Liquidity Management",
-      "description": "Evaluation of AI in managing DEX liquidity",
+      "description": "Evaluation of AI in optimizing liquidity pools, reducing impermanent loss, and maximizing capital efficiency",
       "metrics": [
         {
           "id": "pool-optimization",
-          "name": "Pool Optimization",
-          "description": "Quality of liquidity pool optimization",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Pool Optimization & Rebalancing",
+          "description": "Quality of AI-driven liquidity pool optimization and rebalancing strategies",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Dynamic liquidity concentration with continuous rebalancing based on market conditions and volatility; predictive rebalancing before major price moves; capital efficiency 3-5x better than static pools",
+            "T1": "Basic liquidity concentration with periodic rebalancing; reacts to obvious market trends; improved capital efficiency over static pools"
+          },
+          "tools": [
+            "Capital Efficiency Measurement",
+            "Rebalancing Strategy Analysis",
+            "Liquidity Distribution Optimization"
+          ]
         },
         {
           "id": "liquidity-provision",
-          "name": "Liquidity Provision",
-          "description": "Effectiveness of liquidity provision strategies",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Intelligent Liquidity Provision",
+          "description": "Effectiveness of AI in strategically providing and placing liquidity for maximum returns",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Just-in-time (JIT) liquidity provision with sophisticated price prediction; automatically places liquidity in optimal ranges; uses oracle-guided pricing; adapts to market making opportunities in real-time",
+            "T1": "Basic liquidity provision strategies with some prediction capabilities; reasonable range placement; periodic adaptation to market conditions"
+          },
+          "tools": [
+            "JIT Liquidity Analysis",
+            "Fee Generation Measurement",
+            "Range Placement Optimization"
+          ]
         },
         {
           "id": "impermanent-loss",
-          "name": "Impermanent Loss",
-          "description": "Effectiveness in managing impermanent loss",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Impermanent Loss & LVR Mitigation",
+          "description": "Effectiveness of AI in managing impermanent loss and loss-vs-rebalancing (LVR)",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Advanced IL mitigation using oracle-based pricing; dynamic fee adjustment based on volatility; predictive portfolio rebalancing; reduces IL by >60% compared to passive strategies",
+            "T1": "Basic IL mitigation strategies; some volatility-based adjustments; reduces IL by >30% compared to passive strategies"
+          },
+          "tools": [
+            "Impermanent Loss Tracking",
+            "LVR Comparison Framework",
+            "Portfolio Rebalancing Analysis"
+          ]
+        },
+        {
+          "id": "yield-optimization",
+          "name": "Yield Optimization",
+          "description": "Effectiveness of AI in maximizing returns for liquidity providers",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Multi-strategy yield optimization across different fee tiers and pools; smart rebalancing based on fee generation patterns; outperforms passive LPs by >50% in risk-adjusted returns",
+            "T1": "Basic yield strategies focusing on fee generation; some rebalancing based on performance; outperforms passive LPs measurably"
+          },
+          "tools": [
+            "Risk-Adjusted Return Analysis",
+            "Fee Generation Tracking",
+            "Cross-Protocol Yield Comparison"
+          ]
         }
       ]
     },
     {
       "id": "market-making",
-      "name": "Market Making",
-      "description": "Evaluation of AI in market making strategies",
+      "name": "Market Making & Price Discovery",
+      "description": "Evaluation of AI in market making strategies, price discovery, and spread management",
       "metrics": [
         {
           "id": "price-discovery",
-          "name": "Price Discovery",
-          "description": "Quality of price discovery mechanisms",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Price Discovery & Oracle Integration",
+          "description": "Quality of AI-driven price discovery mechanisms and oracle integration",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Sophisticated price discovery using multiple high-quality oracles; weighted oracle aggregation with outlier detection; cross-chain price validation; price predictions with >90% accuracy; sub-second price updates",
+            "T1": "Basic price discovery using reliable oracles; simple aggregation; reasonable price updates and accuracy"
+          },
+          "tools": [
+            "Oracle Accuracy Testing",
+            "Price Prediction Measurement",
+            "Cross-Chain Price Comparison"
+          ]
         },
         {
           "id": "spread-management",
-          "name": "Spread Management",
-          "description": "Effectiveness in managing bid-ask spreads",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Dynamic Spread Management",
+          "description": "Effectiveness of AI in managing bid-ask spreads based on market conditions",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Advanced dynamic spread adjustments based on volatility, liquidity depth, and market sentiment; competitive with CEX spreads in normal conditions; optimizes for LP profitability during high volatility",
+            "T1": "Basic spread adjustments tied to volatility metrics; reasonable competitiveness with CEX spreads; some optimization for LP protection"
+          },
+          "tools": [
+            "Spread Competitiveness Analysis",
+            "Volatility Response Testing",
+            "LP Profitability Measurement"
+          ]
         },
         {
           "id": "volatility-management",
-          "name": "Volatility Management",
-          "description": "Quality of volatility management",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Volatility Prediction & Management",
+          "description": "Quality of AI-driven volatility prediction and management strategies",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Sophisticated volatility forecasting models; predictive fee adjustments before volatility events; dynamic liquidity positioning during volatility; maintains stability during extreme market conditions",
+            "T1": "Basic volatility monitoring; reactive adjustments to obvious volatility; reasonable stability during moderate market fluctuations"
+          },
+          "tools": [
+            "Volatility Prediction Accuracy",
+            "Fee Adjustment Analysis",
+            "Stability Testing During Market Events"
+          ]
+        },
+        {
+          "id": "batch-auctions",
+          "name": "Batch Auction & Settlement Optimization",
+          "description": "Effectiveness of AI in optimizing batch auctions and trade settlements",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Sophisticated batch auction mechanisms with AI solvers; optimal clearing price discovery; CoW (Coincidence of Wants) detection with >90% efficiency; settlement timing optimization",
+            "T1": "Basic batch auction implementation; reasonable clearing price discovery; some CoW detection; improved settlement efficiency"
+          },
+          "tools": [
+            "CoW Detection Efficiency",
+            "Clearing Price Optimization",
+            "Settlement Cost Analysis"
+          ]
         }
       ]
     },
     {
       "id": "security-monitoring",
-      "name": "Security Monitoring",
-      "description": "Evaluation of AI in DEX security monitoring",
+      "name": "Security & Risk Monitoring",
+      "description": "Evaluation of AI in DEX security monitoring, anomaly detection, and risk management",
       "metrics": [
         {
           "id": "anomaly-detection",
-          "name": "Anomaly Detection",
-          "description": "Quality of trading anomaly detection",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Trade Anomaly Detection",
+          "description": "Quality of AI-driven trading anomaly detection and response",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Real-time anomaly detection with >95% accuracy; sophisticated pattern recognition; identifies novel attack vectors; automatic risk mitigation for suspicious activity; false positive rate <1%",
+            "T1": "Basic anomaly detection for common patterns; reasonable accuracy; manual risk mitigation protocols; acceptable false positive rate"
+          },
+          "tools": [
+            "Anomaly Detection Accuracy Testing",
+            "False Positive Analysis",
+            "Response Time Measurement"
+          ]
         },
         {
           "id": "front-running",
-          "name": "Front-running Prevention",
-          "description": "Effectiveness in preventing front-running",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Advanced MEV & Front-running Analytics",
+          "description": "Sophistication of AI in analyzing and preventing front-running and MEV extraction",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Comprehensive MEV analytics with real-time detection; identifies complex MEV strategies; quantifies value extraction; implements multi-layered protection; adapts to new MEV techniques",
+            "T1": "Basic MEV monitoring and analytics; identifies common MEV patterns; implements standard protections; some adaptation to known MEV techniques"
+          },
+          "tools": [
+            "MEV Extraction Quantification",
+            "Protection Mechanism Testing",
+            "Adaptation to New MEV Techniques"
+          ]
         },
         {
           "id": "smart-contract",
-          "name": "Smart Contract Security",
-          "description": "Quality of smart contract security monitoring",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Smart Contract Security Monitoring",
+          "description": "Quality of AI-driven smart contract security monitoring and vulnerability detection",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Continuous smart contract monitoring with advanced AI analysis; identifies potential vulnerabilities pre-exploitation; simulates complex attack scenarios; integrates with formal verification; <1 hour response to zero-day threats",
+            "T1": "Regular smart contract scanning; identifies common vulnerabilities; simulates basic attack vectors; reasonable response time to known threats"
+          },
+          "tools": [
+            "Vulnerability Detection Testing",
+            "Response Time Analysis",
+            "Simulation Comprehensiveness Evaluation"
+          ]
+        },
+        {
+          "id": "risk-management",
+          "name": "Risk Assessment & Management",
+          "description": "Effectiveness of AI in assessing and managing protocol and liquidity risks",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Sophisticated risk scoring across multiple factors; real-time risk monitoring and alerting; predictive risk assessment; scenario analysis; automated circuit breakers; demonstrable prevention of significant losses",
+            "T1": "Basic risk scoring for major risk factors; periodic risk monitoring; standard alerting systems; manual circuit breakers; reasonable risk prevention"
+          },
+          "tools": [
+            "Risk Scoring Accuracy",
+            "Alert Responsiveness Testing",
+            "Loss Prevention Effectiveness"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "user-experience",
+      "name": "User Experience & Accessibility",
+      "description": "Evaluation of AI-enhanced user experience, personalization, and accessibility features",
+      "metrics": [
+        {
+          "id": "trade-recommendations",
+          "name": "Personalized Trade Recommendations",
+          "description": "Quality of AI-generated personalized trading insights and recommendations",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Highly personalized trade suggestions based on user history, risk profile, and market conditions; demonstrable ROI improvement for users following recommendations; adaptive learning from user behavior",
+            "T1": "Basic trade suggestions based on market trends; some personalization features; reasonable accuracy in recommendations"
+          },
+          "tools": [
+            "Recommendation Relevance Testing",
+            "User ROI Improvement Analysis",
+            "Personalization Effectiveness Measurement"
+          ]
+        },
+        {
+          "id": "interface-adaptation",
+          "name": "Adaptive Interface & Interaction",
+          "description": "Effectiveness of AI in adapting the user interface and interaction based on user behavior",
+          "importance": "Low",
+          "thresholds": {
+            "T0": "Highly responsive interface that adapts to user proficiency level; learns from user interactions; simplifies complex operations; provides contextual assistance; accessibility features for diverse users",
+            "T1": "Basic interface customization options; some adaptive features; reasonable usability improvements over static interfaces"
+          },
+          "tools": [
+            "Usability Testing",
+            "Adaptation Effectiveness Analysis",
+            "Accessibility Compliance Evaluation"
+          ]
+        },
+        {
+          "id": "market-insights",
+          "name": "AI-Powered Market Insights",
+          "description": "Quality and usefulness of AI-generated market insights and analytics",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Comprehensive market analysis with actionable insights; sentiment analysis from multiple sources; correlation detection; pattern recognition; predictive analytics with demonstrable accuracy",
+            "T1": "Basic market analysis and reporting; standard technical indicators; some sentiment analysis; reasonable accuracy in trend identification"
+          },
+          "tools": [
+            "Insight Accuracy Tracking",
+            "Predictive Accuracy Measurement",
+            "User Value Assessment"
+          ]
+        },
+        {
+          "id": "educational-content",
+          "name": "Intelligent Educational Resources",
+          "description": "Quality of AI-generated educational content and learning paths",
+          "importance": "Low",
+          "thresholds": {
+            "T0": "Personalized learning paths based on user knowledge level; interactive tutorials; conversational learning; comprehensive knowledge base; adapts content based on user interactions",
+            "T1": "Standard educational content; some personalization; basic interactive elements; reasonable coverage of important topics"
+          },
+          "tools": [
+            "Knowledge Retention Testing",
+            "Content Personalization Analysis",
+            "User Satisfaction Measurement"
+          ]
         }
       ]
     }

@@ -1,38 +1,75 @@
 {
   "id": "ai-defi-evaluation",
   "name": "AI-Powered DeFi Evaluation",
-  "description": "Comprehensive evaluation template for AI-powered DeFi applications, focusing on trading strategies, risk management, and market analysis capabilities",
-  "author": "Web3 BD Team",
+  "description": "Comprehensive evaluation template for AI-powered DeFi applications, focusing on AI model quality, DeFi integration, risk management, and market analysis capabilities",
+  "author": "Shai Perednik",
   "createdAt": "2024-03-20T00:00:00.000Z",
-  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [
     {
       "id": "ai-capabilities",
       "name": "AI Capabilities",
-      "description": "Evaluation of AI model capabilities and implementation",
+      "description": "Evaluation of AI model quality, training methods, and implementation",
       "metrics": [
         {
           "id": "model-type",
-          "name": "AI Model Type",
-          "description": "Type of AI model used (ML, Deep Learning, etc.)",
-          "type": "select",
-          "options": ["Machine Learning", "Deep Learning", "Reinforcement Learning", "Hybrid Approach", "Other"]
+          "name": "AI Model Type & Architecture",
+          "description": "Type of AI model used and its architectural sophistication",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Uses state-of-the-art models (advanced LLMs, transformers, deep reinforcement learning) specifically tuned for financial applications with verifiable performance metrics",
+            "T1": "Implements standard machine learning models (regression, classification, basic neural networks) with decent performance for financial tasks"
+          },
+          "tools": [
+            "Model Architecture Review",
+            "Technical Documentation Analysis",
+            "Performance Benchmarking"
+          ]
         },
         {
           "id": "training-data",
           "name": "Training Data Quality",
-          "description": "Quality and relevance of training data",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality, diversity, and relevance of training data for financial applications",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Uses high-quality, diverse financial datasets with extensive historical coverage; implements rigorous data validation; updates training data regularly; addresses potential biases",
+            "T1": "Uses adequate financial datasets with reasonable coverage; basic data cleaning procedures; periodic data updates"
+          },
+          "tools": [
+            "Data Source Verification",
+            "Dataset Diversity Assessment",
+            "Bias Testing Framework"
+          ]
         },
         {
           "id": "model-performance",
-          "name": "Model Performance",
-          "description": "Performance metrics and accuracy",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Model Performance & Accuracy",
+          "description": "Demonstrated accuracy and performance metrics in financial prediction tasks",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Consistently outperforms market benchmarks; prediction accuracy >80% for major use cases; low false positive rates; robust performance in varied market conditions",
+            "T1": "Matches or slightly exceeds market benchmarks; prediction accuracy >65% for major use cases; acceptable error rates; performs adequately in normal market conditions"
+          },
+          "tools": [
+            "Backtesting Framework",
+            "Accuracy Metrics Analysis",
+            "Stress Testing Under Various Market Conditions"
+          ]
+        },
+        {
+          "id": "explainability",
+          "name": "AI Explainability",
+          "description": "Transparency and explainability of AI decision-making processes",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Implements advanced explainable AI techniques; provides detailed reasoning for decisions; visualization tools for model interpretability; transparent about model limitations",
+            "T1": "Basic explanation of model decisions; some level of transparency in decision processes; acknowledges limitations"
+          },
+          "tools": [
+            "Explainable AI Assessment",
+            "Decision Path Analysis",
+            "Transparency Framework Evaluation"
+          ]
         }
       ]
     },
@@ -43,89 +80,264 @@
       "metrics": [
         {
           "id": "protocol-support",
-          "name": "Protocol Support",
-          "description": "Number and quality of supported DeFi protocols",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Protocol Support & Interoperability",
+          "description": "Range and quality of supported DeFi protocols and cross-chain capabilities",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Seamless integration with 10+ major DeFi protocols across multiple blockchains; cross-chain operability; adapts to protocol updates automatically; minimal integration failures",
+            "T1": "Integration with 3-5 major DeFi protocols; primarily single-chain; manual updates for protocol changes; occasional integration issues"
+          },
+          "tools": [
+            "Protocol Integration Testing",
+            "Cross-chain Transaction Analysis",
+            "API Reliability Assessment"
+          ]
         },
         {
           "id": "liquidity-access",
-          "name": "Liquidity Access",
-          "description": "Ability to access and utilize liquidity pools",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Liquidity Access & Management",
+          "description": "Ability to access, analyze, and efficiently utilize liquidity pools",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Optimizes routing across multiple liquidity sources; minimizes slippage through AI-driven path finding; accurately predicts and adapts to liquidity shifts; performs well even with low liquidity assets",
+            "T1": "Basic routing across main liquidity pools; reasonable slippage management; functions well with high-liquidity assets"
+          },
+          "tools": [
+            "Liquidity Routing Efficiency Analysis",
+            "Slippage Measurement",
+            "Low Liquidity Asset Testing"
+          ]
         },
         {
           "id": "transaction-efficiency",
-          "name": "Transaction Efficiency",
-          "description": "Efficiency of AI-driven transactions",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Transaction Execution Efficiency",
+          "description": "Speed, cost-effectiveness, and success rate of AI-driven transactions",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Optimal gas management with predictive gas pricing; >98% transaction success rate; MEV protection; sub-second decision-making; transaction batching where beneficial",
+            "T1": "Standard gas management; >90% transaction success rate; basic MEV awareness; reasonable execution speeds"
+          },
+          "tools": [
+            "Gas Optimization Analysis",
+            "Transaction Success Rate Monitoring",
+            "Execution Latency Testing"
+          ]
+        },
+        {
+          "id": "smart-contract-interaction",
+          "name": "Smart Contract Interaction",
+          "description": "Quality and safety of AI interaction with DeFi smart contracts",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Advanced contract analysis before interaction; uses formal verification; simulates transactions before execution; handles contract failures gracefully; identifies potential exploits",
+            "T1": "Basic contract verification; standard error handling; reasonable safety measures for high-value transactions"
+          },
+          "tools": [
+            "Contract Interaction Simulation",
+            "Safety Protocol Assessment",
+            "Error Handling Testing"
+          ]
         }
       ]
     },
     {
       "id": "risk-management",
       "name": "Risk Management",
-      "description": "Evaluation of risk management capabilities",
+      "description": "Evaluation of AI-powered risk assessment and mitigation capabilities",
       "metrics": [
         {
           "id": "risk-assessment",
           "name": "Risk Assessment",
-          "description": "Quality of AI-driven risk assessment",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "description": "Quality and comprehensiveness of AI-driven risk assessment",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Multi-factor risk modeling incorporating market, protocol, and technical risks; real-time adaptation to changing conditions; stress testing capabilities; historical risk backtesting with proven accuracy",
+            "T1": "Basic risk scoring for major risks; periodic risk reassessment; some historical validation of risk models"
+          },
+          "tools": [
+            "Risk Model Validation",
+            "Scenario Analysis",
+            "Historical Backtest Verification"
+          ]
         },
         {
           "id": "safeguards",
-          "name": "Safety Measures",
-          "description": "Implementation of safety measures and circuit breakers",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Safety Measures & Circuit Breakers",
+          "description": "Implementation and effectiveness of protection mechanisms",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Automated circuit breakers with multiple trigger conditions; gradual position unwinding; emergency response system with human oversight options; proven effectiveness during market stress",
+            "T1": "Basic threshold-based circuit breakers; reasonably effective protection mechanisms; manual override capabilities"
+          },
+          "tools": [
+            "Circuit Breaker Testing",
+            "Emergency Response Simulation",
+            "Market Stress Scenario Testing"
+          ]
         },
         {
           "id": "compliance",
-          "name": "Regulatory Compliance",
-          "description": "Compliance with financial regulations",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Regulatory Compliance & Adaptability",
+          "description": "Compliance with financial regulations and ability to adapt to regulatory changes",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Proactive regulatory compliance framework; jurisdiction-specific rule enforcement; automated compliance updates; detailed audit trails; AML/KYC integration where applicable",
+            "T1": "Basic compliance measures; reasonable adaptation to major regulatory changes; standard record keeping"
+          },
+          "tools": [
+            "Compliance Framework Review",
+            "Regulatory Adaptability Assessment",
+            "Audit Trail Verification"
+          ]
+        },
+        {
+          "id": "incident-response",
+          "name": "Incident Response",
+          "description": "Effectiveness of response to exploits, vulnerabilities, or system failures",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Automated detection of anomalies and exploits; rapid response system with <15 min reaction time; comprehensive recovery procedures; learns from incidents to improve security",
+            "T1": "Standard monitoring for major issues; documented response procedures; reasonable recovery mechanisms"
+          },
+          "tools": [
+            "Incident Detection Testing",
+            "Response Time Measurement",
+            "Recovery Procedure Evaluation"
+          ]
         }
       ]
     },
     {
       "id": "market-analysis",
       "name": "Market Analysis",
-      "description": "Evaluation of market analysis capabilities",
+      "description": "Evaluation of AI-powered market analysis and prediction capabilities",
       "metrics": [
         {
           "id": "data-sources",
-          "name": "Data Sources",
-          "description": "Quality and diversity of market data sources",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Market Data Sources",
+          "description": "Quality, diversity, and integration of market data sources",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Integrates 15+ high-quality data sources across on-chain, exchange, and alternative data; real-time data processing; redundant data providers; data quality verification systems",
+            "T1": "Uses 5-10 standard data sources; reasonable data freshness; basic data quality checks"
+          },
+          "tools": [
+            "Data Source Diversity Assessment",
+            "Data Freshness Testing",
+            "Information Advantage Analysis"
+          ]
         },
         {
           "id": "prediction-accuracy",
-          "name": "Prediction Accuracy",
-          "description": "Accuracy of market predictions",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Market Prediction Accuracy",
+          "description": "Historical accuracy of market predictions and forecasts",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Consistent outperformance of market benchmarks by >15%; accurate directional predictions (>75%); effective in both trending and ranging markets; transparent track record with third-party verification",
+            "T1": "Matches or slightly exceeds benchmarks; reasonable directional accuracy (>60%); performs adequately in normal market conditions"
+          },
+          "tools": [
+            "Prediction Accuracy Tracking",
+            "Benchmark Comparison",
+            "Market Condition Performance Analysis"
+          ]
         },
         {
           "id": "analysis-depth",
-          "name": "Analysis Depth",
-          "description": "Depth and sophistication of market analysis",
-          "type": "scale",
-          "min": 1,
-          "max": 5
+          "name": "Analysis Sophistication",
+          "description": "Depth and sophistication of market analysis methodologies",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Multi-model ensemble approach combining technical, fundamental, sentiment, and on-chain analysis; correlation awareness across assets; regime detection; anomaly identification",
+            "T1": "Standard technical and fundamental analysis; basic sentiment analysis; reasonable analytical framework"
+          },
+          "tools": [
+            "Analysis Methodology Review",
+            "Model Diversity Assessment",
+            "Edge Case Analysis"
+          ]
+        },
+        {
+          "id": "adaptive-strategies",
+          "name": "Strategy Adaptation",
+          "description": "Ability to adapt strategies based on changing market conditions",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Autonomous strategy evolution based on market regime; learns from past performance; effectively shifts between defensive and aggressive postures; maintains performance across market cycles",
+            "T1": "Manual or semi-automated strategy adjustments; reasonable adaptation to major market shifts; performs adequately in trending markets"
+          },
+          "tools": [
+            "Strategy Adaptability Testing",
+            "Market Regime Response Analysis",
+            "Learning Mechanism Evaluation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "user-experience",
+      "name": "User Experience & Accessibility",
+      "description": "Evaluation of interface quality, customization options, and accessibility",
+      "metrics": [
+        {
+          "id": "interface-quality",
+          "name": "Interface Quality & Clarity",
+          "description": "Usability and clarity of the user interface for AI-DeFi interactions",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Intuitive, responsive interface across devices; clear visualization of AI decisions and actions; real-time updates; customizable dashboards; excellent accessibility features",
+            "T1": "Functional interface with reasonable usability; adequate information display; standard accessibility compliance"
+          },
+          "tools": [
+            "UI/UX Testing",
+            "Accessibility Compliance Check",
+            "User Journey Mapping"
+          ]
+        },
+        {
+          "id": "customization",
+          "name": "AI Customization Options",
+          "description": "Degree to which users can customize AI behavior and risk parameters",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Extensive customization of risk profiles, strategies, and preferences; fine-grained control over AI autonomy; personalized insights tailored to user goals; maintains performance across customizations",
+            "T1": "Basic customization options; several preset profiles; reasonable adaptability to user preferences"
+          },
+          "tools": [
+            "Customization Range Assessment",
+            "Profile Effectiveness Testing",
+            "Personalization Depth Analysis"
+          ]
+        },
+        {
+          "id": "transparency",
+          "name": "Operational Transparency",
+          "description": "Transparency of AI operations, decisions, and performance metrics",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Complete transparency of actions and decision logic; comprehensive reporting; performance attribution; fee transparency; third-party verification capabilities",
+            "T1": "Standard reporting of major actions and outcomes; reasonable transparency about decision factors; clear fee structure"
+          },
+          "tools": [
+            "Transparency Framework Evaluation",
+            "Reporting Completeness Assessment",
+            "Decision Trail Verification"
+          ]
+        },
+        {
+          "id": "education-resources",
+          "name": "Educational Resources",
+          "description": "Quality and comprehensiveness of educational materials for users",
+          "importance": "Low",
+          "thresholds": {
+            "T0": "Comprehensive educational content explaining AI strategies; interactive tutorials; personalized learning paths; responsive support; actively maintained knowledge base",
+            "T1": "Basic documentation; standard tutorials; reasonable support channels"
+          },
+          "tools": [
+            "Educational Content Review",
+            "Support Responsiveness Testing",
+            "Knowledge Base Evaluation"
+          ]
         }
       ]
     }

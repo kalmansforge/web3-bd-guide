@@ -1,10 +1,10 @@
 {
   "id": "ai-cefi-evaluation",
   "name": "AI-Powered CeFi Evaluation",
-  "description": "Evaluation template for AI applications in Centralized Finance platforms, focusing on trading, risk management, and compliance",
-  "author": "Web3 BD Team",
+  "description": "Comprehensive evaluation template for AI applications in Centralized Finance platforms, focusing on trading, risk management, compliance, and customer service",
+  "author": "Shai Perednik",
   "createdAt": "2024-03-20T00:00:00.000Z",
-  "updatedAt": "2024-03-20T00:00:00.000Z",
+  "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [
     {
       "id": "trading-systems",
@@ -14,7 +14,17 @@
         {
           "id": "order-matching",
           "name": "Order Matching",
-          "description": "Quality of AI-driven order matching",
+          "description": "Quality of AI-driven order matching and execution optimization",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Advanced AI-driven order matching with sub-millisecond latency; intelligent order routing across multiple liquidity sources; predictive execution capabilities reducing slippage by >50% compared to traditional systems; self-optimizing algorithms that adapt to market conditions",
+            "T1": "Basic AI-enhanced order matching with reasonable latency (<10ms); some intelligent routing capabilities; moderate improvements in execution quality compared to traditional systems"
+          },
+          "tools": [
+            "Latency Testing Tools",
+            "Execution Quality Analysis",
+            "Routing Efficiency Measurement"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -22,7 +32,17 @@
         {
           "id": "execution-quality",
           "name": "Execution Quality",
-          "description": "Quality of trade execution",
+          "description": "Quality of AI-optimized trade execution and price improvement",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Industry-leading AI execution algorithms reducing costs by >30%; price improvement on >75% of orders; machine learning models that predict market microstructure; ultra-low slippage even during high volatility; comprehensive execution analytics for clients",
+            "T1": "Standard AI execution with reasonable price improvement on >40% of orders; moderate slippage reduction; basic execution analytics available to clients"
+          },
+          "tools": [
+            "Slippage Analysis Tools",
+            "Price Improvement Metrics",
+            "Execution Cost Calculator" 
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -30,7 +50,17 @@
         {
           "id": "algorithmic-trading",
           "name": "Algorithmic Trading",
-          "description": "Sophistication of algorithmic trading strategies",
+          "description": "Sophistication of AI-powered algorithmic trading strategies",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Cutting-edge ML/AI trading algorithms with demonstrable edge; reinforcement learning systems with continuous optimization; multi-strategy portfolio optimization; alternative data integration; explainable AI components for strategy transparency",
+            "T1": "Basic ML-enhanced trading algorithms; single or limited strategy approach; standard technical indicators with some AI enhancement; minimal alternative data usage"
+          },
+          "tools": [
+            "Strategy Backtest Platform", 
+            "Algorithm Performance Analysis",
+            "ML Model Evaluation Framework"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -45,7 +75,17 @@
         {
           "id": "position-monitoring",
           "name": "Position Monitoring",
-          "description": "Quality of position monitoring and risk assessment",
+          "description": "Quality of AI-enhanced position monitoring and risk assessment",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Real-time AI risk monitoring with predictive alerts; stress testing under thousands of scenarios; anomaly detection for unusual trading patterns; behavioral analysis to identify rogue trading; cross-asset risk correlation models; VaR calculations with AI-optimized parameters",
+            "T1": "Near real-time risk monitoring with basic AI enhancements; standard stress testing capabilities; basic anomaly detection; conventional risk models with some machine learning improvements"
+          },
+          "tools": [
+            "Risk Monitoring Dashboard",
+            "Anomaly Detection Evaluation",
+            "Stress Test Framework"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -53,7 +93,17 @@
         {
           "id": "margin-management",
           "name": "Margin Management",
-          "description": "Effectiveness of margin management systems",
+          "description": "Effectiveness of AI-driven margin management systems",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Dynamic AI-powered margin calculation accounting for market volatility and liquidity; predictive margin calls with pre-emptive risk notifications; personalized margin requirements based on trading history; smart liquidation processes minimizing market impact",
+            "T1": "Standard margin systems with basic AI enhancements; reasonable margin calculation frequency; conventional liquidation processes with some optimization"
+          },
+          "tools": [
+            "Margin Calculation Accuracy Test",
+            "Liquidation Efficiency Analysis",
+            "Margin Call Prediction Assessment"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -61,7 +111,17 @@
         {
           "id": "liquidity-risk",
           "name": "Liquidity Risk",
-          "description": "Quality of liquidity risk management",
+          "description": "Quality of AI-powered liquidity risk management",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Advanced AI models predicting liquidity crises with high accuracy; automated liquidity stress testing; ML-driven correlation analysis between market events and liquidity conditions; dynamic liquidity reserves based on predictive modeling",
+            "T1": "Basic AI-enhanced liquidity monitoring; standard stress tests with some machine learning components; reasonable liquidity reserves based on historical analysis"
+          },
+          "tools": [
+            "Liquidity Prediction Model Testing",
+            "Stress Test Scenario Analysis",
+            "Liquidity Reserve Adequacy Assessment"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -76,7 +136,17 @@
         {
           "id": "kyc-aml",
           "name": "KYC/AML",
-          "description": "Quality of KYC/AML automation",
+          "description": "Quality of AI-powered KYC/AML automation and effectiveness",
+          "importance": "Critical",
+          "thresholds": {
+            "T0": "Industry-leading AI-driven KYC/AML with >99% accuracy; real-time transaction monitoring using advanced ML models; behavioral biometrics for identity verification; sophisticated pattern recognition for fraud detection; adaptive systems learning from new fraud techniques",
+            "T1": "Standard AI-enhanced KYC/AML with >90% accuracy; basic transaction monitoring with machine learning components; conventional biometric verification; reasonable fraud detection capabilities"
+          },
+          "tools": [
+            "KYC Accuracy Assessment",
+            "AML False Positive Analysis",
+            "Verification Speed Measurement"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -84,7 +154,17 @@
         {
           "id": "transaction-monitoring",
           "name": "Transaction Monitoring",
-          "description": "Effectiveness of transaction monitoring",
+          "description": "Effectiveness of AI-powered transaction monitoring and analysis",
+          "importance": "High",
+          "thresholds": {
+            "T0": "Cutting-edge AI transaction monitoring with behavior-based analytics; network analysis for detecting sophisticated fraud patterns; explainable AI models for regulatory compliance; <1% false positive rate with >99% detection rate; automated reporting for suspicious activities",
+            "T1": "Standard ML-enhanced transaction monitoring; basic network analysis capabilities; reasonable false positive rate (<10%) with good detection rate (>90%); semi-automated suspicious activity reporting"
+          },
+          "tools": [
+            "Detection Rate Analysis",
+            "False Positive Measurement",
+            "Pattern Recognition Testing"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -92,7 +172,17 @@
         {
           "id": "regulatory-reporting",
           "name": "Regulatory Reporting",
-          "description": "Quality of automated regulatory reporting",
+          "description": "Quality of AI-automated regulatory reporting and compliance",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Fully automated AI-driven regulatory reporting across multiple jurisdictions; natural language processing for regulatory change detection; automated compliance checks for new products; predictive compliance systems identifying potential regulatory issues before they arise",
+            "T1": "Semi-automated regulatory reporting with basic AI enhancements; standard regulatory change monitoring; manual compliance checks with some AI assistance"
+          },
+          "tools": [
+            "Reporting Accuracy Assessment",
+            "Regulatory Update Response Testing",
+            "Compliance Automation Evaluation"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -107,7 +197,17 @@
         {
           "id": "chatbot-quality",
           "name": "Chatbot Quality",
-          "description": "Quality of AI-powered customer support",
+          "description": "Quality of AI-powered customer support chatbots",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Sophisticated conversational AI with near-human interaction quality; >90% first-contact resolution rate; multilingual support; sentiment analysis to detect customer frustration; seamless handoff to human agents when needed; continuous learning from interactions",
+            "T1": "Basic AI chatbot with reasonable understanding of common queries; >70% first-contact resolution rate; limited language support; basic sentiment detection; standard escalation to human agents"
+          },
+          "tools": [
+            "Conversation Quality Assessment",
+            "Resolution Rate Measurement",
+            "Customer Satisfaction Analysis"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -115,7 +215,17 @@
         {
           "id": "issue-resolution",
           "name": "Issue Resolution",
-          "description": "Effectiveness in resolving customer issues",
+          "description": "Effectiveness of AI in resolving customer issues",
+          "importance": "Medium",
+          "thresholds": {
+            "T0": "Advanced AI-driven issue triage and resolution system; predictive support offering solutions before customers report problems; intelligent routing to specialized teams; automated resolution of >80% of common issues; root cause analysis to prevent recurring problems",
+            "T1": "Standard AI-enhanced issue resolution; basic automated solutions for common problems; conventional routing to support teams; reasonable automation rate (>50%) for simple issues"
+          },
+          "tools": [
+            "Resolution Speed Measurement",
+            "Automation Rate Analysis",
+            "Customer Effort Assessment"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
@@ -123,7 +233,17 @@
         {
           "id": "personalization",
           "name": "Service Personalization",
-          "description": "Quality of personalized service",
+          "description": "Quality of AI-driven personalized customer service",
+          "importance": "Low",
+          "thresholds": {
+            "T0": "Highly sophisticated AI personalization based on customer history, preferences, and behavior; predictive service recommendations; emotion-aware interactions; customized communication style matching customer preferences; proactive relationship management",
+            "T1": "Basic AI personalization using customer history and segments; standard service recommendations; conventional communication approach with some customization; reactive relationship management"
+          },
+          "tools": [
+            "Personalization Accuracy Testing",
+            "Customer Experience Assessment",
+            "Recommendation Relevance Analysis"
+          ],
           "type": "scale",
           "min": 1,
           "max": 5
