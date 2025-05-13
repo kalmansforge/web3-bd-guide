@@ -16,12 +16,6 @@ ENV BUN_INSTALL_CACHE=/root/.bun/install/cache
 RUN --mount=type=cache,target=${BUN_INSTALL_CACHE} \
     bun install --frozen-lockfile
 
-# Create src/templates directory
-RUN mkdir -p ./src/templates
-
-# Copy template json files (make sure directory exists first)
-COPY --link templates/*.json ./src/templates/
-
 # Copy the rest of the application source
 COPY --link . ./
 
@@ -39,12 +33,14 @@ COPY --from=base /app/bun.lockb ./
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/dist ./dist
 COPY --from=base /app/index.html ./index.html
+COPY --from=base /app/src/templates ./src/templates
 
 # Create empty public directory if needed
 RUN mkdir -p ./public
 
 # Use a non-root user for security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /app
 USER appuser
 
 # Vite preview uses port 4173 by default

@@ -9,6 +9,17 @@ services:
     ports:
       - "4173:4173"
     restart: unless-stopped
+    volumes:
+      - ./src:/app/src
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./package.json
     # If you need to use environment variables, uncomment the following:
     # env_file:
     #   - .env
@@ -17,4 +28,33 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-      start_period: 10s 
+      start_period: 10s
+      
+  # Development service with hot reload
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    container_name: web3-bd-dev
+    command: bun run dev --host 0.0.0.0
+    ports:
+      - "8080" # Let Docker assign a random port that maps to 8080 in the container
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: sync
+          path: ./public
+          target: /app/public
+        - action: sync
+          path: ./index.html
+          target: /app/index.html
+    environment:
+      - NODE_ENV=development 
