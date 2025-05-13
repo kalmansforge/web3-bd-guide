@@ -1,4 +1,3 @@
-
 import React from "react";
 import { EvaluationTemplate } from "@/types/templates";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -63,6 +62,17 @@ const TemplateDetailsPanel: React.FC<TemplateDetailsPanelProps> = ({
             value={template.author}
             onChange={(e) => handleTemplateChange("author", e.target.value)}
             placeholder="Enter author name"
+            readOnly={isLocked}
+            className={isLocked ? "bg-muted cursor-not-allowed" : ""}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium">AI Author</label>
+          <Input
+            value={template["aiui-author"] || ""}
+            onChange={(e) => handleTemplateChange("aiui-author", e.target.value)}
+            placeholder="Enter AI model name (e.g., Claude 3 Opus)"
             readOnly={isLocked}
             className={isLocked ? "bg-muted cursor-not-allowed" : ""}
           />

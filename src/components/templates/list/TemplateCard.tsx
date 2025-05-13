@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -51,6 +50,11 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             <CardDescription className="mt-1">
               {template.isBuiltIn && <Badge variant="outline" className="mr-2">Built-in</Badge>}
               By {template.author}
+              {template["aiui-author"] && (
+                <span className="ml-2">
+                  <Badge variant="secondary">AI: {template["aiui-author"]}</Badge>
+                </span>
+              )}
             </CardDescription>
           </div>
         </div>

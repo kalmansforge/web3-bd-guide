@@ -3,6 +3,7 @@
   "name": "Dynamic Loading Example",
   "description": "This template demonstrates the dynamic template loading capability and proper threshold format.",
   "author": "System",
+  "aiui-author": "None",
   "createdAt": "2025-05-13T14:30:00.000Z",
   "updatedAt": "2024-07-01T14:30:00.000Z",
   "categories": [

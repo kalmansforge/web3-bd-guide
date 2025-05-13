@@ -3,6 +3,7 @@
   "name": "AI-Powered DeFi Evaluation",
   "description": "Comprehensive evaluation template for AI-powered DeFi applications, focusing on AI model quality, DeFi integration, risk management, and market analysis capabilities",
   "author": "Shai Perednik",
+  "aiui-author": "Claude 3.7 Sonnet",
   "createdAt": "2024-03-20T00:00:00.000Z",
   "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [

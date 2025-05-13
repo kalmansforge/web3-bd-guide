@@ -3,6 +3,7 @@
   "name": "AI-Powered TradFi Integration",
   "description": "Comprehensive evaluation template for AI applications in traditional finance integration with blockchain, focusing on risk assessment, fraud detection, automation, and market analysis",
   "author": "Shai Perednik",
+  "aiui-author": "Claude 3.7 Sonnet",
   "createdAt": "2024-03-20T00:00:00.000Z",
   "updatedAt": "2024-07-01T00:00:00.000Z",
   "categories": [

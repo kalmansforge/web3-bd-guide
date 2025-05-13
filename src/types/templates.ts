@@ -1,4 +1,3 @@
-
 import { Metric } from "./metrics";
 
 export interface MetricCategory {
@@ -13,6 +12,7 @@ export interface EvaluationTemplate {
   name: string;
   description: string;
   author: string;
+  "aiui-author"?: string; // AI model used to create the template
   createdAt: string;
   updatedAt: string;
   isBuiltIn: boolean;

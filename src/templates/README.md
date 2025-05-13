@@ -23,6 +23,7 @@ Each template follows this JSON structure:
   "name": "Template Display Name",
   "description": "Template description text",
   "author": "Author Name",
+  "aiui-author": "AI Model Name",
   "createdAt": "2023-08-01T00:00:00.000Z",
   "updatedAt": "2023-08-01T00:00:00.000Z",
   "categories": [
@@ -46,6 +47,8 @@ Each template follows this JSON structure:
   ]
 }
 ```
+
+The `aiui-author` field specifies which AI model (e.g., "Claude 3 Opus") was used to create or assist with the template creation, providing transparency about AI-generated content.
 
 ## Adding New Templates
 
